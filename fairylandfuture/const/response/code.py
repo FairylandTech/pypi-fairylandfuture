@@ -7,7 +7,9 @@
 @datetime: 2024-08-18 01:30:12 UTC+08:00
 """
 
-RESPONSE_CODE_MAP = {
+from typing import Dict
+
+RESPONSE_CODE_MAP: Dict[int, str] = {
     100: "Continue",
     101: "Switching Protocols",
     102: "Processing",

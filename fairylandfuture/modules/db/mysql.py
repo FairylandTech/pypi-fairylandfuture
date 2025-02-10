@@ -210,13 +210,14 @@ class MySQLOperation(AbstractMySQLOperation):
         try:
             self.connector.reconnect()
             self.connector.cursor.execute(struct.query, struct.args)
-            data = self.connector.cursor.fetchall()
+            result = self.connector.cursor.fetchall()
             self.connector.connection.commit()
 
-            if not data:
+            if not result:
                 return True
 
-            return tuple(data)
+            return result
+
         except Exception as err:
             self.connector.connection.rollback()
             raise err

@@ -8,6 +8,7 @@
 """
 
 import threading
+from typing import Dict
 
 
 class SingletonMeta(type):
@@ -15,7 +16,7 @@ class SingletonMeta(type):
     Singleton pattern metaclass
     """
 
-    _instance = dict()
+    _instance: Dict = {}
     _lock: threading.Lock = threading.Lock()
 
     # @functools.lru_cache(maxsize=0)

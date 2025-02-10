@@ -14,7 +14,7 @@ from typing import Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
-from fairylandfuture.enums.chrono import DateTimeEnum
+from fairylandfuture.enums.chrono import DateTimeEnum, TimeZoneEnum
 from fairylandfuture.utils.verifies.validate import ParamTypeValidatorUtils
 
 
@@ -22,6 +22,8 @@ class DateTimeToolkits:
     """
     Data and time module
     """
+
+    __TIMEZONE: str = TimeZoneEnum.shanghai.value
 
     @classmethod
     def date(cls, _format: Optional[str] = None) -> str:
@@ -51,7 +53,7 @@ class DateTimeToolkits:
         if not _format:
             _format = DateTimeEnum.date.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name="Asia/Shanghai")).date().strftime(_format)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).date().strftime(_format)
 
     @classmethod
     def time(cls, _fromat: Optional[str] = None) -> str:
@@ -81,7 +83,7 @@ class DateTimeToolkits:
         if not _fromat:
             _fromat = DateTimeEnum.time.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name="Asia/Shanghai")).time().strftime(_fromat)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).time().strftime(_fromat)
 
     @classmethod
     def datetime(cls, _format: Optional[str] = None) -> str:
@@ -111,7 +113,7 @@ class DateTimeToolkits:
         if not _format:
             _format = DateTimeEnum.datetime.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name="Asia/Shanghai")).strftime(_format)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).strftime(_format)
 
     @classmethod
     def timestamp(cls, ms: bool = False, n: Optional[int] = None) -> int:
@@ -268,4 +270,4 @@ class DateTimeToolkits:
         :return: Unzoned datetime in China.
         :rtype: datetime
         """
-        return datetime.now(tz=timezone(timedelta(hours=8), name="Asia/Shanghai")).replace(tzinfo=None)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).replace(tzinfo=None)

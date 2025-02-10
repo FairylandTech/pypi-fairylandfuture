@@ -25,3 +25,13 @@ class DateTimeEnum(BaseEnum):
 
     default = datetime
     default_cn = datetime_cn
+
+
+class TimeZoneEnum(BaseEnum):
+    """
+    Time zone enum.
+    """
+
+    shanghai = "Asia/Shanghai"
+    beijing = "Asia/Shanghai"
+    singapore = "Asia/Singapore"
