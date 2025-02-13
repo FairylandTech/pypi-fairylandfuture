@@ -16,7 +16,7 @@ from psycopg2.extras import NamedTupleCursor
 
 from fairylandfuture.exceptions.db import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
-from fairylandfuture.interface.modules.db import AbstractPostgreSQLOperation
+from fairylandfuture.abstract.modules.db import AbstractPostgreSQLOperation
 from fairylandfuture.structures.builder.db import StructurePostgreSQLExecute
 
 

@@ -15,13 +15,13 @@ from dbutils.pooled_db import PooledDB
 from pymysql.connections import Connection
 from pymysql.cursors import DictCursor
 
+from fairylandfuture.abstract.modules.db import AbstractMySQLOperation
 from fairylandfuture.exceptions.db import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
-from fairylandfuture.interface.modules.db import AbstractMySQLOperation
 from fairylandfuture.structures.builder.db import StructureMySQLExecute
 
 
-class CustomMySQLConnection(pymysql.connections.Connection):
+class CustomMySQLConnection(Connection):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -256,7 +256,7 @@ class MySQLOperation(AbstractMySQLOperation):
         try:
             self.connector.reconnect()
             for struct in structs:
-                if sql.query.lower().startswith("select"):
+                if struct.query.lower().startswith("select"):
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
                 self.connector.cursor.execute(struct.query, struct.args)
             self.connector.connection.commit()
