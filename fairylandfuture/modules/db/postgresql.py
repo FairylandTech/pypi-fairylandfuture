@@ -191,16 +191,13 @@ class PostgreSQLOperation(AbstractPostgreSQLOperation):
             self.connector.cursor.execute(struct.query, struct.vars)
             data = self.connector.cursor.fetchall()
             self.connector.connection.commit()
+            self.connector.close()
 
-            if not data:
-                return True
-
-            return tuple(data)
+            return tuple(data) if data else True
         except Exception as err:
             self.connector.connection.rollback()
-            raise err
-        finally:
             self.connector.close()
+            raise err
 
     def executemany(self, struct: StructurePostgreSQLExecute, /) -> bool:
         """
@@ -216,12 +213,13 @@ class PostgreSQLOperation(AbstractPostgreSQLOperation):
             self.connector.reconnect()
             self.connector.cursor.executemany(struct.query, struct.vars)
             self.connector.connection.commit()
+            self.connector.close()
+
             return True
         except Exception as err:
             self.connector.connection.rollback()
-            raise err
-        finally:
             self.connector.close()
+            raise err
 
     def multiexecute(self, structs: Sequence[StructurePostgreSQLExecute], /) -> bool:
         """
@@ -239,12 +237,13 @@ class PostgreSQLOperation(AbstractPostgreSQLOperation):
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
                 self.connector.cursor.execute(struct.query, struct.vars)
             self.connector.connection.commit()
+            self.connector.close()
+
             return True
         except Exception as err:
             self.connector.connection.rollback()
-            raise err
-        finally:
             self.connector.close()
+            raise err
 
     def select(self, struct: StructurePostgreSQLExecute, /) -> Tuple[NamedTuple, ...]:
         """
@@ -262,8 +261,6 @@ class PostgreSQLOperation(AbstractPostgreSQLOperation):
             return self.execute(struct)
         except Exception as err:
             raise err
-        finally:
-            self.connector.close()
 
 
 class PostgreSQLSimpleConnectionPool:
@@ -313,17 +310,19 @@ class PostgreSQLSimpleConnectionPool:
             data = cursor.fetchall()
             connection.commit()
 
-            if not data and not struct.query.lower().startswith("select"):
-                return True
-
-            return tuple(data)
-        except Exception as err:
-            connection.rollback()
-            raise err
-        finally:
             cursor.close()
             if connection:
                 self.__pool.putconn(connection)
+
+            return tuple(data) if data else True
+        except Exception as err:
+            connection.rollback()
+
+            cursor.close()
+            if connection:
+                self.__pool.putconn(connection)
+
+            raise err
 
     def __del__(self):
         self.__pool.closeall()

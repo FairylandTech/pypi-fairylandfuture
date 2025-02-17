@@ -212,17 +212,13 @@ class MySQLOperation(AbstractMySQLOperation):
             self.connector.cursor.execute(struct.query, struct.args)
             result = self.connector.cursor.fetchall()
             self.connector.connection.commit()
+            self.connector.close()
 
-            if not result:
-                return True
-
-            return result
-
+            return result if result else True
         except Exception as err:
             self.connector.connection.rollback()
-            raise err
-        finally:
             self.connector.close()
+            raise err
 
     def executemany(self, struct: StructureMySQLExecute, /) -> bool:
         """
@@ -237,12 +233,12 @@ class MySQLOperation(AbstractMySQLOperation):
             self.connector.reconnect()
             self.connector.cursor.executemany(struct.query, struct.args)
             self.connector.connection.commit()
+            self.connector.close()
             return True
         except Exception as err:
             self.connector.connection.rollback()
-            raise err
-        finally:
             self.connector.close()
+            raise err
 
     def multiexecute(self, structs: Sequence[StructureMySQLExecute], /) -> bool:
         """
@@ -258,14 +254,15 @@ class MySQLOperation(AbstractMySQLOperation):
             for struct in structs:
                 if struct.query.lower().startswith("select"):
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
+
                 self.connector.cursor.execute(struct.query, struct.args)
             self.connector.connection.commit()
+            self.connector.close()
             return True
         except Exception as err:
             self.connector.connection.rollback()
-            raise err
-        finally:
             self.connector.close()
+            raise err
 
     def select(self, struct: StructureMySQLExecute, /) -> Tuple[Dict[str, Any], ...]:
         """
@@ -283,8 +280,6 @@ class MySQLOperation(AbstractMySQLOperation):
             return self.execute(struct)
         except Exception as err:
             raise err
-        finally:
-            self.connector.close()
 
 
 class MySQLSQLSimpleConnectionPool:
@@ -355,28 +350,26 @@ class MySQLSQLSimpleConnectionPool:
             cursor.execute(struct.query, struct.args)
             data = cursor.fetchall()
             connection.commit()
+            self.__close(connection, cursor)
 
-            if not data:
-                return True
-
-            return tuple(data)
+            return tuple(data) if data else True
         except Exception as err:
             connection.rollback()
-            raise err
-        finally:
             self.__close(connection, cursor)
+            raise err
 
     def executemany(self, struct: StructureMySQLExecute) -> bool:
         connection, cursor = self.__open()
         try:
             cursor.executemany(struct.query, struct.args)
             connection.commit()
+            self.__close(connection, cursor)
+
             return True
         except Exception as err:
             connection.rollback()
-            raise err
-        finally:
             self.__close(connection, cursor)
+            raise err
 
     def multiexecute(self, structs: Sequence[StructureMySQLExecute]) -> bool:
         connection, cursor = self.__open()
@@ -386,9 +379,10 @@ class MySQLSQLSimpleConnectionPool:
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
                 cursor.execute(struct.query, struct.args)
             connection.commit()
+            self.__close(connection, cursor)
+
             return True
         except Exception as err:
             connection.rollback()
-            raise err
-        finally:
             self.__close(connection, cursor)
+            raise err

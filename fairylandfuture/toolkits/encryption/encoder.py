@@ -38,6 +38,6 @@ class Base64CryptionToolkits:
         :return: Decoded data.
         :rtype: str
         """
-        encoded_data = encoded_data.encode(EncodingEnum.UTF_8.value)
+        encoded_data = encoded_data.encode(EncodingEnum.utf8.value)
         decoded_data = base64.b64decode(encoded_data)
         return decoded_data.decode(EncodingEnum.utf8.value)
