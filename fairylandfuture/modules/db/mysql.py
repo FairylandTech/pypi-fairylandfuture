@@ -15,7 +15,7 @@ from dbutils.pooled_db import PooledDB
 from pymysql.connections import Connection
 from pymysql.cursors import DictCursor
 
-from fairylandfuture.abstract.modules.db import AbstractMySQLOperation
+from fairylandfuture.abstract.modules.db import AbstractMySQLOperator
 from fairylandfuture.exceptions.db import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
 from fairylandfuture.structures.builder.db import StructureMySQLExecute
@@ -55,7 +55,7 @@ class MySQLConnector:
     """
     This class is used to connect to MySQL database and execute SQL statements.
 
-    It is a subclass of AbstractMySQLConnector and implements the methods of AbstractMySQLOperation.
+    It is a subclass of AbstractMySQLConnector and implements the methods of AbstractMySQLOperator.
 
     :param host: The host name of the MySQL server.
     :type host: str
@@ -176,18 +176,18 @@ class MySQLConnector:
         self.close()
 
 
-class MySQLOperation(AbstractMySQLOperation):
+class MySQLOperator(AbstractMySQLOperator):
     """
     This class is used to execute SQL statements for MySQL database.
-    It is a subclass of AbstractMySQLOperation and implements the methods of AbstractMySQLOperation.
+    It is a subclass of AbstractMySQLOperator and implements the methods of AbstractMySQLOperator.
 
     :param connector: The MySQLConnector object.
     :type connector: MySQLConnector
 
     Usage:
-        >>> from fairylandfuture.modules.databases.mysql import MySQLConnector, MySQLOperation
+        >>> from fairylandfuture.modules.databases.mysql import MySQLConnector, MySQLOperator
         >>> connector = MySQLConnector(host="localhost", port=3306, user="root", password="password", database="test")
-        >>> operation = MySQLOperation(connector)
+        >>> operation = MySQLOperator(connector)
         >>> operation.execute("SELECT * FROM users")
         [{'id': 1, 'name': 'John', 'age': 25}, {'id': 2, 'name': 'Mary', 'age': 30}]
     """

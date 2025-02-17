@@ -55,3 +55,7 @@ coreapi  # Django REST framework CoreAPI
 pygments  # Django REST framework Pygments
 markdown  # Markdown Support
 uritemplate  # URL Template, URL building
+
+elasticsearch
+elasticsearch[async]
+opensearch-py

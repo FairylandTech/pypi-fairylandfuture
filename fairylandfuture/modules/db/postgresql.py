@@ -16,7 +16,7 @@ from psycopg2.extras import NamedTupleCursor
 
 from fairylandfuture.exceptions.db import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
-from fairylandfuture.abstract.modules.db import AbstractPostgreSQLOperation
+from fairylandfuture.abstract.modules.db import AbstractPostgreSQLOperator
 from fairylandfuture.structures.builder.db import StructurePostgreSQLExecute
 
 
@@ -150,24 +150,24 @@ class PostgreSQLConnector:
         self.close()
 
 
-class PostgreSQLOperation(AbstractPostgreSQLOperation):
+class PostgreSQLOperator(AbstractPostgreSQLOperator):
     """
-    PostgreSQLOperation is a class for executing SQL queries on PostgreSQL database.
+    PostgreSQLOperator is a class for executing SQL queries on PostgreSQL database.
 
     :param connector: The PostgreSQLConnector instance.
     :type connector: PostgreSQLConnector
 
     Usage::
-        >>> from fairylandfuture.modules.databases.postgresql import PostgreSQLConnector, PostgreSQLOperation
+        >>> from fairylandfuture.modules.databases.postgresql import PostgreSQLConnector, PostgreSQLOperator
         >>> from fairylandfuture.structures.builder.expression import StructurePostgreSQLExecute
         >>> connector = PostgreSQLConnector(host="localhost", port=5432, user="postgres", password="password", database="test")
-        >>> operation = PostgreSQLOperation(connector)
+        >>> operation = PostgreSQLOperator(connector)
         >>> data = operation.select(StructurePostgreSQLExecute("SELECT * FROM users"))
         >>> print(data)
 
     **Notice:**
     The `connector` must be an instance of `PostgreSQLConnector`.
-    PostgreSQLOperation is singleton class.
+    PostgreSQLOperator is singleton class.
 
     """
 

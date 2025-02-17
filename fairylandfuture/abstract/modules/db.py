@@ -16,7 +16,7 @@ from fairylandfuture.structures.builder.db import StructurePostgreSQLExecute
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
 
 
-class AbstractMySQLOperation(abc.ABC):
+class AbstractMySQLOperator(abc.ABC):
     """
     This class is an abstract class for MySQL operations.
 
@@ -44,7 +44,7 @@ class AbstractMySQLOperation(abc.ABC):
     def select(self, struct: StructureMySQLExecute, /) -> Tuple[Dict[str, Any], ...]: ...
 
 
-class AbstractPostgreSQLOperation(abc.ABC):
+class AbstractPostgreSQLOperator(abc.ABC):
     """
     This class is an abstract class for PostgreSQL operations.
 

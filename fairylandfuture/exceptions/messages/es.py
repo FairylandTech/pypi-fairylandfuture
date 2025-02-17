@@ -4,9 +4,9 @@
 @author: Lionel Johnson
 @contact: https://fairy.host
 @organization: https://github.com/FairylandFuture
-@datetime: 2024-07-17 10:42:19 UTC+08:00
+@datetime: 2025-02-17 17:51:35 UTC+08:00
 """
 
-# from elasticsearch import Elasticsearch
 
-# es = Elasticsearch()
+class ElasticSearchExceptMessage:
+    TIMEOUT = "TIMEOUT"
