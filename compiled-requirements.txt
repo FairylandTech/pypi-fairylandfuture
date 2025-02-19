@@ -85,7 +85,9 @@ aiohttp==3.11.11 \
     --hash=sha256:f047569d655f81cb70ea5be942ee5d4421b6219c3f05d131f64088c73bb0917f \
     --hash=sha256:ffa336210cf9cd8ed117011085817d00abe4c08f99968deef0013ea283547204 \
     --hash=sha256:ffb3dc385f6bb1568aa974fe65da84723210e5d9707e360e9ecb51f59406cd2e
-    # via pigar
+    # via
+    #   elasticsearch
+    #   pigar
 aiomysql==0.2.0 \
     --hash=sha256:558b9c26d580d08b8c5fd1be23c5231ce3aeff2dadad989540fee740253deb67 \
     --hash=sha256:b7c26da0daf23a5ec5e0b133c03d20657276e4eae9b73e040b72787f6f6ade0a
@@ -176,6 +178,7 @@ certifi==2025.1.31 \
     --hash=sha256:ca78db4565a652026a4db2bcdf68f2fb589ea80d0be70e03929ed730746b84fe
     # via
     #   elastic-transport
+    #   opensearch-py
     #   requests
 cffi==1.17.1 \
     --hash=sha256:045d61c734659cc045141be4bae381a41d89b741f795af1dd018bfb532fd0df8 \
@@ -494,10 +497,13 @@ elastic-transport==8.17.0 \
     --hash=sha256:59f553300866750e67a38828fede000576562a0e66930c641adb75249e0c95af \
     --hash=sha256:e755f38f99fa6ec5456e236b8e58f0eb18873ac8fe710f74b91a16dd562de2a5
     # via elasticsearch
-elasticsearch==8.17.1 \
+elasticsearch[async]==8.17.1 \
     --hash=sha256:057ab44cae8b3acffbf826a31678e46eafc38f26fcffa91015352d973299cdf0 \
     --hash=sha256:f1de0a075f12cc0fa377668eb4fb2ce02185c060ebb50cf2c3889242f9a5130e
     # via -r requirements.in
+events==0.5 \
+    --hash=sha256:a7286af378ba3e46640ac9825156c93bdba7502174dd696090fdfcd4d80a1abd
+    # via opensearch-py
 executing==2.2.0 \
     --hash=sha256:11387150cad388d62750327a53d3339fad4888b39a6fe233c3afbb54ecffd3aa \
     --hash=sha256:5d108c028108fe2551d1a7b2e8b713341e2cb4fc0aa7dcf966fa4327a5226755
@@ -1054,6 +1060,10 @@ netifaces==0.11.0 \
     --hash=sha256:e76c7f351e0444721e85f975ae92718e21c1f361bda946d60a214061de1f00a1 \
     --hash=sha256:eb4813b77d5df99903af4757ce980a98c4d702bbcb81f32a0b305a1537bdf0b1
     # via -r requirements.in
+opensearch-py==2.8.0 \
+    --hash=sha256:52c60fdb5d4dcf6cce3ee746c13b194529b0161e0f41268b98ab8f1624abe2fa \
+    --hash=sha256:6598df0bc7a003294edd0ba88a331e0793acbb8c910c43edf398791e3b2eccda
+    # via -r requirements.in
 ordered-set==4.1.0 \
     --hash=sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562 \
     --hash=sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8
@@ -1356,6 +1366,7 @@ python-dateutil==2.9.0.post0 \
     #   celery
     #   faker
     #   jupyter-client
+    #   opensearch-py
 python-dotenv==1.0.1 \
     --hash=sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca \
     --hash=sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a
@@ -1569,6 +1580,7 @@ requests==2.32.3 \
     # via
     #   -r requirements.in
     #   coreapi
+    #   opensearch-py
     #   yarg
 rpds-py==0.22.3 \
     --hash=sha256:009de23c9c9ee54bf11303a966edf4d9087cd43a6003672e6aa7def643d06518 \
@@ -1819,6 +1831,7 @@ urllib3==2.3.0 \
     --hash=sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d
     # via
     #   elastic-transport
+    #   opensearch-py
     #   requests
 uv==0.5.28 \
     --hash=sha256:099fef6c623ef0d6cf6a26201ec92de657c2f613a2669df0bd4988a4f556a1af \
