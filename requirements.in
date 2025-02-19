@@ -12,6 +12,7 @@ pigar  # pigar -p requirements.txt
 pipdeptree  # pipdeptree -fl
 pip-review  # pip-review --interactive
 pip-autoremove  # pip-autoremove -y <package name>
+uv  # new package manager
 
 setuptools
 wheel
@@ -54,3 +55,7 @@ coreapi  # Django REST framework CoreAPI
 pygments  # Django REST framework Pygments
 markdown  # Markdown Support
 uritemplate  # URL Template, URL building
+
+elasticsearch
+elasticsearch[async]
+opensearch-py

@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: UTF-8
 """
 @software: PyCharm
 @author: Lionel Johnson
@@ -65,7 +65,7 @@ class UserPasswordCryptionToolkits(CipherToolkits):
         password = password.encode(EncodingEnum.utf8.value)
         salted_password = password + salt
         hashed_password = hashlib.md5(salted_password).hexdigest()
-        return hashed_password, salt.hex()
+        return hashed_password, salt.hex() if isinstance(salt, bytes) else salt
 
     @classmethod
     def verify(cls, password: str, hashed_password: str, salt: str) -> bool:

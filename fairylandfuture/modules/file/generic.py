@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: UTF-8
 """ 
 @software: PyCharm
 @author: Lionel Johnson
@@ -7,7 +7,7 @@
 @datetime: 2024-06-30 14:20:28 UTC+08:00
 """
 
-from fairylandfuture.core.superclass.file import BaseFile, BaseTextFile, BaseYamlFile, BaseJsonFile
+from fairylandfuture.core.superclass.modules.file import BaseFile, BaseTextFile, BaseYamlFile, BaseJsonFile
 
 
 class File(BaseFile):
