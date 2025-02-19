@@ -8,8 +8,7 @@
 """
 
 # from fairylandfuture.utils.journal import journal
-from fairylandfuture.core.superclass.enumerate import BaseEnum
-from fairylandfuture.modules.datetimes import DateTimeModule
+from fairylandfuture.core.superclass.enums.enumerate import BaseEnum
 
 
 class DepartmemtEnum(BaseEnum):

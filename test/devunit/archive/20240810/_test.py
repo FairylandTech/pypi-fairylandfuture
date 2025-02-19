@@ -8,7 +8,6 @@
 """
 
 from fairylandfuture.enums.enconding import EncodingEnum
-from fairylandfuture.core.superclass.enumerate import BaseEnum
 from fairylandfuture.modules.validations.strings import ValidateStringModule
 
 print(EncodingEnum.default.value)

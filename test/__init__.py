@@ -1,12 +1,8 @@
-# coding: utf-8
+# coding: UTF-8
 """
 @software: PyCharm
 @author: Lionel Johnson
 @contact: https://fairy.host
 @organization: https://github.com/FairylandFuture
-@datetime: 2024-07-17 10:42:19 UTC+08:00
+@datetime: 2025-02-13 20:55:43 UTC+08:00
 """
-
-# from elasticsearch import Elasticsearch
-
-# es = Elasticsearch()

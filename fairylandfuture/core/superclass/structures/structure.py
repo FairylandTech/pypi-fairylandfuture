@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: UTF-8
 """
 @software: PyCharm
 @author: Lionel Johnson
@@ -9,9 +9,9 @@
 
 import json
 
-from dataclasses import dataclass, asdict, astuple
+from dataclasses import dataclass, asdict, astuple, field
 
-from typing import Dict, Any, Tuple, Self, Union
+from typing import Dict, Any, Tuple, Self, Union, List
 
 
 @dataclass(frozen=True)
@@ -37,3 +37,30 @@ class BaseStructure:
 
     def to_jsonstring(self: Self, /, *, ignorenone: bool = False) -> str:
         return json.dumps(self.to_dict(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
+
+
+@dataclass
+class BaseStructureTreeNode:
+    id: Any
+    parent_id: Any
+    data: Dict[str, Any]
+    children: List["BaseStructureTreeNode"] = field(default=None)
+
+    def __post_init__(self):
+        self.children = []
+
+    def get_id(self) -> Any:
+        return self.id
+
+    def get_parent_id(self) -> Any:
+        return self.parent_id
+
+    def add_child(self, child: "BaseStructureTreeNode"):
+        self.children.append(child)
+
+    def get_children(self) -> List["BaseStructureTreeNode"]:
+        return self.children
+
+    def to_dict(self) -> Dict[str, ...]:
+        result = {"id": self.id, "parent_id": self.parent_id, "data": self.data, "children": [child.to_dict() for child in self.children]}
+        return result
