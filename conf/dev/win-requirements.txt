@@ -92,7 +92,7 @@ defusedxml==0.7.1
     # via nbconvert
 dill==0.3.8
     # via pylint
-django==5.1.1
+django==5.0.13
     # via
     #   -r .\requirements.in
     #   django-celery-results
