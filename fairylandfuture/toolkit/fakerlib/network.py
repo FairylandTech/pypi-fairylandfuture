@@ -12,7 +12,7 @@ from faker import Faker
 from fairylandfuture.core.superclass.toolkits.fakerlib import BaseFaker
 
 
-class FakeNetworkToolkits(BaseFaker):
+class FakeNetworkToolkit(BaseFaker):
 
     @classmethod
     def __route(cls, locale=None):
