@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 from fairylandfuture.core.superclass.structures import BaseStructureTreeNode
-from fairylandfuture.toolkits.generic.structure import TreeBuilder, TreeBuilderV2
+from fairylandfuture.toolkit.generic.structure import TreeBuilder, TreeBuilderV2
 
 
 @dataclass

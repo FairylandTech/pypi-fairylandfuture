@@ -10,13 +10,13 @@
 from typing import Optional
 from fairylandfuture.modules.validator.validators import Validator, RequestValidator
 from fairylandfuture.enums.chrono import DateTimeEnum
-from fairylandfuture.toolkits.chrono import DateTimeToolkits
+from fairylandfuture.toolkit.chron import DateTimeToolkit
 
 
 def main():
     def validator_date(value: str):
         try:
-            _ = DateTimeToolkits.datetime_to_timestamp(value, _format=DateTimeEnum.date.value)
+            _ = DateTimeToolkit.datetime_to_timestamp(value, _format=DateTimeEnum.date.value)
             return True
         except Exception as err:
             raise err
