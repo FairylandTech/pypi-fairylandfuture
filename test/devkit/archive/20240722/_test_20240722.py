@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from test.utils.config import TestConfig
 
 from fairylandfuture.modules.db.postgresql import PostgreSQLConnector, PostgreSQLOperator
-from fairylandfuture.structures.builder.db import StructurePostgreSQLExecute
+from fairylandfuture.structures.builder.db import FrozenStructurePostgreSQLExecute
 from fairylandfuture.utils.builder.convert import ConvertDataStructure
 
 
@@ -44,7 +44,7 @@ pgsql2 = PostgreSQLOperator(connector)
 
 # connector.cursor.execute("SELECT * FROM public_dev_test.author;")
 
-data: Tuple[Data, ...] = pgsql.select(StructurePostgreSQLExecute("SELECT id, name, gender FROM public_dev_test.author where id = %s;", (1,)))
+data: Tuple[Data, ...] = pgsql.select(FrozenStructurePostgreSQLExecute("SELECT id, name, gender FROM public_dev_test.author where id = %s;", (1,)))
 print(repr(data), repr(type(data[0])))
 res_data = [{"id": row.id, "name": row.name, "gender": "男" if row.gender else "女"} for row in data]
 

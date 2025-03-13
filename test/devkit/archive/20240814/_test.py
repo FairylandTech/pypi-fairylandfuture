@@ -7,12 +7,12 @@
 @datetime: 2024-08-14 17:13:15 UTC+08:00
 """
 
-from fairylandfuture.structures.generic.api import StructureResponse
+from fairylandfuture.structures.generic.api import ResponseFrozenStructure
 
 
 if __name__ == "__main__":
     data = {"key": '["asdsa"]'}
-    response = StructureResponse(code=200, data=data)
+    response = ResponseFrozenStructure(code=200, data=data)
     d = response.asdict
     d.update(code=2000)
     print(repr(response), repr(response.to_dict(ignorenone=True)), repr(d))

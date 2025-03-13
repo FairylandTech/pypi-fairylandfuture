@@ -9,7 +9,7 @@
 
 from fairylandfuture.modules.db.postgresql import PostgreSQLConnector
 from fairylandfuture.modules.db.postgresql import PostgreSQLOperator
-from fairylandfuture.structures.builder.db import StructurePostgreSQLExecute
+from fairylandfuture.structures.builder.db import FrozenStructurePostgreSQLExecute
 
 
 def main():
@@ -24,7 +24,7 @@ def main():
     operation = PostgreSQLOperator(connector)
 
     sql = "select id, name from internal_app_test.test_table;"
-    result = operation.select(StructurePostgreSQLExecute(sql))
+    result = operation.select(FrozenStructurePostgreSQLExecute(sql))
 
 
 

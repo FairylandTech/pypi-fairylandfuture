@@ -11,7 +11,7 @@ from typing import Dict, Any
 from pathlib import Path
 
 from fairylandfuture.modules.db.mysql import MySQLOperator, MySQLConnector
-from fairylandfuture.structures.builder.db import StructureMySQLExecute
+from fairylandfuture.structures.builder.db import FrozenStructureMySQLExecute
 
 from test.utils.config import TestConfig
 from test.utils.logger import journal
@@ -28,13 +28,13 @@ table = "users"
 
 datasource = MySQLOperator(MySQLConnector(host=host, port=port, user=user, password=password, database=database))
 print("第一次查询".center(50, "="))
-query_1 = StructureMySQLExecute("select * from users;")
+query_1 = FrozenStructureMySQLExecute("select * from users;")
 print(f"SQL: {query_1.query}, Params: {query_1.args}")
 data = datasource.select(query_1)
 print(f"Results: {data}")
 print("第一次查询成功".center(50, "="))
 
-insert_sql = StructureMySQLExecute("insert into users (user, email) values (%(user)s, %(email)s);", {"user": "Lionel", "email": "email@example.com"})
+insert_sql = FrozenStructureMySQLExecute("insert into users (user, email) values (%(user)s, %(email)s);", {"user": "Lionel", "email": "email@example.com"})
 print("第一次插入".center(50, "="))
 print(f"SQL: {insert_sql.query}, Params: {insert_sql.args}")
 data = datasource.execute(insert_sql)
@@ -42,7 +42,7 @@ print(f"Results: {data}")
 print("第一次插入成功".center(50, "="))
 
 print("第二次查询".center(50, "="))
-query_2 = StructureMySQLExecute("select * from users;")
+query_2 = FrozenStructureMySQLExecute("select * from users;")
 print(f"SQL: {query_2.query}, Params: {query_2.args}")
 data = datasource.select(query_2)
 print(f"Results: {data}")

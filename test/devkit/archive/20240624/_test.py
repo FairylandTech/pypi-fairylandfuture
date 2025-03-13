@@ -12,7 +12,7 @@ import os.path
 from fairylandfuture.modules.datasource import MySQLConnector
 
 from test.utils.config import TestConfig
-from test.devunit._test import BASE_PATH
+from test.devkit._test import BASE_PATH
 from bin.generic import DEV_CONFIG_FILE_PATH
 
 if __name__ == "__main__":

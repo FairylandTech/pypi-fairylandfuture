@@ -16,15 +16,15 @@
 # print(file.md5, file.sha256)
 # print(file.dir_path)
 
-# json_file = JsonFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devunit\20240630\1.json")
-# yaml_file = YamlFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devunit\20240630\2.yaml", True)
+# json_file = JsonFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devkit\20240630\1.json")
+# yaml_file = YamlFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devkit\20240630\2.yaml", True)
 #
 # data = json_file.load()
 # print(data, type(data))
 # yaml_file.save(data)
 #
-# yaml_file = YamlFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devunit\20240630\1.yaml")
-# json_file = JsonFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devunit\20240630\2.json", True)
+# yaml_file = YamlFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devkit\20240630\1.yaml")
+# json_file = JsonFileMixin(r"C:\Lionel\Project\Github\pypi-fairylandfuture\test\devkit\20240630\2.json", True)
 #
 # data = yaml_file.load_yaml()
 # print(data, type(data))

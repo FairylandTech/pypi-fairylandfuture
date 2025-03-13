@@ -18,7 +18,7 @@ from pymysql.cursors import DictCursor
 from fairylandfuture.abstract.modules.db import AbstractMySQLOperator
 from fairylandfuture.exceptions.db import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
-from fairylandfuture.structures.builder.db import StructureMySQLExecute
+from fairylandfuture.structures.builder.db import FrozenStructureMySQLExecute
 
 
 class CustomMySQLConnection(Connection):
@@ -198,12 +198,12 @@ class MySQLOperator(AbstractMySQLOperator):
 
         self.connector = connector
 
-    def execute(self, struct: StructureMySQLExecute, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def execute(self, struct: FrozenStructureMySQLExecute, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
         """
         This method is used to execute a SQL statement.
 
         :param struct: StructureMySQLExecute object.
-        :type struct: StructureMySQLExecute
+        :type struct: FrozenStructureMySQLExecute
         :return: Query result or execution result.
         :rtype: bool | tuple
         """
@@ -220,12 +220,12 @@ class MySQLOperator(AbstractMySQLOperator):
             self.connector.close()
             raise err
 
-    def executemany(self, struct: StructureMySQLExecute, /) -> bool:
+    def executemany(self, struct: FrozenStructureMySQLExecute, /) -> bool:
         """
         This method is used to execute multiple SQL statements.
 
         :param struct: StructureMySQLExecute object.
-        :type struct: StructureMySQLExecute
+        :type struct: FrozenStructureMySQLExecute
         :return: Execution result.
         :rtype: bool
         """
@@ -240,7 +240,7 @@ class MySQLOperator(AbstractMySQLOperator):
             self.connector.close()
             raise err
 
-    def multiexecute(self, structs: Sequence[StructureMySQLExecute], /) -> bool:
+    def multiexecute(self, structs: Sequence[FrozenStructureMySQLExecute], /) -> bool:
         """
         This method is used to execute multiple SQL statements.
 
@@ -264,12 +264,12 @@ class MySQLOperator(AbstractMySQLOperator):
             self.connector.close()
             raise err
 
-    def select(self, struct: StructureMySQLExecute, /) -> Tuple[Dict[str, Any], ...]:
+    def select(self, struct: FrozenStructureMySQLExecute, /) -> Tuple[Dict[str, Any], ...]:
         """
         This method is used to execute a select statement.
 
         :param struct: Query structure.
-        :type struct: StructureMySQLExecute
+        :type struct: FrozenStructureMySQLExecute
         :return: Query result
         :rtype: tuple
         """
@@ -344,7 +344,7 @@ class MySQLSQLSimpleConnectionPool:
         cur.close()
         conn.close()
 
-    def execute(self, struct: StructureMySQLExecute) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def execute(self, struct: FrozenStructureMySQLExecute) -> Union[bool, Tuple[Dict[str, Any], ...]]:
         connection, cursor = self.__open()
         try:
             cursor.execute(struct.query, struct.args)
@@ -358,7 +358,7 @@ class MySQLSQLSimpleConnectionPool:
             self.__close(connection, cursor)
             raise err
 
-    def executemany(self, struct: StructureMySQLExecute) -> bool:
+    def executemany(self, struct: FrozenStructureMySQLExecute) -> bool:
         connection, cursor = self.__open()
         try:
             cursor.executemany(struct.query, struct.args)
@@ -371,7 +371,7 @@ class MySQLSQLSimpleConnectionPool:
             self.__close(connection, cursor)
             raise err
 
-    def multiexecute(self, structs: Sequence[StructureMySQLExecute]) -> bool:
+    def multiexecute(self, structs: Sequence[FrozenStructureMySQLExecute]) -> bool:
         connection, cursor = self.__open()
         try:
             for struct in structs:

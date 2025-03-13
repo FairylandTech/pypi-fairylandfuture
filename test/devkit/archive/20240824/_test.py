@@ -7,10 +7,10 @@
 @datetime: 2024-08-24 16:05:40 UTC+08:00
 """
 
-from fairylandfuture.structures.builder.db import StructureMySQLExecute, StructurePostgreSQLExecute
+from fairylandfuture.structures.builder.db import FrozenStructureMySQLExecute, FrozenStructurePostgreSQLExecute
 from fairylandfuture.tools.databases.mysql import MySQLSQLSimpleConnectionPool
 from fairylandfuture.tools.databases.postgresql import PostgreSQLSimpleConnectionPool
-from test.devunit import CONFIG
+from test.devkit import CONFIG
 from test.utils.logger import journal
 
 mysql_config: dict = CONFIG.get("mysql")
@@ -27,7 +27,7 @@ pool = MySQLSQLSimpleConnectionPool(
 )
 
 sql = "SELECT * FROM users;"
-a = pool.execute(StructureMySQLExecute(sql))
+a = pool.execute(FrozenStructureMySQLExecute(sql))
 print(a)
 
 pg_pool = PostgreSQLSimpleConnectionPool(
@@ -39,5 +39,5 @@ pg_pool = PostgreSQLSimpleConnectionPool(
 )
 
 pg_sql = "SELECT * FROM public_dev_test.publish;"
-b = pg_pool.execute(StructurePostgreSQLExecute(pg_sql))
+b = pg_pool.execute(FrozenStructurePostgreSQLExecute(pg_sql))
 print(b)

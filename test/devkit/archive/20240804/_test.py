@@ -11,11 +11,11 @@ from dataclasses import dataclass
 
 from fairylandfuture.modules.db.mysql import MySQLConnector
 from fairylandfuture.modules.db.mysql import MySQLOperator
-from fairylandfuture.structures.builder.db import StructureMySQLExecute
+from fairylandfuture.structures.builder.db import FrozenStructureMySQLExecute
 
 from test.utils.logger import journal
-from test.devunit import BASE_PATH
-from test.devunit import CONFIG
+from test.devkit import BASE_PATH
+from test.devkit import CONFIG
 
 
 @dataclass(frozen=True)
@@ -42,7 +42,7 @@ _select_string = "select id, user from users order by id;"
 _insert_string = "insert into users (user, email) values (%(user)s, %(email)s);"
 _insert_values = {"user": "test", "email": "email@example.com"}
 
-d1 = connection.select(StructureMySQLExecute(_select_string))
+d1 = connection.select(FrozenStructureMySQLExecute(_select_string))
 # d2 = connection.insert(StructureMySQLExecute(_insert_string, _insert_values))
 # d3 = connection.select(StructureMySQLExecute(_select_string))
 journal.info(f"d1: {d1}")

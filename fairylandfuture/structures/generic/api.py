@@ -8,14 +8,37 @@
 """
 
 from dataclasses import dataclass, field
-from typing import MutableSequence, Sequence, MutableMapping, Mapping, Union
+from typing import MutableSequence, Sequence, MutableMapping, Mapping, Union, Self, Dict, Any
 
-from fairylandfuture.core.superclass.structures.structure import BaseStructure
+from fairylandfuture.core.superclass.structures.structure import BaseStructure, BaseFrozenStructure
 from fairylandfuture.const.response.code import RESPONSE_CODE_MAP
 
 
+@dataclass(frozen=False)
+class ResponseStructure(BaseStructure):
+    code: int = field(default=None)
+    message: str = field(default=None)
+    data: Union[MutableSequence, Sequence, MutableMapping, Mapping] = field(default=None)
+
+    def __embody(self):
+        if self.code and not self.message:
+            self.message = RESPONSE_CODE_MAP.get(self.code, "Internal Server Error")
+
+    def __post_init__(self):
+        self.__embody()
+
+    def __str__(self):
+        self.__embody()
+        return self.string
+
+    @property
+    def asdict(self: Self) -> Dict[str, Any]:
+        self.__embody()
+        return super().asdict
+
+
 @dataclass(frozen=True)
-class StructureResponse(BaseStructure):
+class ResponseFrozenStructure(BaseFrozenStructure):
     code: int = field(default=None)
     message: str = field(default=None)
     data: Union[MutableSequence, Sequence, MutableMapping, Mapping] = field(default=None)

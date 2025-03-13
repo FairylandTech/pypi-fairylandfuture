@@ -6,15 +6,14 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2024-06-04 10:38:31 UTC+08:00
 """
-
 import json
 
 from dataclasses import dataclass, asdict, astuple, field
 
-from typing import Dict, Any, Tuple, Self, Union, List
+from typing import Dict, Any, Tuple, Self, List
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class BaseStructure:
 
     @property
@@ -29,11 +28,30 @@ class BaseStructure:
     def string(self: Self) -> str:
         return json.dumps(self.asdict, separators=(",", ":"), ensure_ascii=False)
 
-    def to_dict(self: Self, /, *, ignorenone: bool = False) -> Union[Dict[Any, Any], property]:
-        if ignorenone:
-            return {k: v for k, v in self.asdict.items() if v is not None}
-        else:
-            return self.asdict
+    def to_dict(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
+        return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
+
+    def to_jsonstring(self: Self, /, *, ignorenone: bool = False) -> str:
+        return json.dumps(self.to_dict(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
+
+
+@dataclass(frozen=True)
+class BaseFrozenStructure:
+
+    @property
+    def asdict(self: Self) -> Dict[str, Any]:
+        return asdict(self)
+
+    @property
+    def astuple(self: Self) -> Tuple[Any, ...]:
+        return astuple(self)
+
+    @property
+    def string(self: Self) -> str:
+        return json.dumps(self.asdict, separators=(",", ":"), ensure_ascii=False)
+
+    def to_dict(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
+        return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
 
     def to_jsonstring(self: Self, /, *, ignorenone: bool = False) -> str:
         return json.dumps(self.to_dict(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
@@ -61,6 +79,6 @@ class BaseStructureTreeNode:
     def get_children(self) -> List["BaseStructureTreeNode"]:
         return self.children
 
-    def to_dict(self) -> Dict[str, ...]:
+    def to_dict(self) -> Dict[str, Any]:
         result = {"id": self.id, "parent_id": self.parent_id, "data": self.data, "children": [child.to_dict() for child in self.children]}
         return result
