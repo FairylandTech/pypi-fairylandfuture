@@ -28,12 +28,7 @@ class BaseStructureTreeNode(object):
         return self.children
 
     def to_dict(self):
-        return {
-            "id": self.id,
-            "parent_id": self.parent_id,
-            "data": self.data,
-            "children": [child.to_dict() for child in self.children]
-        }
+        return {"id": self.id, "parent_id": self.parent_id, "data": self.data, "children": [child.to_dict() for child in self.children]}
 
 
 class TreeBuilder(object):
