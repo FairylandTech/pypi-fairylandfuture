@@ -4,7 +4,16 @@
 @author: Lionel Johnson
 @contact: https://fairy.host
 @organization: https://github.com/FairylandFuture
-@datetime: 2024-08-10 18:27:26 UTC+08:00
+@datetime: 2025-02-18 20:27:35 UTC+08:00
 """
 
-from fairylandfuture.core.superclass.exceptions.exception import BaseProgramException
+"""
+host::employ.fairies.ltd
+port::51004
+user::root
+pwd::7JquBHx3Vm5MrKh7
+"""
+
+
+
+

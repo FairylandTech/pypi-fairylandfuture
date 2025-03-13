@@ -39,9 +39,9 @@
 
 # structures.general
 
-# toolkits.databases
+# toolkit.databases
 
-# toolkits.encryptions
+# toolkit.encryptions
 
 # modules.files
 

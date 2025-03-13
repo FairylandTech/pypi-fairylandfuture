@@ -18,7 +18,7 @@ import requests
 import setuptools
 
 _ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
-_VERSION = "1.2.0"
+_VERSION = "1.3.0"
 
 if sys.version_info < (3, 11):
     sys.exit("Python 3.11 or higher is required.")
@@ -78,7 +78,7 @@ class Package(object):
 
     @property
     def email(self):
-        return "fairylandfuture@outlook.com"
+        return "fairylandfuture@protonmail.com"
 
     @property
     def description(self):
@@ -166,6 +166,7 @@ class Package(object):
             "Programming Language :: Python :: Implementation :: PyPy",
             "Programming Language :: SQL",
             "Framework :: Django :: 4",
+            "Framework :: Django :: 5",
             "Framework :: Flask",
             "Framework :: FastAPI",
             "Framework :: Flake8",
@@ -216,7 +217,7 @@ class Package(object):
 
 
 if __name__ == "__main__":
-    package = Package(_VERSION, VersionLevelEnum.beta)
+    package = Package(_VERSION, VersionLevelEnum.release)
     setuptools.setup(
         name=package.name,
         version=package.version,

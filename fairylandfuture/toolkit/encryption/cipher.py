@@ -18,7 +18,7 @@ from cryptography.fernet import Fernet
 from fairylandfuture.enums.enconding import EncodingEnum
 
 
-class CipherToolkits:
+class CipherToolkit:
 
     @classmethod
     def generate_salt(cls, length: int = 16) -> str:
@@ -44,7 +44,7 @@ class CipherToolkits:
         return Fernet.generate_key()
 
 
-class UserPasswordCryptionToolkits(CipherToolkits):
+class UserPasswordCryptionToolkit(CipherToolkit):
 
     @classmethod
     def encrypt(cls, password: str, salt: Optional[str] = None) -> Tuple[str, str]:
@@ -88,7 +88,7 @@ class UserPasswordCryptionToolkits(CipherToolkits):
         return hashed_password_to_verify == hashed_password
 
 
-class PasswordCryptionToolkits(CipherToolkits):
+class PasswordCryptionToolkit(CipherToolkit):
 
     @classmethod
     def encrypt(cls, password: str, key: bytes) -> Tuple[str, str]:

@@ -9,15 +9,15 @@
 import hashlib
 import os
 
-from fairylandfuture.toolkits.encryption.cipher import UserPasswordCryptionToolkits, PasswordCryptionToolkits
+from fairylandfuture.toolkit.encryption.cipher import UserPasswordCryptionToolkit, PasswordCryptionToolkit
 
 
 def main():
     password = "Lionel0-12,./"
-    salt = PasswordCryptionToolkits.generate_salt()
+    salt = PasswordCryptionToolkit.generate_salt()
     print(salt)
 
-    encrypted_password, salt_hex = UserPasswordCryptionToolkits.encrypt(password, salt)
+    encrypted_password, salt_hex = UserPasswordCryptionToolkit.encrypt(password, salt)
 
     print(encrypted_password, bytes.fromhex(salt_hex).decode())
 
