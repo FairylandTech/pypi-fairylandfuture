@@ -14,7 +14,7 @@ import yaml
 
 from bin.generic import DEV_CASE_CONFIG_FILE_PATH
 from fairylandfuture.enums.chrono import DateTimeEnum, EncodingEnum
-from fairylandfuture.structures.builder.db import FrozenStructureMySQLExecute, StructureSQLInsertManyParams
+from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure, StructureSQLInsertManyParams
 from fairylandfuture.modules.datasource import MySQLDataSource
 
 with open(DEV_CASE_CONFIG_FILE_PATH, encoding=EncodingEnum.utf8.value) as stream:

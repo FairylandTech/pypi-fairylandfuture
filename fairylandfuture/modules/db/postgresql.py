@@ -17,7 +17,7 @@ from psycopg2.extras import NamedTupleCursor
 from fairylandfuture.exceptions.db import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
 from fairylandfuture.abstract.modules.db import AbstractPostgreSQLOperator
-from fairylandfuture.structures.builder.db import FrozenStructurePostgreSQLExecute
+from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 
 
 class CustomPostgreSQLConnection(psycopg2.extensions.connection):
@@ -177,12 +177,12 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
 
         self.connector = connector
 
-    def execute(self, struct: FrozenStructurePostgreSQLExecute, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
         """
         Execute a SQL query on PostgreSQL database.
 
         :param struct: PostgreSQL execute structure.
-        :type struct: FrozenStructurePostgreSQLExecute
+        :type struct: PostgreSQLExecuteFrozenStructure
         :return: PostgreSQL query result.
         :rtype: bool | tuple
         """
@@ -199,13 +199,13 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
             self.connector.close()
             raise err
 
-    def executemany(self, struct: FrozenStructurePostgreSQLExecute, /) -> bool:
+    def executemany(self, struct: PostgreSQLExecuteFrozenStructure, /) -> bool:
         """
         Execute multiple SQL queries on PostgreSQL database.
         Generally used for batch insertion, update, and deletion of data.
 
         :param struct: PostgreSQL execute structure.
-        :type struct: FrozenStructurePostgreSQLExecute
+        :type struct: PostgreSQLExecuteFrozenStructure
         :return: Execute status.
         :rtype: bool
         """
@@ -221,12 +221,12 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
             self.connector.close()
             raise err
 
-    def multiexecute(self, structs: Sequence[FrozenStructurePostgreSQLExecute], /) -> bool:
+    def multiexecute(self, structs: Sequence[PostgreSQLExecuteFrozenStructure], /) -> bool:
         """
         Execute multiple SQL queries on PostgreSQL database.
 
         :param structs: Sequence of PostgreSQL execute structures.
-        :type structs: Sequence[FrozenStructurePostgreSQLExecute]
+        :type structs: Sequence[PostgreSQLExecuteFrozenStructure]
         :return: Execute status.
         :rtype: bool
         """
@@ -245,12 +245,12 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
             self.connector.close()
             raise err
 
-    def select(self, struct: FrozenStructurePostgreSQLExecute, /) -> Tuple[NamedTuple, ...]:
+    def select(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Tuple[NamedTuple, ...]:
         """
         Select data from PostgreSQL database.
 
         :param struct: PostgreSQL Query structure.
-        :type struct: FrozenStructurePostgreSQLExecute
+        :type struct: PostgreSQLExecuteFrozenStructure
         :return: Query result.
         :rtype: tuple
         """
@@ -302,7 +302,7 @@ class PostgreSQLSimpleConnectionPool:
     def database(self):
         return self.__database
 
-    def execute(self, struct: FrozenStructurePostgreSQLExecute, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
         connection: psycopg2.extensions.connection = self.__pool.getconn()
         cursor: CustomPostgreSQLCursor = connection.cursor(cursor_factory=CustomPostgreSQLCursor)
         try:

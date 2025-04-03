@@ -13,7 +13,7 @@ from pathlib import Path
 from fairylandfuture.modules.journal import journal
 from fairylandfuture.modules.db.mysql import MySQLDatabase, MySQLConnector
 from fairylandfuture.utils.builder.expression import QueryMySQLBuilder, InsertMySQLBuilder
-from fairylandfuture.structures.builder.db import FrozenStructureMySQLExecute, StructureSQLInsertManyParams
+from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure, StructureSQLInsertManyParams
 
 from test.utils.config import TestConfig
 
@@ -28,7 +28,7 @@ table = "users"
 
 datasource = MySQLDatabase(host=host, port=port, user=user, password=password, database=database)
 print("第一次查询".center(50, "="))
-query_params = FrozenStructureMySQLExecute(QueryMySQLBuilder(table).to_string())
+query_params = MySQLExecuteFrozenStructure(QueryMySQLBuilder(table).to_string())
 print(f"SQL: {query_params.expression}, Params: {query_params.params}")
 data = datasource.select(query_params)
 print(f"Results: {data}")
@@ -42,7 +42,7 @@ muilt_insert_params = StructureSQLInsertManyParams(
 )
 datasource.insertmany(muilt_insert_params)
 print("第二次查询".center(50, "="))
-query_params = FrozenStructureMySQLExecute(QueryMySQLBuilder(table).to_string())
+query_params = MySQLExecuteFrozenStructure(QueryMySQLBuilder(table).to_string())
 print(f"SQL: {query_params.expression}, Params: {query_params.params}")
 data = datasource.select(query_params)
 print(f"Results: {data}")

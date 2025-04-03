@@ -14,12 +14,12 @@ from fairylandfuture.core.superclass.structures.structure import BaseFrozenStruc
 
 
 @dataclass(frozen=True)
-class FrozenStructureMySQLExecute(BaseFrozenStructure):
+class MySQLExecuteFrozenStructure(BaseFrozenStructure):
     query: str
     args: Optional[Union[Sequence, MutableSequence, Mapping, MutableMapping]] = field(default=None)
 
 
 @dataclass(frozen=True)
-class FrozenStructurePostgreSQLExecute(BaseFrozenStructure):
+class PostgreSQLExecuteFrozenStructure(BaseFrozenStructure):
     query: str
     vars: Optional[Union[Sequence, MutableSequence, Mapping, MutableMapping]] = field(default=None)
