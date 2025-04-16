@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from test.utils.config import TestConfig
 
-from fairylandfuture.modules.db.postgresql import PostgreSQLConnector, PostgreSQLOperator
+from fairylandfuture.modules.db.postgresql import PostgreSQLConnector, PostgreSQLOperatorImpl
 from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 from fairylandfuture.utils.builder.convert import ConvertDataStructure
 
@@ -39,8 +39,8 @@ connector = TestPostgreSQL(host=config.get("host"), port=config.get("port"), use
 
 print(connector.dsn)
 
-pgsql = PostgreSQLOperator(connector)
-pgsql2 = PostgreSQLOperator(connector)
+pgsql = PostgreSQLOperatorImpl(connector)
+pgsql2 = PostgreSQLOperatorImpl(connector)
 
 # connector.cursor.execute("SELECT * FROM public_dev_test.author;")
 

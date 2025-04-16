@@ -176,7 +176,7 @@ class MySQLConnector:
         self.close()
 
 
-class MySQLOperator(AbstractMySQLOperator):
+class MySQLOperatorImpl(AbstractMySQLOperator):
     """
     This class is used to execute SQL statements for MySQL database.
     It is a subclass of AbstractMySQLOperator and implements the methods of AbstractMySQLOperator.
@@ -185,9 +185,9 @@ class MySQLOperator(AbstractMySQLOperator):
     :type connector: MySQLConnector
 
     Usage:
-        >>> from fairylandfuture.modules.databases.mysql import MySQLConnector, MySQLOperator
+        >>> from fairylandfuture.modules.databases.mysql import MySQLConnector, MySQLOperatorImpl
         >>> connector = MySQLConnector(host="localhost", port=3306, user="root", password="password", database="test")
-        >>> operation = MySQLOperator(connector)
+        >>> operation = MySQLOperatorImpl(connector)
         >>> operation.execute("SELECT * FROM users")
         [{'id': 1, 'name': 'John', 'age': 25}, {'id': 2, 'name': 'Mary', 'age': 30}]
     """

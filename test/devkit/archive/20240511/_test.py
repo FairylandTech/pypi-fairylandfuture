@@ -8,7 +8,7 @@
 """
 
 from fairylandfuture.modules.db.postgresql import PostgreSQLConnector
-from fairylandfuture.modules.db.postgresql import PostgreSQLOperator
+from fairylandfuture.modules.db.postgresql import PostgreSQLOperatorImpl
 from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 
 
@@ -21,7 +21,7 @@ def main():
         database="nsc"
     )
 
-    operation = PostgreSQLOperator(connector)
+    operation = PostgreSQLOperatorImpl(connector)
 
     sql = "select id, name from internal_app_test.test_table;"
     result = operation.select(PostgreSQLExecuteFrozenStructure(sql))

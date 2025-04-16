@@ -10,7 +10,7 @@
 from typing import Dict, Any
 from pathlib import Path
 
-from fairylandfuture.modules.db.mysql import MySQLOperator, MySQLConnector
+from fairylandfuture.modules.db.mysql import MySQLOperatorImpl, MySQLConnector
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
 
 from test.utils.config import TestConfig
@@ -26,7 +26,7 @@ password = config.get("password")
 database = config.get("database")
 table = "users"
 
-datasource = MySQLOperator(MySQLConnector(host=host, port=port, user=user, password=password, database=database))
+datasource = MySQLOperatorImpl(MySQLConnector(host=host, port=port, user=user, password=password, database=database))
 print("第一次查询".center(50, "="))
 query_1 = MySQLExecuteFrozenStructure("select * from users;")
 print(f"SQL: {query_1.query}, Params: {query_1.args}")

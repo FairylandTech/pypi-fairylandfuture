@@ -10,7 +10,7 @@
 from dataclasses import dataclass
 
 from fairylandfuture.modules.db.mysql import MySQLConnector
-from fairylandfuture.modules.db.mysql import MySQLOperator
+from fairylandfuture.modules.db.mysql import MySQLOperatorImpl
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
 
 from test.utils.logger import journal
@@ -36,7 +36,7 @@ mysql_connector = MySQLConnector(
     mysql_config.get("database"),
 )
 
-connection = MySQLOperator(mysql_connector)
+connection = MySQLOperatorImpl(mysql_connector)
 
 _select_string = "select id, user from users order by id;"
 _insert_string = "insert into users (user, email) values (%(user)s, %(email)s);"

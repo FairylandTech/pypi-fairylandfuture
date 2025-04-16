@@ -150,24 +150,24 @@ class PostgreSQLConnector:
         self.close()
 
 
-class PostgreSQLOperator(AbstractPostgreSQLOperator):
+class PostgreSQLOperatorImpl(AbstractPostgreSQLOperator):
     """
-    PostgreSQLOperator is a class for executing SQL queries on PostgreSQL database.
+    PostgreSQLOperatorImpl is a class for executing SQL queries on PostgreSQL database.
 
     :param connector: The PostgreSQLConnector instance.
     :type connector: PostgreSQLConnector
 
     Usage::
-        >>> from fairylandfuture.modules.databases.postgresql import PostgreSQLConnector, PostgreSQLOperator
+        >>> from fairylandfuture.modules.db.postgresql import PostgreSQLConnector, PostgreSQLOperatorImpl
         >>> from fairylandfuture.structures.builder.expression import StructurePostgreSQLExecute
         >>> connector = PostgreSQLConnector(host="localhost", port=5432, user="postgres", password="password", database="test")
-        >>> operation = PostgreSQLOperator(connector)
+        >>> operation = PostgreSQLOperatorImpl(connector)
         >>> data = operation.select(StructurePostgreSQLExecute("SELECT * FROM users"))
         >>> print(data)
 
     **Notice:**
     The `connector` must be an instance of `PostgreSQLConnector`.
-    PostgreSQLOperator is singleton class.
+    PostgreSQLOperatorImpl is singleton class.
 
     """
 
