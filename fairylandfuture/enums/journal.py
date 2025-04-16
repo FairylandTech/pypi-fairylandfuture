@@ -15,12 +15,10 @@ class LogLevelEnum(BaseEnum):
     Log level Enum.
     """
 
-    trace = "TRACE"
-    debug = "DEBUG"
-    info = "INFO"
-    success = "SUCCESS"
-    warning = "WARNING"
-    error = "ERROR"
-    critical = "CRITICAL"
-
-    default = info
+    TRACE = "TRACE"
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    SUCCESS = "SUCCESS"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"

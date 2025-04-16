@@ -15,9 +15,7 @@ class EncodingEnum(BaseEnum):
     Encoding enum.
     """
 
-    utf8 = "UTF-8"
-    gbk = "GBK"
-    gb2312 = "GB2312"
-    gb18030 = "GB18030"
-
-    default = utf8
+    UTF8 = "UTF-8"
+    GBK = "GBK"
+    GB2312 = "GB2312"
+    GB18030 = "GB18030"

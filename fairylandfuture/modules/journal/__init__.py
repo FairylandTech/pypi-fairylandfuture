@@ -9,25 +9,25 @@
 
 import os
 import sys
+import threading
 from importlib.resources import read_text
 from typing import Optional
 
 from loguru import logger
 
-from fairylandfuture.core.metaclasses.singleton import SingletonMeta
 from fairylandfuture.enums.enconding import EncodingEnum
 from fairylandfuture.enums.journal import LogLevelEnum
 
 
-class Journal(metaclass=SingletonMeta):
+class Journal(object):
     """
     A logging utility implemented as a singleton to ensure that only one instance
     handles logging across the application.
 
-    :param path: Path to directory where log files are stored.
-    :type path: str
-    :param name: Name of the log file.
-    :type name: str
+    :param dirname: Path to directory where log files are stored.
+    :type dirname: str
+    :param filename: Name of the log file.
+    :type filename: str
     :param debug: Flag to set logging level to debug.
     :type debug: bool
     :param rotation: Log rotation size or time.
@@ -50,6 +50,8 @@ class Journal(metaclass=SingletonMeta):
     :type console_level: LogLevelEnum
     :param console_format: Log message format for console.
     :type console_format: str or None
+    :param clear_existing: Flag to clear existing log files.
+    :type clear_existing: bool
 
     Usage::
         >>> # Create a journal instance
@@ -63,108 +65,145 @@ class Journal(metaclass=SingletonMeta):
     The metaclass `SingletonMeta` ensures a single instance is used.
     """
 
+    DEFAULT_LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | P:{process} T:{thread} | {message}"
+
     # ... rest of the class remains unchanged ...
     def __init__(
         self,
-        path: str = "logs",
-        name: str = "service.log",
+        dirname: str = "logs",
+        filename: str = "service.log",
         debug: bool = False,
         rotation: str = "20 MB",
         retention: str = "180 days",
         formatting: Optional[str] = None,
         compression: str = "gz",
-        encoding: EncodingEnum = EncodingEnum.utf8,
-        level: LogLevelEnum = LogLevelEnum.info,
+        encoding: EncodingEnum = EncodingEnum.UTF8,
+        level: LogLevelEnum = LogLevelEnum.INFO,
         serialize: bool = False,
         console: bool = False,
-        console_level: LogLevelEnum = LogLevelEnum.trace,
+        console_level: LogLevelEnum = LogLevelEnum.TRACE,
         console_format: Optional[str] = None,
+        clear_existing: bool = True,
     ):
         """
         Constructs all the necessary attributes for the Journal object.
         Initializes file and console loggers with specified configurations.
         """
-        self.__path = path
-        self.__name = name
-        self.__debug = debug
-        self.__rotation = rotation
-        self.__retention = retention
-        self.__formatting = formatting
-        self.__compression = compression
-        self.__level = level
-        self.__encoding = encoding
-        self.__enqueue = True
-        self.__colorize = False
-        self.__backtrace = True
-        self.__diagnose = True
-        self.__serialize = serialize
-        self.__console = console
-        self.__console_level = console_level
-        self.__console_format = console_format
-        self.__console_colorize = True
-        self.__console_enqueue = True
 
-        self.__logo = self.load_logo()
+        self._dirname = dirname
+        self._filename = filename
+        self._debug = debug
+        self._rotation = rotation
+        self._retention = retention
+        self._formatting = formatting
+        self._compression = compression
+        self._encoding = encoding
+        self._level = level
+        self._serialize = serialize
+        self._console = console
+        self._console_level = console_level
+        self._console_format = console_format
+        self._clear_existing = clear_existing
 
-        self.__name, extension = os.path.splitext(self.__name)
+        self._logo = self.load_logo()
 
-        if self.__debug:
-            self.__name += f".debug{extension if extension else '.log'}"
-            self.__level = LogLevelEnum.debug
+        self.logger = logger
 
-        if not self.__formatting:
-            self.__formatting = "[{time:YYYY-MM-DD HH:mm:ss} | Process ID: {process:<8} | Thread ID: {thread:<8} | {level:<8}]: {message}"
-
-        # Fixed: Remove the default console output.
-        logger.remove()
-
-        logger.add(
-            sink=os.path.join(self.__path, self.__name),
-            rotation=self.__rotation,
-            retention=self.__retention,
-            format=self.__formatting,
-            compression=self.__compression,
-            encoding=self.__encoding.value,
-            level=self.__level.value,
-            enqueue=self.__enqueue,
-            colorize=self.__colorize,
-            backtrace=self.__backtrace,
-            diagnose=self.__diagnose,
+        self._configure(
+            self._dirname,
+            self._filename,
+            self._debug,
+            self._rotation,
+            self._retention,
+            self._formatting,
+            self._compression,
+            self._encoding,
+            self._level,
+            self._serialize,
+            self._console,
+            self._console_level,
+            self._console_format,
+            self._clear_existing,
         )
 
-        self.__write_logo(os.path.join(self.__path, self.__name))
+    def _configure(
+        self,
+        dirname: str = "logs",
+        filename: str = "service.log",
+        debug: bool = False,
+        rotation: str = "20 MB",
+        retention: str = "180 days",
+        formatting: Optional[str] = None,
+        compression: str = "gz",
+        encoding: EncodingEnum = EncodingEnum.UTF8,
+        level: LogLevelEnum = LogLevelEnum.INFO,
+        serialize: bool = False,
+        console: bool = False,
+        console_level: LogLevelEnum = LogLevelEnum.TRACE,
+        console_format: Optional[str] = None,
+        clear_existing: bool = True,
+    ):
 
-        if self.__serialize:
-            __serialize_name = f"{self.__name}.serialize{extension if extension else '.log'}"
+        if clear_existing:
+            self.logger.remove()
+
+        name, ext = os.path.splitext(filename)
+
+        if debug:
+            filename += f".debug{ext if ext else '.log'}"
+            level = LogLevelEnum.DEBUG
+
+        formatting = formatting if formatting else self.DEFAULT_LOG_FORMAT
+
+        logger.add(
+            sink=os.path.join(dirname, filename),
+            rotation=rotation,
+            retention=retention,
+            format=formatting,
+            compression=compression,
+            encoding=encoding.value,
+            level=level.value,
+            enqueue=True,
+            colorize=False,
+            backtrace=True,
+            diagnose=True,
+        )
+        self._write_logo(os.path.join(dirname, filename))
+
+        if serialize:
+            serialize_name = f"{name}.serialize{ext if ext else '.log'}"
             logger.add(
-                sink=os.path.join(self.__path, __serialize_name),
-                rotation=self.__rotation,
-                retention=self.__retention,
-                format=self.__formatting,
-                compression=self.__compression,
-                encoding=self.__encoding.value,
-                level=self.__level.value,
-                enqueue=self.__enqueue,
-                colorize=self.__colorize,
-                backtrace=self.__backtrace,
-                diagnose=self.__diagnose,
-                serialize=self.__serialize,
+                sink=os.path.join(dirname, serialize_name),
+                rotation=rotation,
+                retention=retention,
+                format=formatting,
+                compression=compression,
+                encoding=encoding.value,
+                level=level.value,
+                enqueue=True,
+                colorize=False,
+                backtrace=True,
+                diagnose=True,
+                serialize=serialize,
             )
-            self.__write_logo(os.path.join(self.__path, self.__name))
 
-        if self.__console:
-            if not self.__console_format:
-                self.__console_format = "<level> [{time:YYYY-MM-DD HH:mm:ss} | Process ID: {process:<8} | Thread ID: {thread:<8} | {level:<8}]: {message} </level>"
+        if console:
+            if not console_format:
+                console_format = (
+                    "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+                    "<level>{level: <8}</level> | "
+                    "<cyan>{name}:{function}:{line}</cyan> | "
+                    "P:{process} T:{thread} | "
+                    "<level>{message}</level>"
+                )
 
             logger.add(
                 sink=sys.stdout,
-                format=self.__console_format,
-                level=self.__console_level.value,
-                colorize=self.__console_colorize,
-                enqueue=self.__console_enqueue,
+                format=console_format,
+                level=console_level.value,
+                colorize=True,
+                enqueue=False,
             )
-
-            print(self.__logo)
 
     @staticmethod
     def load_logo():
@@ -172,7 +211,7 @@ class Journal(metaclass=SingletonMeta):
 
         return logo_text
 
-    def __write_logo(self, sink: str):
+    def _write_logo(self, sink: str):
         """
         Writes the logo to the specified file.
         :param sink: Sink file path.
@@ -180,133 +219,54 @@ class Journal(metaclass=SingletonMeta):
         :return: ...
         :rtype: ...
         """
-        with open(sink, "w") as f:
-            f.write(self.__logo)
+        with open(sink, "a+") as f:
+            f.write(self._logo)
 
-    @staticmethod
-    def trace(msg, *args, **kwargs):
-        """
-        Logs a trace message.
+    def trace(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).trace(msg, *args, **kwargs)
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.trace(msg, *args, **kwargs)
+    def debug(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).debug(msg, *args, **kwargs)
 
-    @staticmethod
-    def debug(msg, *args, **kwargs):
-        """
-        Logs a debug message.
+    def info(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).info(msg, *args, **kwargs)
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.debug(msg, *args, **kwargs)
+    def success(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).success(msg, *args, **kwargs)
 
-    @staticmethod
-    def info(msg, *args, **kwargs):
-        """
-        Logs an info message.
+    def warning(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).warning(msg, *args, **kwargs)
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.info(msg, *args, **kwargs)
+    def error(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).error(msg, *args, **kwargs)
 
-    @staticmethod
-    def success(msg, *args, **kwargs):
-        """
-        Logs a success message.
+    def critical(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).critical(msg, *args, **kwargs)
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.success(msg, *args, **kwargs)
+    def exception(self, msg, *args, **kwargs):
+        return self.logger.opt(depth=1).exception(msg, *args, **kwargs)
 
-    @staticmethod
-    def warning(msg, *args, **kwargs):
-        """
-        Logs a warning message.
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.warning(msg, *args, **kwargs)
+class SingletonJournal(Journal):
 
-    @staticmethod
-    def error(msg, *args, **kwargs):
-        """
-        Logs an error message.
+    _instance = None
+    _lock = threading.Lock()
+    _initialized = False
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.error(msg, *args, **kwargs)
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            with cls._lock:
+                if cls._instance is None:
+                    cls._instance = super().__new__(cls)
+        return cls._instance
 
-    @staticmethod
-    def critical(msg, *args, **kwargs):
-        """
-        Logs a critical message.
+    def __init__(self, *args, **kwargs):
+        if SingletonJournal._initialized:
+            return
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.critical(msg, *args, **kwargs)
+        __logo = self.load_logo()
 
-    @staticmethod
-    def exception(msg, *args, **kwargs):
-        """
-        Logs an exception.
+        super().__init__(*args, **kwargs)
 
-        :param msg: Message to log.
-        :type msg: str
-        :param args: ...
-        :type args: ...
-        :param kwargs: ...
-        :type kwargs: ...
-        :return: Logger object.
-        :rtype: Logger
-        """
-        return logger.exception(msg, *args, **kwargs)
+        SingletonJournal._initialized = True
+        self.info("Logger initialized.")
