@@ -21,7 +21,7 @@ class TestConfig:
         self.path = path
 
     def __read(self):
-        with open(self.path, mode="r", encoding=EncodingEnum.utf8.value) as stream:
+        with open(self.path, mode="r", encoding=EncodingEnum.UTF8.value) as stream:
             content = yaml.safe_load(stream)
 
         return content
