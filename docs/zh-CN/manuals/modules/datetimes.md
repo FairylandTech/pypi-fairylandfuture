@@ -26,9 +26,9 @@ from fairylandfuture.modules.datetimes import DateTimeModule
 from fairylandfuture.enums.chrono import DateTimeEnum
 from fairylandfuture.modules.datetimes import DateTimeModule
 
-date = DateTimeModule.date()  # default format:: %Y-%m-%d
+date = DateTimeModule.DATE()  # default format:: %Y-%m-%d
 print(date)  # Output: 2024-05-10
 
-date = DateTimeModule.date("%Y/%m/%d")  # format: %Y/%m/%d
+date = DateTimeModule.DATE("%Y/%m/%d")  # format: %Y/%m/%d
 print(date)  # Output: 2024/05/10
 ```

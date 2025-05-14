@@ -29,5 +29,3 @@ class FileModeEnum(BaseEnum):
     ab = "ab"
     a_plus = "a+"
     ab_plus = "ab+"
-
-    default = r

@@ -40,25 +40,25 @@ class TestDateTimeModule:
     @classmethod
     @ActionDecorator(action="获取当前日期")
     def test_date(cls):
-        date = DateTimeModule.date()
+        date = DateTimeModule.DATE()
         journal.debug(date)
-        date = DateTimeModule.date("%Y/%m/%d")  # format: %Y/%m/%d
+        date = DateTimeModule.DATE("%Y/%m/%d")  # format: %Y/%m/%d
         journal.debug(date)  # Output: 2024/05/10
 
     @classmethod
     @ActionDecorator(action="获取当前时间")
     def test_time(cls):
-        time = DateTimeModule.time()
+        time = DateTimeModule.TIME()
         journal.debug(time)
-        time = DateTimeModule.time("%H--%M--%S")  # format: %H--%M--%S
+        time = DateTimeModule.TIME("%H--%M--%S")  # format: %H--%M--%S
         journal.debug(time)  # Output: 10--15--06
 
     @classmethod
     @ActionDecorator(action="获取当前日期时间")
     def test_datetime(cls):
-        datetime = DateTimeModule.datetime()
+        datetime = DateTimeModule.DATETIME()
         journal.debug(datetime)
-        datetime = DateTimeModule.datetime("%Y/%m/%d %H--%M--%S")  # format: %Y/%m/%d %H--%M--%S
+        datetime = DateTimeModule.DATETIME("%Y/%m/%d %H--%M--%S")  # format: %Y/%m/%d %H--%M--%S
         journal.debug(datetime)  # Output: 2024/05/10 10--15--06
 
     @classmethod

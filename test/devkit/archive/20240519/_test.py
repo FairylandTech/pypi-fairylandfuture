@@ -43,7 +43,7 @@ instermany_v = ({"name": "郭昕蕊", "age": 51}, {"name": "董敏", "age": 21})
 
 query_now_result = datasource.select(query_now)
 now: datetime = query_now_result.get("now")
-print(now.strftime(DateTimeEnum.datetime_cn))
+print(now.strftime(DateTimeEnum.DATETIME_CN))
 
 multiple_exec = (ExecuteParams(add_col_sql), ExecuteParams(update_age, {"id": 1}))
 

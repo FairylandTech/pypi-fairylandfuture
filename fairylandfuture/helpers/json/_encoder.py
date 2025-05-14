@@ -11,34 +11,47 @@
 import json
 import datetime
 import decimal
-from json import JSONEncoder
 
 from fairylandfuture.enums.chrono import DateTimeEnum
 
-
-class JsonEncoder(JSONEncoder):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.visited_objects = set()
+class JsonEncoder(json.JSONEncoder):
 
     def default(self, obj):
-        obj_id = id(obj)
-        if obj_id in self.visited_objects:
-            return "[循环引用]"
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime(DateTimeEnum.DATETIME.value)
+        elif isinstance(obj, datetime.date):
+            return obj.strftime(DateTimeEnum.DATE.value)
+        elif isinstance(obj, datetime.time):
+            return obj.strftime(DateTimeEnum.TIME.value)
+        elif isinstance(obj, decimal.Decimal):
+            return float(obj)
 
-        self.visited_objects.add(obj_id)
+        return super().default(obj)
 
-        try:
-            if isinstance(obj, datetime.datetime):
-                return obj.strftime(DateTimeEnum.datetime.value)
-            elif isinstance(obj, datetime.date):
-                return obj.strftime("%Y-%m-%d")
-            elif isinstance(obj, datetime.time):
-                return obj.strftime("%H:%M:%S")
-            elif isinstance(obj, decimal.Decimal):
-                return float(obj)
-            else:
-                return super().default(obj)
-        finally:
-            self.visited_objects.remove(obj_id)
+
+# class JsonEncoder(JSONEncoder):
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.visited_objects = set()
+#
+#     def default(self, obj):
+#         obj_id = id(obj)
+#         if obj_id in self.visited_objects:
+#             return "[循环引用]"
+#
+#         self.visited_objects.add(obj_id)
+#
+#         try:
+#             if isinstance(obj, datetime.datetime):
+#                 return obj.strftime(DateTimeEnum.datetime.value)
+#             elif isinstance(obj, datetime.date):
+#                 return obj.strftime("%Y-%m-%d")
+#             elif isinstance(obj, datetime.time):
+#                 return obj.strftime("%H:%M:%S")
+#             elif isinstance(obj, decimal.Decimal):
+#                 return float(obj)
+#             else:
+#                 return super().default(obj)
+#         finally:
+#             self.visited_objects.remove(obj_id)

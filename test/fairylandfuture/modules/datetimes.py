@@ -15,24 +15,24 @@ class TestDataTime:
     @classmethod
     def test_001(cls):
         print("获取当前日期")
-        print(DateTimeModule.date())
-        print(DateTimeModule.date(_format="%Y-%m-%d"))
-        print(DateTimeModule.date(_format="%Y%m%d"))
-        print(DateTimeModule.date(_format="%Y%m%d %I:%M %p"))
+        print(DateTimeModule.DATE())
+        print(DateTimeModule.DATE(_format="%Y-%m-%d"))
+        print(DateTimeModule.DATE(_format="%Y%m%d"))
+        print(DateTimeModule.DATE(_format="%Y%m%d %I:%M %p"))
         print("=======================")
 
     @classmethod
     def test_002(cls):
         print("获取当前时间")
-        print(DateTimeModule.time())
-        print(DateTimeModule.time(_fromat="%H:%M:%S"))
+        print(DateTimeModule.TIME())
+        print(DateTimeModule.TIME(_fromat="%H:%M:%S"))
         print("=======================")
 
     @classmethod
     def test_003(cls):
         print("获取当前日期时间")
-        print(DateTimeModule.datetime())
-        print(DateTimeModule.datetime(_format="%Y-%m-%d %H:%M:%S"))
+        print(DateTimeModule.DATETIME())
+        print(DateTimeModule.DATETIME(_format="%Y-%m-%d %H:%M:%S"))
         print("=======================")
 
     @classmethod

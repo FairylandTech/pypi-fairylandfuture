@@ -28,10 +28,10 @@ class InstallDependenciesCommand(setuptools.Command):
     user_options = []
 
     def initialize_options(self):
-        pass
+        return
 
     def finalize_options(self):
-        pass
+        return
 
     def run(self):
         command = "python -m pip install --force git+https://github.com/imba-tjd/pip-autoremove@ups"

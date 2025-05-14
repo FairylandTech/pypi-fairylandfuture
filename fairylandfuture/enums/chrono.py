@@ -15,16 +15,13 @@ class DateTimeEnum(BaseEnum):
     Date time enum.
     """
 
-    date = "%Y-%m-%d"
-    time = "%H:%M:%S"
-    datetime = "%Y-%m-%d %H:%M:%S"
+    DATE = "%Y-%m-%d"
+    TIME = "%H:%M:%S"
+    DATETIME = "%Y-%m-%d %H:%M:%S"
 
-    date_cn = "%Y年%m月%d日"
-    time_cn = "%H时%M分%S秒"
-    datetime_cn = "%Y年%m月%d日 %H时%M分%S秒"
-
-    default = datetime
-    default_cn = datetime_cn
+    DATE_CN = "%Y年%m月%d日"
+    TIME_CN = "%H时%M分%S秒"
+    DATETIME_CN = "%Y年%m月%d日 %H时%M分%S秒"
 
 
 class TimeZoneEnum(BaseEnum):
@@ -32,6 +29,6 @@ class TimeZoneEnum(BaseEnum):
     Time zone enum.
     """
 
-    shanghai = "Asia/Shanghai"
-    beijing = "Asia/Shanghai"
-    singapore = "Asia/Singapore"
+    Shanghai = "Asia/Shanghai"
+    Beiing = "Asia/Shanghai"
+    Singapore = "Asia/Singapore"

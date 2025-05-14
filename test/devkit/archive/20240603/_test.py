@@ -10,7 +10,7 @@
 from fairylandfuture.modules.datetimes import DateTimeModule
 from fairylandfuture.enums.chrono import DateTimeEnum
 
-a = DateTimeModule.datetime_to_timestamp("2024-01-01", _format=DateTimeEnum.date)
+a = DateTimeModule.datetime_to_timestamp("2024-01-01", _format=DateTimeEnum.DATE)
 a = DateTimeModule.datetime_to_timestamp("2024/01/01", _format="%Y/%m/%d")
 a = DateTimeModule.datetime_to_timestamp("2024--01--01", _format="%Y--%m--%d")
 

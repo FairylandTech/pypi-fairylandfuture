@@ -23,7 +23,7 @@ class DateTimeToolkit:
     Data and time module
     """
 
-    __TIMEZONE: str = TimeZoneEnum.shanghai.value
+    __TIMEZONE: str = TimeZoneEnum.Shanghai.value
 
     @classmethod
     def date(cls, _format: Optional[str] = None) -> str:
@@ -36,7 +36,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _format:
-            _format = DateTimeEnum.date.value
+            _format = DateTimeEnum.DATE.value
 
         return datetime.now().date().strftime(_format)
 
@@ -51,7 +51,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _format:
-            _format = DateTimeEnum.date.value
+            _format = DateTimeEnum.DATE.value
 
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).date().strftime(_format)
 
@@ -66,7 +66,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _fromat:
-            _fromat = DateTimeEnum.time.value
+            _fromat = DateTimeEnum.TIME.value
 
         return datetime.now().time().strftime(_fromat)
 
@@ -81,7 +81,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _fromat:
-            _fromat = DateTimeEnum.time.value
+            _fromat = DateTimeEnum.TIME.value
 
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).time().strftime(_fromat)
 
@@ -96,7 +96,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _format:
-            _format = DateTimeEnum.datetime.value
+            _format = DateTimeEnum.DATETIME.value
 
         return datetime.now().strftime(_format)
 
@@ -111,7 +111,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _format:
-            _format = DateTimeEnum.datetime.value
+            _format = DateTimeEnum.DATETIME.value
 
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).strftime(_format)
 
@@ -152,7 +152,7 @@ class DateTimeToolkit:
             timestamp /= 1000
 
         if not _format:
-            _format = DateTimeEnum.datetime.value
+            _format = DateTimeEnum.DATETIME.value
 
         return datetime.fromtimestamp(timestamp).strftime(_format)
 
@@ -177,7 +177,7 @@ class DateTimeToolkit:
         validator.validate({"dt_string": dt_string, "ms": ms, "n": n, "_format": _format})
 
         if not _format:
-            _format = DateTimeEnum.datetime.value
+            _format = DateTimeEnum.DATETIME.value
 
         timestamp = datetime.strptime(dt_string, _format).timestamp()
 
@@ -199,7 +199,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _format:
-            _format = DateTimeEnum.date.value
+            _format = DateTimeEnum.DATE.value
 
         return (datetime.now() - relativedelta(days=1)).strftime(_format)
 
@@ -214,7 +214,7 @@ class DateTimeToolkit:
         :rtype: str
         """
         if not _format:
-            _format = DateTimeEnum.date.value
+            _format = DateTimeEnum.DATE.value
 
         return (datetime.now() + relativedelta(days=1)).strftime(_format)
 
@@ -237,7 +237,7 @@ class DateTimeToolkit:
         :rtype: int
         """
         if not _format:
-            _format = DateTimeEnum.date.value
+            _format = DateTimeEnum.DATE.value
 
         if timestamp:
             if ms:

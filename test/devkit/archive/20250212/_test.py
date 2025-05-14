@@ -16,7 +16,7 @@ from fairylandfuture.toolkit.chron import DateTimeToolkit
 def main():
     def validator_date(value: str):
         try:
-            _ = DateTimeToolkit.datetime_to_timestamp(value, _format=DateTimeEnum.date.value)
+            _ = DateTimeToolkit.datetime_to_timestamp(value, _format=DateTimeEnum.DATE.value)
             return True
         except Exception as err:
             raise err

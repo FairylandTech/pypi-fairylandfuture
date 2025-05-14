@@ -40,7 +40,7 @@ class TestClass(TestBase):
     @CustomizeActionDecorator(action="测试002")
     def test_002(cls):
         a = datetime.now() - relativedelta(days=1)
-        journal.debug(a.strftime(DateTimeEnum.time_cn.value))
+        journal.debug(a.strftime(DateTimeEnum.TIME_CN.value))
 
     @classmethod
     @CustomizeTimingDecorator
