@@ -7,6 +7,6 @@
 @datetime: 2024-08-04 01:06:57 UTC+08:00
 """
 
-from fairylandfuture.modules.journal import SingletonJournal
+from fairylandfuture.toolkit.journal import SingletonJournal
 
 journal = SingletonJournal(debug=True)

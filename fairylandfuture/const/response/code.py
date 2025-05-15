@@ -9,7 +9,7 @@
 
 from typing import Dict
 
-RESPONSE_CODE_MAP: Dict[int, str] = {
+RESPONSE_CODE_MAPPING: Dict[int, str] = {
     100: "Continue",
     101: "Switching Protocols",
     102: "Processing",

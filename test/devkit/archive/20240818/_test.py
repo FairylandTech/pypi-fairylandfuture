@@ -7,7 +7,7 @@
 @datetime: 2024-08-18 00:40:48 UTC+08:00
 """
 
-from fairylandfuture.modules.journal import Journal
+from fairylandfuture.toolkit.journal import Journal
 from fairylandfuture.tools.files.general import YamlFile
 
 journal = Journal(console=True)

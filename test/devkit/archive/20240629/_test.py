@@ -10,11 +10,10 @@
 from typing import Dict, Any
 from pathlib import Path
 
-from fairylandfuture.modules.db.mysql import MySQLOperatorImpl, MySQLConnector
+from fairylandfuture.database import MySQLOperatorImpl, MySQLConnector
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
 
 from test.utils.config import TestConfig
-from test.utils.logger import journal
 
 # config: Dict[str, Any] = TestConfig(Path(r"C:\Lionel\Project\Github\pypi-fairylandfuture\conf\dev\config.yaml")).config.get("mysql")
 config: Dict[str, Any] = TestConfig(Path(r"C:\Lionel\Project\Github\PrettiestFairy\pypi-fairylandfuture\conf\dev\config.yaml")).config.get("mysql")

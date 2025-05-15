@@ -7,9 +7,7 @@
 @datetime: 2024-10-15 17:13:42 UTC+08:00
 """
 
-from faker import Faker
-
-from fairylandfuture.core.superclass.toolkits.fakerlib import BaseFaker
+from fairylandfuture.core.superclass.fakerlib import BaseFaker
 
 
 class FakeNetworkToolkit(BaseFaker):

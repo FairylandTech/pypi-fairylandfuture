@@ -11,7 +11,7 @@ from typing import Dict, Any, List, NamedTuple
 from pathlib import Path
 
 from test.utils.config import TestConfig
-from fairylandfuture.modules.db.postgresql import PostgreSQLConnector
+from fairylandfuture.database import PostgreSQLConnector
 
 
 class SQLData(NamedTuple):

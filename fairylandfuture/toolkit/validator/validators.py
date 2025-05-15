@@ -9,7 +9,7 @@
 
 from typing import Any, Dict
 
-from fairylandfuture.core.superclass.modules.validators import Validator
+from fairylandfuture.core.superclass.validators import Validator
 
 
 class RequestParamsValidator:

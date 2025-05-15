@@ -10,8 +10,8 @@
 from dataclasses import dataclass, field
 from typing import MutableSequence, Sequence, MutableMapping, Mapping, Union, Self, Dict, Any
 
-from fairylandfuture.core.superclass.structures.structure import BaseStructure, BaseFrozenStructure
-from fairylandfuture.const.response.code import RESPONSE_CODE_MAP
+from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
+from fairylandfuture.const.response.code import RESPONSE_CODE_MAPPING
 
 
 @dataclass(frozen=False)
@@ -22,7 +22,7 @@ class ResponseStructure(BaseStructure):
 
     def __embody(self):
         if self.code and not self.message:
-            self.message = RESPONSE_CODE_MAP.get(self.code, "Internal Server Error")
+            self.message = RESPONSE_CODE_MAPPING.get(self.code, "Internal Server Error")
 
     def __post_init__(self):
         self.__embody()
@@ -45,7 +45,7 @@ class ResponseFrozenStructure(BaseFrozenStructure):
 
     def __post_init__(self):
         if self.code and not self.message:
-            object.__setattr__(self, "message", RESPONSE_CODE_MAP.get(self.code, "Internal Server Error"))
+            object.__setattr__(self, "message", RESPONSE_CODE_MAPPING.get(self.code, "Internal Server Error"))
 
     def __str__(self):
         return self.string

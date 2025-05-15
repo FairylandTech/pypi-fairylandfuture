@@ -10,8 +10,8 @@
 from typing import Dict, Any
 from pathlib import Path
 
-from fairylandfuture.modules.journal import journal
-from fairylandfuture.modules.db.mysql import MySQLDatabase, MySQLConnector
+from fairylandfuture.toolkit.journal import journal
+from fairylandfuture.database import MySQLDatabase
 from fairylandfuture.utils.builder.expression import QueryMySQLBuilder, InsertMySQLBuilder
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure, StructureSQLInsertManyParams
 

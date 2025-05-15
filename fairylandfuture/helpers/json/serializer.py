@@ -20,4 +20,4 @@ class JsonSerializerHelper:
 
     @classmethod
     def deserialize(cls, value):
-        return
+        return json.loads(value)

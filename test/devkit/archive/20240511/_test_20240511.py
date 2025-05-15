@@ -14,7 +14,7 @@ from fairylandfuture.modules.datetimes import DateTimeModule
 from fairylandfuture.modules.decorators import ActionDecorator, TimingDecorator
 
 # 日志
-from fairylandfuture.modules.journal import journal
+from fairylandfuture.toolkit.journal import journal
 
 # 枚举
 

@@ -10,7 +10,7 @@
 import abc
 from typing import Tuple, NamedTuple, Union, Dict, Any
 
-from fairylandfuture.exceptions.db import SQLSyntaxException
+from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
 from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage

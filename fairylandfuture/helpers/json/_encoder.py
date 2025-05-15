@@ -16,17 +16,17 @@ from fairylandfuture.enums.chrono import DateTimeEnum
 
 class JsonEncoder(json.JSONEncoder):
 
-    def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return obj.strftime(DateTimeEnum.DATETIME.value)
-        elif isinstance(obj, datetime.date):
-            return obj.strftime(DateTimeEnum.DATE.value)
-        elif isinstance(obj, datetime.time):
-            return obj.strftime(DateTimeEnum.TIME.value)
-        elif isinstance(obj, decimal.Decimal):
-            return float(obj)
+    def default(self, o):
+        if isinstance(o, datetime.datetime):
+            return o.strftime(DateTimeEnum.DATETIME.value)
+        elif isinstance(o, datetime.date):
+            return o.strftime(DateTimeEnum.DATE.value)
+        elif isinstance(o, datetime.time):
+            return o.strftime(DateTimeEnum.TIME.value)
+        elif isinstance(o, decimal.Decimal):
+            return float(o)
 
-        return super().default(obj)
+        return super().default(o)
 
 
 # class JsonEncoder(JSONEncoder):

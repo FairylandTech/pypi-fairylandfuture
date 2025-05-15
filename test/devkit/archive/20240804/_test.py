@@ -9,12 +9,11 @@
 
 from dataclasses import dataclass
 
-from fairylandfuture.modules.db.mysql import MySQLConnector
-from fairylandfuture.modules.db.mysql import MySQLOperatorImpl
+from fairylandfuture.database import MySQLConnector
+from fairylandfuture.database import MySQLOperatorImpl
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
 
 from test.utils.logger import journal
-from test.devkit import BASE_PATH
 from test.devkit import CONFIG
 
 

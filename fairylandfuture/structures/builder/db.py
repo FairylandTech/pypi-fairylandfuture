@@ -10,7 +10,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, Union, Sequence, MutableSequence, Mapping, MutableMapping
 
-from fairylandfuture.core.superclass.structures.structure import BaseFrozenStructure
+from fairylandfuture.core.superclass.structure import BaseFrozenStructure
 
 
 @dataclass(frozen=True)

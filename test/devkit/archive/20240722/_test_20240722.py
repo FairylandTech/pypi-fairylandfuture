@@ -8,13 +8,12 @@
 """
 
 from pathlib import Path
-from collections import namedtuple, deque
 from typing import Tuple
 from dataclasses import dataclass
 
 from test.utils.config import TestConfig
 
-from fairylandfuture.modules.db.postgresql import PostgreSQLConnector, PostgreSQLOperatorImpl
+from fairylandfuture.database import PostgreSQLConnector, PostgreSQLOperator
 from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 from fairylandfuture.utils.builder.convert import ConvertDataStructure
 
@@ -39,8 +38,8 @@ connector = TestPostgreSQL(host=config.get("host"), port=config.get("port"), use
 
 print(connector.dsn)
 
-pgsql = PostgreSQLOperatorImpl(connector)
-pgsql2 = PostgreSQLOperatorImpl(connector)
+pgsql = PostgreSQLOperator(connector)
+pgsql2 = PostgreSQLOperator(connector)
 
 # connector.cursor.execute("SELECT * FROM public_dev_test.author;")
 

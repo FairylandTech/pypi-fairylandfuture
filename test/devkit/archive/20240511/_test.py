@@ -7,8 +7,8 @@
 @datetime: 2025-02-11 14:14:02 UTC+08:00
 """
 
-from fairylandfuture.modules.db.postgresql import PostgreSQLConnector
-from fairylandfuture.modules.db.postgresql import PostgreSQLOperatorImpl
+from fairylandfuture.database import PostgreSQLConnector
+from fairylandfuture.database import PostgreSQLOperator
 from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 
 
@@ -21,7 +21,7 @@ def main():
         database="nsc"
     )
 
-    operation = PostgreSQLOperatorImpl(connector)
+    operation = PostgreSQLOperator(connector)
 
     sql = "select id, name from internal_app_test.test_table;"
     result = operation.select(PostgreSQLExecuteFrozenStructure(sql))

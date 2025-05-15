@@ -15,8 +15,8 @@ from dbutils.pooled_db import PooledDB
 from pymysql.connections import Connection
 from pymysql.cursors import DictCursor
 
-from fairylandfuture.abstract.modules.db import AbstractMySQLOperator
-from fairylandfuture.exceptions.db import SQLSyntaxException
+from fairylandfuture.abstract.database import AbstractMySQLOperator
+from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
 from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
 

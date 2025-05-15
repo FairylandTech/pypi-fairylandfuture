@@ -7,9 +7,9 @@
 @datetime: 2024-12-23 16:35:23 UTC+08:00
 """
 
-from typing import Dict, Any, List, Optional, Sequence, Tuple, Union
+from typing import Dict, Any, Optional, Sequence, Tuple, Union
 
-from fairylandfuture.core.superclass.structures.structure import BaseStructureTreeNode
+from fairylandfuture.core.superclass.structure import BaseStructureTreeNode
 
 
 class TreeBuilder:

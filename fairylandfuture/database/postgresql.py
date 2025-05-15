@@ -14,9 +14,9 @@ import psycopg2
 from psycopg2 import pool
 from psycopg2.extras import NamedTupleCursor
 
-from fairylandfuture.exceptions.db import SQLSyntaxException
+from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.exceptions.messages.db import SQLSyntaxExceptMessage
-from fairylandfuture.abstract.modules.db import AbstractPostgreSQLOperator
+from fairylandfuture.abstract.database import AbstractPostgreSQLOperator
 from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
 
 
@@ -150,7 +150,7 @@ class PostgreSQLConnector:
         self.close()
 
 
-class PostgreSQLOperatorImpl(AbstractPostgreSQLOperator):
+class PostgreSQLOperator(AbstractPostgreSQLOperator):
     """
     PostgreSQLOperatorImpl is a class for executing SQL queries on PostgreSQL database.
 
@@ -158,10 +158,10 @@ class PostgreSQLOperatorImpl(AbstractPostgreSQLOperator):
     :type connector: PostgreSQLConnector
 
     Usage::
-        >>> from fairylandfuture.modules.db.postgresql import PostgreSQLConnector, PostgreSQLOperatorImpl
+        >>> from fairylandfuture.modules.database.postgresql import PostgreSQLConnector, PostgreSQLOperator
         >>> from fairylandfuture.structures.builder.expression import StructurePostgreSQLExecute
         >>> connector = PostgreSQLConnector(host="localhost", port=5432, user="postgres", password="password", database="test")
-        >>> operation = PostgreSQLOperatorImpl(connector)
+        >>> operation = PostgreSQLOperator(connector)
         >>> data = operation.select(StructurePostgreSQLExecute("SELECT * FROM users"))
         >>> print(data)
 
