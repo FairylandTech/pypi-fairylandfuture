@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from typing import MutableSequence, Sequence, MutableMapping, Mapping, Union, Self, Dict, Any
 
 from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
-from fairylandfuture.const.response.code import RESPONSE_CODE_MAPPING
+from fairylandfuture.const.http.response import RESPONSE_CODE_MAPPING
 
 
 @dataclass(frozen=False)

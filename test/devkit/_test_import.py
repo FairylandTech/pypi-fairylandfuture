@@ -7,9 +7,9 @@
 @datetime: 2024-09-22 10:46:57 UTC+08:00
 """
 
-# const.response
+# const.http
 
-# core.metaclasses
+# core.metaclass
 
 # core.superclass
 

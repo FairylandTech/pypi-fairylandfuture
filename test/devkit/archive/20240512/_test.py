@@ -7,7 +7,7 @@
 @datetime: 2025-02-12 15:07:41 UTC+08:00
 """
 
-from fairylandfuture.toolkit.encryption.encoder import Base64CryptionToolkit
+from fairylandfuture.toolkit.utils.encryption.encoder import Base64CryptionUtils
 
 
-print(Base64CryptionToolkit.decode("aHR0cHM6Ly9zb2MuY3FjZmUuY29tL1dlYkFwaS9idXNpbmVzc19jb21tb25fc2VydmljZS9zdGF0aWMvZGlzdC8jL2p1ZGdlLW9wZXJhdGlvbi9yb3V0ZS9ldmVudC9saXN0"))
+print(Base64CryptionUtils.decode("aHR0cHM6Ly9zb2MuY3FjZmUuY29tL1dlYkFwaS9idXNpbmVzc19jb21tb25fc2VydmljZS9zdGF0aWMvZGlzdC8jL2p1ZGdlLW9wZXJhdGlvbi9yb3V0ZS9ldmVudC9saXN0"))

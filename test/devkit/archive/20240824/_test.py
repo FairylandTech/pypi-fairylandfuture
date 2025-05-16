@@ -7,7 +7,7 @@
 @datetime: 2024-08-24 16:05:40 UTC+08:00
 """
 
-from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure, PostgreSQLExecuteFrozenStructure
+from fairylandfuture.structures.builder.database import MySQLExecuteFrozenStructure, PostgreSQLExecuteFrozenStructure
 from fairylandfuture.tools.databases.mysql import MySQLSQLSimpleConnectionPool
 from fairylandfuture.tools.databases.postgresql import PostgreSQLSimpleConnectionPool
 from test.devkit import CONFIG

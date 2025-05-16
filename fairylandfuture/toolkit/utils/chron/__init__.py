@@ -14,11 +14,11 @@ from typing import Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
-from fairylandfuture.enums.chrono import DateTimeEnum, TimeZoneEnum
-from fairylandfuture.utils.verifies.validate import ParamTypeValidatorUtils
+from fairylandfuture.enums.chron import DateTimeEnum, TimeZoneEnum
+from fairylandfuture.toolkit.tools.validator.validate import ParamTypeValidator
 
 
-class DateTimeToolkit:
+class DateTimeUtils:
     """
     Data and time module
     """
@@ -123,7 +123,7 @@ class DateTimeToolkit:
         :return: Current timestamp.
         :rtype: int
         """
-        validator = ParamTypeValidatorUtils({"ms": bool, "n": (int, type(None))})
+        validator = ParamTypeValidator({"ms": bool, "n": (int, type(None))})
         validator.validate({"ms": ms, "n": n})
 
         if ms:
@@ -145,7 +145,7 @@ class DateTimeToolkit:
         :return: Formatted datetime_str string.
         :rtype: str
         """
-        validator = ParamTypeValidatorUtils({"timestamp": (int, float)})
+        validator = ParamTypeValidator({"timestamp": (int, float)})
         validator.validate({"timestamp": timestamp})
 
         if len(str(int(timestamp))) == 13:
@@ -173,7 +173,7 @@ class DateTimeToolkit:
         :rtype: int
         """
         validator_expected_types = {"dt_string": str, "ms": bool, "n": (int, type(None)), "_format": (str, type(None))}
-        validator = ParamTypeValidatorUtils(validator_expected_types)
+        validator = ParamTypeValidator(validator_expected_types)
         validator.validate({"dt_string": dt_string, "ms": ms, "n": n, "_format": _format})
 
         if not _format:

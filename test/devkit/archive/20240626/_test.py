@@ -7,13 +7,12 @@
 @datetime: 2024-06-26 00:09:01 UTC+08:00
 """
 
-import os
 import sys
 import platform
 
 from fairylandfuture.const.enums import PlatformEnum
 
-from fairylandfuture.utils.general.common import OSPlatform
+from fairylandfuture.toolkit.utils.general.common import OSPlatform
 
 print(PlatformEnum.windows.value)
 

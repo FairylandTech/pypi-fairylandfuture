@@ -13,7 +13,7 @@ from pypinyin import pinyin, Style
 from fairylandfuture.core.superclass.fakerlib import BaseFaker
 
 
-class FakeUserToolkit(BaseFaker):
+class FakeUserUtils(BaseFaker):
 
     @classmethod
     def __route(cls, locale=None):
@@ -84,7 +84,7 @@ class FakeUserToolkit(BaseFaker):
         return age
 
     # def __init__(self, locale="zh_CN"):
-    #     super().__init__(locale)
+    #     superclass().__init__(locale)
     #     self.fake = Faker(locale)
     #
     # def user_name(self):

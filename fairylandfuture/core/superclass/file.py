@@ -15,7 +15,7 @@ from typing import Union, AnyStr, Sequence, Optional, Any, Self
 
 import yaml
 
-from fairylandfuture.enums.enconding import EncodingEnum
+from fairylandfuture.enums.encode import EncodingEnum
 from fairylandfuture.enums.file import FileModeEnum
 
 

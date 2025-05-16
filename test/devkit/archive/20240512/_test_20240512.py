@@ -13,10 +13,10 @@ from datetime import datetime
 from _test import TestBase
 from dateutil.relativedelta import relativedelta
 
-from fairylandfuture.enums.chrono import DateTimeEnum
+from fairylandfuture.enums.chron import DateTimeEnum
 from fairylandfuture.modules.datetimes import DateTimeModule
 from fairylandfuture.modules.decorators import ActionDecorator, SingletonDecorator, TimingDecorator, TipsDecorator
-from fairylandfuture.utils.journal import journal
+from fairylandfuture.toolkit.utils import journal
 
 
 class CustomizeTimingDecorator(TimingDecorator):

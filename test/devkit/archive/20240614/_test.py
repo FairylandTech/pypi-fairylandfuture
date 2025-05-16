@@ -9,7 +9,7 @@
 
 import binascii
 
-from fairylandfuture.enums.enconding import EncodingEnum
+from fairylandfuture.enums.encode import EncodingEnum
 from fairylandfuture.modules.encryptions import UserPasswordEncryption
 from fairylandfuture.modules.encryptions import Base64Encryption
 

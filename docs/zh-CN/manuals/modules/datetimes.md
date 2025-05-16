@@ -23,7 +23,7 @@ from fairylandfuture.modules.datetimes import DateTimeModule
 ### 获取当前日期
 
 ```python
-from fairylandfuture.enums.chrono import DateTimeEnum
+from fairylandfuture.enums.chron import DateTimeEnum
 from fairylandfuture.modules.datetimes import DateTimeModule
 
 date = DateTimeModule.DATE()  # default format:: %Y-%m-%d

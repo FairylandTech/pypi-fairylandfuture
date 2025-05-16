@@ -14,7 +14,7 @@ from typing import Dict, Union, Tuple, Sequence
 from elasticsearch import Elasticsearch
 from opensearchpy import OpenSearch
 
-from fairylandfuture.exceptions.es import ElasticSearchExecutionException
+from fairylandfuture.exceptions.elasticsearch import ElasticSearchExecutionException
 from fairylandfuture.exceptions.messages.es import ElasticSearchExceptMessage
 
 warnings.filterwarnings("ignore")

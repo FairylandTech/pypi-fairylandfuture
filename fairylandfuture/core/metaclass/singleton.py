@@ -32,7 +32,7 @@ class SingletonMeta(type):
         :rtype: object
         """
         # if not hasattr(cls, "_instance"):
-        #     setattr(cls, "_instance", super().__call__(*args, **kwargs))
+        #     setattr(cls, "_instance", superclass().__call__(*args, **kwargs))
         #     return getattr(cls, "_instance")
         # else:
         #     return getattr(cls, "_instance")

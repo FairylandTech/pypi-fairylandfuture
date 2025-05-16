@@ -12,7 +12,7 @@ import yaml
 from typing import Dict, Any
 from pathlib import Path
 
-from fairylandfuture.enums.enconding import EncodingEnum
+from fairylandfuture.enums.encode import EncodingEnum
 
 
 class TestConfig:

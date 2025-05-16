@@ -12,7 +12,7 @@ import json
 import datetime
 import decimal
 
-from fairylandfuture.enums.chrono import DateTimeEnum
+from fairylandfuture.enums.chron import DateTimeEnum
 
 class JsonEncoder(json.JSONEncoder):
 
@@ -32,7 +32,7 @@ class JsonEncoder(json.JSONEncoder):
 # class JsonEncoder(JSONEncoder):
 #
 #     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
+#         superclass().__init__(*args, **kwargs)
 #         self.visited_objects = set()
 #
 #     def default(self, obj):
@@ -52,6 +52,6 @@ class JsonEncoder(json.JSONEncoder):
 #             elif isinstance(obj, decimal.Decimal):
 #                 return float(obj)
 #             else:
-#                 return super().default(obj)
+#                 return superclass().default(obj)
 #         finally:
 #             self.visited_objects.remove(obj_id)

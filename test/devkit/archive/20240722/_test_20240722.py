@@ -14,8 +14,8 @@ from dataclasses import dataclass
 from test.utils.config import TestConfig
 
 from fairylandfuture.database import PostgreSQLConnector, PostgreSQLOperator
-from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
-from fairylandfuture.utils.builder.convert import ConvertDataStructure
+from fairylandfuture.structures.builder.database import PostgreSQLExecuteFrozenStructure
+from fairylandfuture.toolkit.utils import ConvertDataStructure
 
 
 @dataclass(frozen=True)

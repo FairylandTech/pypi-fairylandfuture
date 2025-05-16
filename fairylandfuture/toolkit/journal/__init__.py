@@ -15,7 +15,7 @@ from typing import Optional
 
 from loguru import logger
 
-from fairylandfuture.enums.enconding import EncodingEnum
+from fairylandfuture.enums.encode import EncodingEnum
 from fairylandfuture.enums.journal import LogLevelEnum
 
 

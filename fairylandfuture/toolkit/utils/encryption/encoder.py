@@ -9,10 +9,10 @@
 
 import base64
 
-from fairylandfuture.enums.enconding import EncodingEnum
+from fairylandfuture.enums.encode import EncodingEnum
 
 
-class Base64CryptionToolkit:
+class Base64CryptionUtils:
 
     @classmethod
     def encode(cls, data: str) -> str:

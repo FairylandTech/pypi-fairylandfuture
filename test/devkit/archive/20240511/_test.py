@@ -9,7 +9,7 @@
 
 from fairylandfuture.database import PostgreSQLConnector
 from fairylandfuture.database import PostgreSQLOperator
-from fairylandfuture.structures.builder.db import PostgreSQLExecuteFrozenStructure
+from fairylandfuture.structures.builder.database import PostgreSQLExecuteFrozenStructure
 
 
 def main():

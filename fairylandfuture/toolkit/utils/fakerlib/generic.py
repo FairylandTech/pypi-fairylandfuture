@@ -10,7 +10,7 @@
 import secrets
 
 
-class FakeGeneralToolkit:
+class FakeGeneralUtils:
 
     @classmethod
     def generate_hex_string(cls, number, group=1, sep=""):

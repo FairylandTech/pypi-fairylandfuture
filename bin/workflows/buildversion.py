@@ -16,14 +16,14 @@ def count_commits(token):
     url = "https://api.github.com/repos/PrettiestFairy/pypi-fairylandfuture/commits"
     # headers = {"Authorization": f"Token {token}"}
     headers = {"Authorization": f"Bearer {token}"}
-    # response = requests.get(url, headers=headers)
+    # http = requests.get(url, headers=headers)
     # try:
-    #     if response.status_code == 200:
-    #         commit_data = response.json()
+    #     if http.status_code == 200:
+    #         commit_data = http.json()
     #         print(f"Fetched {len(commit_data)} commits")
     #         return len(commit_data)
     #     else:
-    #         print(f"Failed to fetch commits, status code: {response.status_code}")
+    #         print(f"Failed to fetch commits, status code: {http.status_code}")
     #         return 0
     # except Exception as err:
     #     print(f"Failed to fetch commits, error: {err}")

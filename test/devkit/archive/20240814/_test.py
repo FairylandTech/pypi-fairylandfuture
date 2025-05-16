@@ -7,7 +7,7 @@
 @datetime: 2024-08-14 17:13:15 UTC+08:00
 """
 
-from fairylandfuture.structures.generic.api import ResponseFrozenStructure
+from fairylandfuture.structures.http.response import ResponseFrozenStructure
 
 
 if __name__ == "__main__":

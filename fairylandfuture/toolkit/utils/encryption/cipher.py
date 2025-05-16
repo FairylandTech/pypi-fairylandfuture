@@ -15,10 +15,10 @@ from typing import Optional, Tuple
 
 from cryptography.fernet import Fernet
 
-from fairylandfuture.enums.enconding import EncodingEnum
+from fairylandfuture.enums.encode import EncodingEnum
 
 
-class CipherToolkit:
+class CipherUtils:
 
     @classmethod
     def generate_salt(cls, length: int = 16) -> str:
@@ -44,7 +44,7 @@ class CipherToolkit:
         return Fernet.generate_key()
 
 
-class UserPasswordCryptionToolkit(CipherToolkit):
+class UserPasswordCryptionUtils(CipherUtils):
 
     @classmethod
     def encrypt(cls, password: str, salt: Optional[str] = None) -> Tuple[str, str]:
@@ -88,7 +88,7 @@ class UserPasswordCryptionToolkit(CipherToolkit):
         return hashed_password_to_verify == hashed_password
 
 
-class PasswordCryptionToolkit(CipherToolkit):
+class PasswordCryptionUtils(CipherUtils):
 
     @classmethod
     def encrypt(cls, password: str, key: bytes) -> Tuple[str, str]:

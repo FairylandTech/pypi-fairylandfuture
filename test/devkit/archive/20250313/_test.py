@@ -6,7 +6,7 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2025-03-13 23:06:09 UTC+08:00
 """
-from fairylandfuture.structures.generic.api import ResponseStructure
+from fairylandfuture.structures.http.response import ResponseStructure
 
 
 def main():

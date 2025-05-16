@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 from fairylandfuture.database import MySQLConnector
 from fairylandfuture.database import MySQLOperatorImpl
-from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure
+from fairylandfuture.structures.builder.database import MySQLExecuteFrozenStructure
 
 from test.utils.logger import journal
 from test.devkit import CONFIG

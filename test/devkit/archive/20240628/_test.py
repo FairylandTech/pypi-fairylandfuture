@@ -12,8 +12,8 @@ from pathlib import Path
 
 from fairylandfuture.toolkit.journal import journal
 from fairylandfuture.database import MySQLDatabase
-from fairylandfuture.utils.builder.expression import QueryMySQLBuilder, InsertMySQLBuilder
-from fairylandfuture.structures.builder.db import MySQLExecuteFrozenStructure, StructureSQLInsertManyParams
+from fairylandfuture.toolkit.utils import QueryMySQLBuilder, InsertMySQLBuilder
+from fairylandfuture.structures.builder.database import MySQLExecuteFrozenStructure, StructureSQLInsertManyParams
 
 from test.utils.config import TestConfig
 
