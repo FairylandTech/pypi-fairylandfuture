@@ -176,7 +176,7 @@ class MySQLConnector:
         self.close()
 
 
-class MySQLOperatorImpl(AbstractMySQLOperator):
+class MySQLOperator(AbstractMySQLOperator):
     """
     This class is used to execute SQL statements for MySQL database.
     It is a subclass of AbstractMySQLOperator and implements the methods of AbstractMySQLOperator.
