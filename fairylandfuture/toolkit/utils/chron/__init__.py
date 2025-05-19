@@ -15,15 +15,16 @@ from typing import Optional, Union
 from dateutil.relativedelta import relativedelta
 
 from fairylandfuture.enums.chron import DateTimeEnum, TimeZoneEnum
-from fairylandfuture.toolkit.tools.validator.validate import ParamTypeValidator
+from fairylandfuture.toolkit.tools.validator.validators import ParamsValidator
+from fairylandfuture.core.superclass.validators import Validator
 
 
-class DateTimeUtils:
+class DateTimeToolkit:
     """
     Data and time module
     """
 
-    __TIMEZONE: str = TimeZoneEnum.Shanghai.value
+    TIMEZONE: str = TimeZoneEnum.Shanghai.value
 
     @classmethod
     def date(cls, _format: Optional[str] = None) -> str:
@@ -53,7 +54,7 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATE.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).date().strftime(_format)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).date().strftime(_format)
 
     @classmethod
     def time(cls, _fromat: Optional[str] = None) -> str:
@@ -83,7 +84,7 @@ class DateTimeUtils:
         if not _fromat:
             _fromat = DateTimeEnum.TIME.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).time().strftime(_fromat)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).time().strftime(_fromat)
 
     @classmethod
     def datetime(cls, _format: Optional[str] = None) -> str:
@@ -113,7 +114,7 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATETIME.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).strftime(_format)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).strftime(_format)
 
     @classmethod
     def timestamp(cls, ms: bool = False, n: Optional[int] = None) -> int:
@@ -123,7 +124,12 @@ class DateTimeUtils:
         :return: Current timestamp.
         :rtype: int
         """
-        validator = ParamTypeValidator({"ms": bool, "n": (int, type(None))})
+        validator = ParamsValidator(
+            {
+                "ms": Validator(required=False, typedef=bool),
+                "n": Validator(required=False, typedef=(int, type(None)))
+            }
+        )
         validator.validate({"ms": ms, "n": n})
 
         if ms:
@@ -145,7 +151,11 @@ class DateTimeUtils:
         :return: Formatted datetime_str string.
         :rtype: str
         """
-        validator = ParamTypeValidator({"timestamp": (int, float)})
+        validator = ParamsValidator(
+            {
+                "timestamp": Validator(required=True, typedef=(int, float)),
+            }
+        )
         validator.validate({"timestamp": timestamp})
 
         if len(str(int(timestamp))) == 13:
@@ -172,8 +182,14 @@ class DateTimeUtils:
         :return: Timestamp.
         :rtype: int
         """
-        validator_expected_types = {"dt_string": str, "ms": bool, "n": (int, type(None)), "_format": (str, type(None))}
-        validator = ParamTypeValidator(validator_expected_types)
+        validator = ParamsValidator(
+            {
+                "dt_string": Validator(required=True, typedef=str),
+                "ms": Validator(required=False, typedef=bool),
+                "n": Validator(required=False, typedef=(int, type(None))),
+                "_format": Validator(required=False, typedef=(str, type(None)))
+            }
+        )
         validator.validate({"dt_string": dt_string, "ms": ms, "n": n, "_format": _format})
 
         if not _format:
@@ -270,4 +286,6 @@ class DateTimeUtils:
         :return: Unzoned datetime in China.
         :rtype: datetime
         """
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.__TIMEZONE)).replace(tzinfo=None)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).replace(tzinfo=None)
+
+

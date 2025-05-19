@@ -13,7 +13,7 @@ from pypinyin import pinyin, Style
 from fairylandfuture.core.superclass.fakerlib import BaseFaker
 
 
-class FakeUserUtils(BaseFaker):
+class FakeUserToolkit(BaseFaker):
 
     @classmethod
     def __route(cls, locale=None):

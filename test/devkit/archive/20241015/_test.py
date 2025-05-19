@@ -7,6 +7,6 @@
 @datetime: 2024-10-15 16:41:26 UTC+08:00
 """
 
-from fairylandfuture.toolkit.utils.chron import DateTimeUtils
+from fairylandfuture.toolkit.utils.chron import DateTimeToolkit
 
-print(DateTimeUtils.timestamp())
+print(DateTimeToolkit.timestamp())

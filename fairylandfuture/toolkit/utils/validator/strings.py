@@ -14,7 +14,7 @@ import json
 from array import array
 
 
-class StringValidatorUtils:
+class StringValidatorToolkit:
 
     @classmethod
     def valid_parentheses(cls, _string: str, /) -> bool:

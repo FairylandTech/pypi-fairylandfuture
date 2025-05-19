@@ -10,7 +10,7 @@
 from typing import Any, Dict, List, Set, Tuple
 
 
-class DefaultConstantUtils:
+class DefaultConstantToolkit:
     """
     Default constant utils.
     """
@@ -75,7 +75,7 @@ class DefaultConstantUtils:
         return results
 
 
-class APIConstantUtils(DefaultConstantUtils):
+class APIConstantToolkit(DefaultConstantToolkit):
     """
     API constant utils.
     """
@@ -86,7 +86,7 @@ class APIConstantUtils(DefaultConstantUtils):
         return results
 
 
-class EncodingConstantUtils(DefaultConstantUtils):
+class EncodingConstantToolkit(DefaultConstantToolkit):
     """
     Encoding constant utils.
     """

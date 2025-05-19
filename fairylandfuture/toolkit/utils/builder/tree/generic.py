@@ -12,7 +12,7 @@ from typing import Dict, Any, Optional, Sequence, Tuple, Union
 from fairylandfuture.core.superclass.structure import BaseStructureTreeNode
 
 
-class TreeBuilderUtils:
+class TreeBuilderToolkit:
     node = BaseStructureTreeNode
 
     @classmethod
@@ -35,7 +35,7 @@ class TreeBuilderUtils:
         return tuple([node.to_dict() for node in root_nodes])
 
 
-class TreeBuilderV2Utils(TreeBuilderUtils):
+class TreeBuilderToolkitV2(TreeBuilderToolkit):
 
     @classmethod
     def build(
