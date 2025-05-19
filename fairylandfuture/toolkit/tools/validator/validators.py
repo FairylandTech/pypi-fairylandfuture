@@ -12,7 +12,7 @@ from typing import Any, Dict
 from fairylandfuture.core.superclass.validators import Validator
 
 
-class RequestParamsValidator:
+class ParamsValidator:
     def __init__(self, schema: Dict[str, Validator]):
         self.schema = schema
 
