@@ -114,7 +114,7 @@ class Package(object):
         exclude = (
             "bin",
             "conf",
-            "deploy",
+            "deployment",
             "docs",
             "scripts",
             "temp",
