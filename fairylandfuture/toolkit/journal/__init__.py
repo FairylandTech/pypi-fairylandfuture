@@ -150,10 +150,15 @@ class Journal(object):
         name, ext = os.path.splitext(filename)
 
         if debug:
-            filename += f".debug{ext if ext else '.log'}"
+            if not ext:
+                filename = f"{name}.debug.log"
+            else:
+                filename = f"{name}.debug{ext}"
             level = LogLevelEnum.DEBUG
 
         formatting = formatting if formatting else self.DEFAULT_LOG_FORMAT
+
+        self._write_logo(os.path.join(dirname, filename))
 
         logger.add(
             sink=os.path.join(dirname, filename),
@@ -168,7 +173,6 @@ class Journal(object):
             backtrace=True,
             diagnose=True,
         )
-        self._write_logo(os.path.join(dirname, filename))
 
         if serialize:
             serialize_name = f"{name}.serialize{ext if ext else '.log'}"
@@ -219,8 +223,11 @@ class Journal(object):
         :return: ...
         :rtype: ...
         """
-        with open(sink, "a+") as f:
-            f.write(self._logo)
+        if not os.path.exists(sink):
+            os.makedirs(os.path.dirname(sink), exist_ok=True)
+
+            with open(sink, "a+") as f:
+                f.write(self._logo)
 
     def trace(self, msg, *args, **kwargs):
         return self.logger.opt(depth=1).trace(msg, *args, **kwargs)
@@ -264,9 +271,6 @@ class SingletonJournal(Journal):
         if SingletonJournal._initialized:
             return
 
-        __logo = self.load_logo()
-
         super().__init__(*args, **kwargs)
 
         SingletonJournal._initialized = True
-        self.info("Logger initialized.")

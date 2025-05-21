@@ -29,3 +29,7 @@ class FileModeEnum(BaseEnum):
     ab = "ab"
     a_plus = "a+"
     ab_plus = "ab+"
+
+    @property
+    def value(self) -> str:
+        return super().value

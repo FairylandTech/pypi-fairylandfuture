@@ -23,6 +23,10 @@ class DateTimeEnum(BaseEnum):
     TIME_CN = "%H时%M分%S秒"
     DATETIME_CN = "%Y年%m月%d日 %H时%M分%S秒"
 
+    @property
+    def value(self) -> str:
+        return super().value
+
 
 class TimeZoneEnum(BaseEnum):
     """
@@ -32,3 +36,7 @@ class TimeZoneEnum(BaseEnum):
     Shanghai = "Asia/Shanghai"
     Beiing = "Asia/Shanghai"
     Singapore = "Asia/Singapore"
+
+    @property
+    def value(self) -> str:
+        return super().value

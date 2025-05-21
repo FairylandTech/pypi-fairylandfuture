@@ -22,3 +22,7 @@ class LogLevelEnum(BaseEnum):
     WARNING = "WARNING"
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
+
+    @property
+    def value(self) -> str:
+        return super().value

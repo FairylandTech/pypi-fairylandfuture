@@ -17,3 +17,6 @@ PyFairylandFuture.egg-info
 ### Python ###
 .venv
 __pycache__
+
+### Test ###
+test

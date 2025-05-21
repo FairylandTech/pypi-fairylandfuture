@@ -19,3 +19,7 @@ class EncodingEnum(BaseEnum):
     GBK = "GBK"
     GB2312 = "GB2312"
     GB18030 = "GB18030"
+
+    @property
+    def value(self) -> str:
+        return super().value

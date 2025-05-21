@@ -1,5 +1,5 @@
 # coding: UTF-8
-""" 
+"""
 @software: PyCharm
 @author: Lionel Johnson
 @contact: https://fairy.host
@@ -155,7 +155,7 @@ class BaseFile:
         if self.ext not in exts:
             raise TypeError("File extension is not valid.")
 
-    def read(self, mode: FileModeEnum = None, /, *, encoding: Optional[EncodingEnum] = None) -> AnyStr:
+    def read(self, mode: Optional[FileModeEnum] = None, /, *, encoding: Optional[EncodingEnum] = None) -> AnyStr:
         """
         Read data from file.
 
@@ -169,7 +169,7 @@ class BaseFile:
         if not mode:
             mode = FileModeEnum.r
         if not encoding:
-            encoding = EncodingEnum.default
+            encoding = EncodingEnum.UTF8
 
         if self.size_byte > self.max_size:
             raise ValueError("Out of file size max.")
@@ -199,7 +199,7 @@ class BaseFile:
         if not mode:
             mode = FileModeEnum.w
         if not encoding:
-            encoding = EncodingEnum.default
+            encoding = EncodingEnum.UTF8
 
         if self.size_byte > self.max_size:
             raise ValueError(f"Out of file size max: {self.max_size}.")

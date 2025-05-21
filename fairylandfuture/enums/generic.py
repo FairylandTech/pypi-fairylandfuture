@@ -25,3 +25,7 @@ class ComparisonOperatorEnum(BaseEnum):
     NOT_LIKE = "not like"
     IS_NULL = "is null"
     IS_NOT_NULL = "is not null"
+
+    @property
+    def value(self) -> str:
+        return super().value

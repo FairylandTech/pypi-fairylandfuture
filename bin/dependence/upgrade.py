@@ -24,7 +24,7 @@ def main():
 
     if upgrade_pip_tools_err:
         print("Upgrade pip-tools failed.")
-        raise RuntimeError(upgrade_pip_tools_err.decode(EncodingEnum.default.value))
+        raise RuntimeError(upgrade_pip_tools_err.decode(EncodingEnum.UTF8.value))
     print("Upgrade pip-tools successfully.")
 
     print("Step 2: Generate requirements.")
@@ -42,7 +42,7 @@ def main():
 
     if sync_requirements_err:
         print("Sync dependencies failed.")
-        raise RuntimeError(sync_requirements_errde.code(EncodingEnum.default.value))
+        raise RuntimeError(sync_requirements_errde.code(EncodingEnum.UTF8.value))
     print("Sync dependencies successfully.")
 
     print("Step 4: Export develop dependencies.")
@@ -55,7 +55,7 @@ def main():
 
     if export_develop_dependencies_err:
         print("Export develop dependencies failed.")
-        raise RuntimeError(export_develop_dependencies_err.decode(EncodingEnum.default.value))
+        raise RuntimeError(export_develop_dependencies_err.decode(EncodingEnum.UTF8.value))
     print("Export develop dependencies successfully.")
 
     print("Upgrade successfully.")
