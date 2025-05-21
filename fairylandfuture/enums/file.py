@@ -7,7 +7,7 @@
 @datetime: 2024-08-18 00:57:31 UTC+08:00
 """
 
-from fairylandfuture.core.superclass.enums.enumerate import BaseEnum
+from fairylandfuture.core.superclass.enumerate import BaseEnum
 
 
 class FileModeEnum(BaseEnum):
@@ -30,4 +30,6 @@ class FileModeEnum(BaseEnum):
     a_plus = "a+"
     ab_plus = "ab+"
 
-    default = r
+    @property
+    def value(self) -> str:
+        return super().value

@@ -1,9 +1,0 @@
-mysql:
-  database: test
-  host: 127.0.0.1
-  options:
-  - option1
-  - option2
-  password: root
-  port: 3306
-  user: root
