@@ -1,0 +1,162 @@
+#!/bin/bash
+# @software: PyCharm
+# @author: Lionel Johnson
+# @contact: https://fairy.host
+# @organization: https://github.com/FairylandFuture
+# @datetime: 2024-09-25 17:32:13 UTC+08:00
+
+# Terminal output color
+RESET_COLOR="\e[0m"
+RED_COLOR="\e[31m"
+GREEN_COLOR="\e[32m"
+
+# Run
+RUN_PATH=$(pwd)
+
+# Srouce code
+PACKAGE_NAME="pypi-fairylandfuture"
+SOURCE_CODE_HTTPS_URL="https://github.com/FairylandTech/pypi-fairylandfuture.git"
+SOURCE_CODE_SSH_URL="git@github.com:FairylandTech/pypi-fairylandfuture.git"
+SOURCE_CODE_DEFAULT_BRANCH="ReleaseMaster"
+SYSTEM_DEPENDENCIES=(
+  "git"
+)
+
+# Temp path
+RANDOM_CURRENT_PATH="/tmp/$(uuidgen)"
+BUILD_PATH="/tmp/build${PACKAGE_NAME}"
+
+validate_python_version() {
+  # Check current Python version
+  local required_version="3.11"
+  local python_version
+
+  python_version=$(python --version 2>&1 | awk '{print $2}')
+
+  # Compare versions
+  if [[ "$(printf '%s\n' "${required_version}" "${python_version}" | sort -V | head -n1)" != "${required_version}" ]]; then
+    echo -e "${RED_COLOR}Python version must be >= ${required_version}, but found ${python_version}${RESET_COLOR}" >&2
+    exit 1
+  fi
+}
+
+install_system_dependencies() {
+  yum_install() {
+    sudo yum makecache && sudo yum update -y
+    sudo yum install -y "${SYSTEM_DEPENDENCIES[@]}"
+  }
+
+  apt_get_install() {
+    sudo apt-get update && sudo apt-get upgrade -y
+    sudo apt-get install -y "${SYSTEM_DEPENDENCIES[@]}"
+  }
+
+  dnf_install() {
+    sudo dnf makecache && sudo dnf update -y
+    sudo dnf install -y "${SYSTEM_DEPENDENCIES[@]}"
+  }
+
+  if [[ "${OSTYPE}" != "linux-gnu"* ]]; then
+    echo "This script is designed to run on Linux systems only."
+    return 1
+  fi
+
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    local os_name=$NAME
+    local os_version=$VERSION_ID
+  else
+    echo "Cannot determine the OS type."
+    return 1
+  fi
+
+  case "${os_name}" in
+  "Ubuntu" | "Debian")
+    echo "You are using ${os_name} ${os_version}."
+    apt_get_install
+    ;;
+  "Fedora")
+    echo "You are using ${os_name} ${os_version}."
+    dnf_install
+    ;;
+  "CentOS" | "Red Hat Enterprise Linux" | "RHEL")
+    if [ "${os_version}" -ge 8 ]; then
+      echo "You are using $os_name ${os_version}."
+      dnf_install
+    else
+      echo "You are using $os_name ${os_version}."
+      yum_install
+    fi
+    ;;
+  *)
+    echo "Unsupported OS: ${os_name}"
+    return 1
+    ;;
+  esac
+  return 0
+}
+
+checkout_main_branch() {
+  local current_branch
+
+  if [ ! -d .git ]; then
+    echo -e "This is not a Git repository."
+    exit 1
+  fi
+
+  current_branch=$(git symbolic-ref --short HEAD)
+
+  if [ "${current_branch}" == "${SOURCE_CODE_DEFAULT_BRANCH}" ]; then
+    echo -e "${GREEN_COLOR}You are already on the ${SOURCE_CODE_DEFAULT_BRANCH} branch.${RESET_COLOR}"
+  else
+    echo -e "Switching to ${SOURCE_CODE_DEFAULT_BRANCH} branch..."
+    if git show-ref --verify --quiet refs/heads/${SOURCE_CODE_DEFAULT_BRANCH}; then
+      git checkout -b "${SOURCE_CODE_DEFAULT_BRANCH}" origin/"${SOURCE_CODE_DEFAULT_BRANCH}"
+    else
+      echo -e "${RED_COLOR}${SOURCE_CODE_DEFAULT_BRANCH} branch does not exist.${RESET_COLOR}"
+      exit 1
+    fi
+  fi
+}
+
+install_pip_dependencies() {
+  # Install dependencies
+  echo -e "${GREEN_COLOR}Install python dependencies...${RESET_COLOR}"
+  python -m pip install --no-cache-dir --upgrade pip
+  python -m pip install --no-cache-dir --upgrade setuptools wheel
+  python -m pip install --no-cache-dir pip-tools
+
+  echo -e "${GREEN_COLOR}Compile requirements...${RESET_COLOR}"
+  pip-compile --generate-hashes requirements.in --output-file compiled-requirements.txt
+
+  echo -e "${GREEN_COLOR}Install compiled requirements...${RESET_COLOR}"
+  python -m pip install --no-cache-dir -r compiled-requirements.txt
+}
+
+main() {
+  echo -e "==========${GREEN_COLOR}Run package script${RESET_COLOR}=========="
+
+  # Check Python version
+  validate_python_version && echo -e "Check Python version: ${GREEN_COLOR}PASS${RESET_COLOR}"
+
+  # Install system dependencies
+  install_system_dependencies && echo -e "Install system dependencies: ${GREEN_COLOR}PASS${RESET_COLOR}"
+
+  # Create and enter directory
+  mkdir -p "${RANDOM_CURRENT_PATH}" && cd "${RANDOM_CURRENT_PATH}" || exit 1 && echo -e "${GREEN_COLOR}Temp directory: ${RANDOM_CURRENT_PATH}${RESET_COLOR}"
+
+  # Clone source code & build
+  echo -e "${GREEN_COLOR}Clone source code${RESET_COLOR}"
+  git clone "${SOURCE_CODE_HTTPS_URL}"
+  cd "${PACKAGE_NAME}" || exit 1
+  checkout_main_branch
+  install_pip_dependencies
+  python -m build --no-isolation
+  mkdir -p "${BUILD_PATH}" && cp -r dist/* "${BUILD_PATH}" && echo -e "${GREEN_COLOR}Build output path: ${BUILD_PATH}${RESET_COLOR}"
+
+  # End package
+  rm -rf "${RANDOM_CURRENT_PATH}" && echo -e "${GREEN_COLOR}Clean up temp directory${RESET_COLOR}"
+  cd "${RUN_PATH}" || exit 1
+}
+
+main
