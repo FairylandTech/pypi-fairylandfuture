@@ -7,7 +7,7 @@
 @datetime: 2024-12-24 10:26:13 UTC+08:00
 """
 
-from fairylandfuture.core.superclass.enums.enumerate import BaseEnum
+from fairylandfuture.core.superclass.enumerate import BaseEnum
 
 
 class ComparisonOperatorEnum(BaseEnum):
@@ -25,3 +25,7 @@ class ComparisonOperatorEnum(BaseEnum):
     NOT_LIKE = "not like"
     IS_NULL = "is null"
     IS_NOT_NULL = "is not null"
+
+    @property
+    def value(self) -> str:
+        return super().value

@@ -23,12 +23,12 @@ from fairylandfuture.modules.datetimes import DateTimeModule
 ### 获取当前日期
 
 ```python
-from fairylandfuture.enums.chrono import DateTimeEnum
+from fairylandfuture.enums.chron import DateTimeEnum
 from fairylandfuture.modules.datetimes import DateTimeModule
 
-date = DateTimeModule.date()  # default format:: %Y-%m-%d
+date = DateTimeModule.DATE()  # default format:: %Y-%m-%d
 print(date)  # Output: 2024-05-10
 
-date = DateTimeModule.date("%Y/%m/%d")  # format: %Y/%m/%d
+date = DateTimeModule.DATE("%Y/%m/%d")  # format: %Y/%m/%d
 print(date)  # Output: 2024/05/10
 ```
