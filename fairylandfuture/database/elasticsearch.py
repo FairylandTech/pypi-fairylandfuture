@@ -7,22 +7,24 @@
 @datetime: 2024-07-17 10:42:19 UTC+08:00
 """
 
-import json
 import warnings
-from typing import Dict, Union, Tuple, Sequence
+from typing import Dict, Union, Tuple, Sequence, Any, Literal
 
 from elasticsearch import Elasticsearch
-from opensearchpy import OpenSearch
+from elasticsearch.exceptions import NotFoundError
+from elasticsearch.helpers import bulk
 
+from fairylandfuture import journal
 from fairylandfuture.exceptions.elasticsearch import ElasticSearchExecutionException
-from fairylandfuture.exceptions.messages.es import ElasticSearchExceptMessage
+from fairylandfuture.exceptions.messages.elasticsearch import ElasticSearchExceptMessage
+from fairylandfuture.structures.builder.elasticsearch import ElasticsearchBulkParamFrozenStructure
 
 warnings.filterwarnings("ignore")
 
 
 class ElasticSearchOperator:
 
-    def __init__(self, client: Union[Elasticsearch, OpenSearch]):
+    def __init__(self, client: Elasticsearch):
         self.__client = client
 
     @property
@@ -30,57 +32,112 @@ class ElasticSearchOperator:
         return self.__client
 
     @property
-    def indices(self) -> Tuple[str, ...]:
-        indices: Dict[str, ...] = self.client.indices.get("*")
-        return tuple([index for index in indices.keys()])
+    def info(self) -> Dict[str, Any]:
+        return self.client.info().raw
 
-    def simple_search(self, index, dsl) -> Tuple[int, Sequence[Dict[str, ...]]]:
-        data: Dict[str, ...] = self.client.search(index=index, body=dsl)
+    @property
+    def indices(self) -> Tuple[str, ...]:
+        return tuple(self.client.indices.get(index="*").raw.keys())
+
+    def _validate_index(self, index: str) -> str:
+        if self.client.indices.exists_alias(name=index):
+            raise ElasticSearchExecutionException(ElasticSearchExceptMessage.ALIAS_NOT_ALLOWED)
+        if not self.client.indices.exists(index=index):
+            raise ElasticSearchExecutionException(ElasticSearchExceptMessage.INDEX_NOT_EXISTS)
+
+        return index
+
+    def _validate_alias(self, alias: str) -> str:
+        if self.client.indices.exists(index=alias):
+            raise ElasticSearchExecutionException(ElasticSearchExceptMessage.INDEX_NOT_ALLOWED)
+        if not self.client.indices.exists_alias(name=alias):
+            raise ElasticSearchExecutionException(ElasticSearchExceptMessage.ALIAS_NOT_EXISTS)
+
+        return alias
+
+    def _validate_doc(self, index: str, doc_id: str):
+        self._validate_index(index)
+
+        if not self.client.exists(index=index, id=doc_id):
+            raise ElasticSearchExecutionException(ElasticSearchExceptMessage.DOC_NOT_EXISTS)
+
+    def get_name_type(self, name: str) -> Literal["index", "alias", "both", "none"]:
+        index = self.client.indices.exists(index=name)
+        alias = self.client.indices.exists_alias(name=name)
+
+        if index and alias:
+            return "both"
+        elif index:
+            return "index"
+        elif alias:
+            return "alias"
+        else:
+            return "none"
+
+    def get_index_info(self, index: str):
+        self._validate_index(index)
+
+        return self.client.indices.get(index=index).raw.get(index)
+
+    def get_doc_info(self, index: str, doc_id: str) -> Dict[str, Any]:
+        self._validate_index(index)
+        self._validate_doc(index, doc_id)
+
+        return self.client.get(index=index, id=doc_id).raw
+
+    def get_index_stats(self, index: str):
+        self._validate_index(index)
+
+        return self.client.indices.stats(index=index).raw
+
+    def get_index_stats_light(self, index: str) -> Dict[str, Dict[str, str]]:
+        self._validate_index(index)
+
+        data = self.client.cat.indices(index=index, format="json").raw
+
+        result = {row.get("index"): row for row in data}
+
+        return result
+
+    def get_indices_for_alias(self, name: str) -> Union[str, Tuple[str, ...]]:
+        try:
+            result = tuple(self.client.indices.get_alias(name=name).raw.keys())
+
+            return result if len(result) > 1 else result[0]
+        except NotFoundError as err:
+            journal.warning("Error getting indices for alias {}: {}", name, err)
+            return tuple()
+
+    def search(self, index: str, body: Dict[str, Any]):
+        if not self.client.indices.exists(index=index):
+            raise ElasticSearchExecutionException(ElasticSearchExceptMessage.INDEX_NOT_EXISTS)
+
+        results = self.client.search(index=index, body=body).raw
+
         if data.get("timed_out"):
             raise ElasticSearchExecutionException(ElasticSearchExceptMessage.TIMEOUT)
 
-        total: int = data.get("hits").get("total").get("value")
-        hits: List[Dict[str, ...]] = data.get("hits").get("hits")
+        return results
 
+    def update_partial(self, index: str, doc_id: str, content: Dict[str, Any]):
+        self._validate_index(index)
+        self._validate_doc(index, doc_id)
+
+        return self.client.update(index=index, id=doc_id, body={"doc": content}, refresh=True)
+
+    def update_replace(self, index: str, doc_id: str, document: Dict[str, Any]):
+        self._validate_index(index)
+        self._validate_doc(index, doc_id)
+
+        return self.client.index(index=index, id=doc_id, body=document, refresh=True)
+
+    def bulk_update(self, params: Sequence[ElasticsearchBulkParamFrozenStructure]):
+        actions = [{"_op_type": "update", "_index": param.index, "_id": param.id, "doc": param.content} for param in params]
+
+        return bulk(self.client, actions, refresh=True)
+
+    @classmethod
+    def parser_search_results(cls, data: Union[str, Dict[str, Any]]) -> Tuple[int, Tuple[Dict[str, ...], ...]]:
+        total = data.get("hits", {}).get("total", {}).get("value", 0)
+        hits = data.get("hits", {}).get("hits", [])
         return total, tuple(hits)
-
-    def run(self):
-        self.client.update_by_query(index="asd", body={}, conflicts="proceed")
-
-
-if __name__ == '__main__':
-    client = OpenSearch("http://10.65.66.213:19399", meta_header=False, verify_certs=False)
-    es_operator = ElasticSearchOperator(client)
-
-    index = "internal_isop_event*"
-    query = {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "nested": {
-                            "path": "destination",
-                            "query": {
-                                "bool": {
-                                    "must": [
-                                        {
-                                            "term": {
-                                                "destination.ip": "23.12.104.144"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                ]
-            }
-        }
-    }
-    # data = client.search(query, "internal_isop_event*")
-
-    total, hits = es_operator.simple_search(index, query)
-    print(hits)
-
-
-    # print(data)
