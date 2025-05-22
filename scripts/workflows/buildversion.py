@@ -12,22 +12,9 @@ import os
 import requests
 
 
-def count_commits(token):
-    url = "https://api.github.com/repos/PrettiestFairy/pypi-fairylandfuture/commits"
-    # headers = {"Authorization": f"Token {token}"}
+def counter(token):
+    url = "https://api.github.com/repos/FairylandTech/pypi-fairylandfuture/commits"
     headers = {"Authorization": f"Bearer {token}"}
-    # response = requests.get(url, headers=headers)
-    # try:
-    #     if response.status_code == 200:
-    #         commit_data = response.json()
-    #         print(f"Fetched {len(commit_data)} commits")
-    #         return len(commit_data)
-    #     else:
-    #         print(f"Failed to fetch commits, status code: {response.status_code}")
-    #         return 0
-    # except Exception as err:
-    #     print(f"Failed to fetch commits, error: {err}")
-    #     return 0
     page = 1
     per_page = 100
     count = 0
@@ -49,17 +36,24 @@ def count_commits(token):
     return count
 
 
-def write_commit_count(count):
+def process(data=None):
+    if not data:
+        with open("fairylandfuture/conf/release/buildversion", "r", encoding="UTF-8") as file:
+            content = file.read()
+
+        data = str(int(content.strip()) + 1)
+
     with open("fairylandfuture/conf/release/buildversion", "w", encoding="UTF-8") as file:
-        file.write(count)
-    with open("conf/release/buildversion", "w", encoding="UTF-8") as file:
-        file.write(count)
-    return "Successful"
+        file.write(data)
 
 
 if __name__ == "__main__":
     TOKEN = os.environ.get("GITHUB_TOKEN")
-    commit_count = count_commits(TOKEN)
-    if commit_count:
-        commit_count += 2
-        write_commit_count(str(commit_count))
+    count = counter(TOKEN)
+    if count:
+        process(str(count + 2))
+        print("Build version updated successfully.")
+    else:
+        print("Failed to retrieve commit count.")
+        process()
+        exit(1)
