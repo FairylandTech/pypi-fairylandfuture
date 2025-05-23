@@ -114,7 +114,7 @@ class ElasticSearchOperator:
 
         results = self.client.search(index=index, body=body).raw
 
-        if data.get("timed_out"):
+        if results.get("timed_out"):
             raise ElasticSearchExecutionException(ElasticSearchExceptMessage.TIMEOUT)
 
         return results
@@ -123,7 +123,7 @@ class ElasticSearchOperator:
         self._validate_index(index)
         self._validate_doc(index, doc_id)
 
-        return self.client.update(index=index, id=doc_id, body={"doc": content}, refresh=True)
+        return self.client.update(index=index, id=doc_id, body={"doc": content}, refresh=True).raw
 
     def update_replace(self, index: str, doc_id: str, document: Dict[str, Any]):
         self._validate_index(index)
@@ -134,7 +134,9 @@ class ElasticSearchOperator:
     def bulk_update(self, params: Sequence[ElasticsearchBulkParamFrozenStructure]):
         actions = [{"_op_type": "update", "_index": param.index, "_id": param.id, "doc": param.content} for param in params]
 
-        return bulk(self.client, actions, refresh=True)
+        succeed, failed = bulk(self.client, actions, stats_only=True, refresh=True)
+
+        return succeed, failed
 
     @classmethod
     def parser_search_results(cls, data: Union[str, Dict[str, Any]]) -> Tuple[int, Tuple[Dict[str, ...], ...]]:
