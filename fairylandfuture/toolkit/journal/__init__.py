@@ -67,7 +67,6 @@ class Journal(object):
 
     DEFAULT_LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | P:{process} T:{thread} | {message}"
 
-    # ... rest of the class remains unchanged ...
     def __init__(
         self,
         dirname: str = "logs",
