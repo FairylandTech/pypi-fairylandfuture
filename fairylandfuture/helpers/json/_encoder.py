@@ -13,6 +13,7 @@ import datetime
 import decimal
 
 from fairylandfuture.enums.chron import DateTimeEnum
+from fairylandfuture.core.superclass.structure import BaseFrozenStructure, BaseStructure
 
 class JsonEncoder(json.JSONEncoder):
 
@@ -25,6 +26,8 @@ class JsonEncoder(json.JSONEncoder):
             return o.strftime(DateTimeEnum.TIME.value)
         elif isinstance(o, decimal.Decimal):
             return float(o)
+        elif isinstance(o, (BaseStructure, BaseFrozenStructure)):
+            return o.to_json()
 
         return super().default(o)
 
