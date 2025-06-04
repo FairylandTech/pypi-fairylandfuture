@@ -67,13 +67,12 @@ class Journal(object):
 
     DEFAULT_LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} | P:{process} T:{thread} | {message}"
 
-    # ... rest of the class remains unchanged ...
     def __init__(
         self,
         dirname: str = "logs",
         filename: str = "service.log",
         debug: bool = False,
-        rotation: str = "20 MB",
+        rotation: str = "5 MB",
         retention: str = "180 days",
         formatting: Optional[str] = None,
         compression: str = "gz",
@@ -128,20 +127,20 @@ class Journal(object):
 
     def _configure(
         self,
-        dirname: str = "logs",
-        filename: str = "service.log",
-        debug: bool = False,
-        rotation: str = "20 MB",
-        retention: str = "180 days",
-        formatting: Optional[str] = None,
-        compression: str = "gz",
-        encoding: EncodingEnum = EncodingEnum.UTF8,
-        level: LogLevelEnum = LogLevelEnum.INFO,
-        serialize: bool = False,
-        console: bool = False,
-        console_level: LogLevelEnum = LogLevelEnum.TRACE,
-        console_format: Optional[str] = None,
-        clear_existing: bool = True,
+        dirname: str,
+        filename: str,
+        debug: bool,
+        rotation: str,
+        retention: str,
+        formatting: Optional[str],
+        compression: str,
+        encoding: EncodingEnum,
+        level: LogLevelEnum,
+        serialize: bool,
+        console: bool,
+        console_level: LogLevelEnum,
+        console_format: Optional[str],
+        clear_existing: bool,
     ):
 
         if clear_existing:

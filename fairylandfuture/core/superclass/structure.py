@@ -31,8 +31,11 @@ class BaseStructure:
     def to_dict(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
         return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
 
+    def to_json(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
+        return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
+
     def to_jsonstring(self: Self, /, *, ignorenone: bool = False) -> str:
-        return json.dumps(self.to_dict(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
+        return json.dumps(self.to_json(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
 
 
 @dataclass(frozen=True)
@@ -53,8 +56,11 @@ class BaseFrozenStructure:
     def to_dict(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
         return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
 
+    def to_json(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
+        return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
+
     def to_jsonstring(self: Self, /, *, ignorenone: bool = False) -> str:
-        return json.dumps(self.to_dict(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
+        return json.dumps(self.to_json(ignorenone=ignorenone), separators=(",", ":"), ensure_ascii=False)
 
 
 @dataclass

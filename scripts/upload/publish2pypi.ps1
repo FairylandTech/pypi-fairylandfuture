@@ -17,7 +17,7 @@
 
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 
-$ProjectPyPIrcPath = "conf\pypi\.pypirc"
+$ProjectPyPIrcPath = "conf\.pypirc"
 $PyPIrcPath = "$HOME\.pypirc"
 
 if (-Not (Test-Path $PyPIrcPath))

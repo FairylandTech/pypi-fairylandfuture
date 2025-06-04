@@ -10,6 +10,7 @@
 import os
 import subprocess
 import sys
+import tomllib
 from datetime import datetime
 from enum import StrEnum
 from typing import Optional
@@ -18,7 +19,6 @@ import requests
 import setuptools
 
 _ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
-_VERSION = "1.3.0"
 
 if sys.version_info < (3, 11):
     sys.exit("Python 3.11 or higher is required.")
@@ -47,8 +47,8 @@ class VersionLevelEnum(StrEnum):
 
 class Package(object):
 
-    def __init__(self, version_number: str, version_level: Optional[VersionLevelEnum] = None):
-        self.version_number: str = version_number
+    def __init__(self, version_level: Optional[VersionLevelEnum] = None):
+        self.version_number: str = self._version()
         self.version_level: VersionLevelEnum = version_level if version_level else VersionLevelEnum.release
 
     @property
@@ -114,12 +114,10 @@ class Package(object):
         exclude = (
             "bin",
             "conf",
-            "deployment",
             "docs",
             "scripts",
             "temp",
             "test",
-            # "fairylandfuture/test",
         )
 
         return exclude
@@ -189,9 +187,12 @@ class Package(object):
 
     @property
     def install_requires(self):
-        with open(os.path.join(_ROOT_PATH, "fairylandfuture", "conf", "requirements.in"), "r", encoding="UTF-8") as stream:
-            requirements_text = stream.read()
-        return requirements_text.split()
+        with open("pyproject.toml", "rb") as stream:
+            data = tomllib.load(stream)
+
+        requirements = data.get("project", {}).get("dependencies", [])
+
+        return requirements
 
     @staticmethod
     def github_commit_number():
@@ -215,9 +216,19 @@ class Package(object):
             print(err)
             return local_build_version()
 
+    @staticmethod
+    def _version():
+        try:
+            with open(os.path.join(_ROOT_PATH, "pyproject.toml"), "rb") as stream:
+                data = tomllib.load(stream)
+            return data.get("project", {}).get("version", "0.0.0")
+        except Exception as err:
+            print(f"Error: Getting version {err}")
+            raise RuntimeError("Failed to get version.")
+
 
 if __name__ == "__main__":
-    package = Package(_VERSION, VersionLevelEnum.release)
+    package = Package(VersionLevelEnum.release)
     setuptools.setup(
         name=package.name,
         version=package.version,

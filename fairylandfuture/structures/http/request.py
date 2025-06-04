@@ -8,7 +8,7 @@
 """
 
 from dataclasses import dataclass
-from typing import Union, Dict, Any, Literal, Optional
+from typing import Union, Dict, Any, Literal, Optional, Self
 
 from requests import Response
 
@@ -30,3 +30,17 @@ class HTTPSimpleRequestResultStructure(BaseFrozenStructure):
             content = self.content
 
         return f"<HTTPSimpleRequestResultStructure(flag={self.flag}, content={content}, format={self.format}, response={self.response})"
+
+    def to_json(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
+        result = super().to_dict(ignorenone=ignorenone)
+
+        if self.response:
+            result["response"] = {
+                "status_code": self.response.status_code,
+                "headers": dict(self.response.headers),
+                "url": self.response.url,
+                "cookies": dict(self.response.cookies),
+                "elapsed": self.response.elapsed.total_seconds() if self.response.elapsed else None,
+            }
+
+        return result
