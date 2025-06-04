@@ -114,12 +114,10 @@ class Package(object):
         exclude = (
             "bin",
             "conf",
-            "deployment",
             "docs",
             "scripts",
             "temp",
             "test",
-            # "fairylandfuture/test",
         )
 
         return exclude
