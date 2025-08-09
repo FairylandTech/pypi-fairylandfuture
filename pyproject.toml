@@ -66,4 +66,7 @@ dependencies = [
     "pygments",
     "markdown",
     "uritemplate",
+    # Auto
+    "selenium",
+    "webdriver-manager",
 ]
