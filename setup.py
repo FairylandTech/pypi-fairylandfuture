@@ -243,7 +243,7 @@ if __name__ == "__main__":
         classifiers=package.classifiers,
         python_requires=package.python_requires,
         install_requires=package.install_requires,
-        cmdclass=package.cmdclass,
+        # cmdclass=package.cmdclass,
         fullname=package.fullname,
         keywords=package.keywords,
         long_description=package.long_description,

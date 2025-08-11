@@ -12,7 +12,7 @@ temp/*
 ### Build ###
 build
 dist
-PyFairylandFuture.egg-info
+*.egg-info
 
 ### Python ###
 .venv
