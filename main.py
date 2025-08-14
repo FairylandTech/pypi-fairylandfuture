@@ -9,12 +9,14 @@
 
 import tomllib
 
+
 def main():
     # This is a placeholder for the main function.
     # You can add your code here to execute when the script runs.
     print("Hello, World!")
 
     read_toml()
+
 
 def read_toml():
     with open("pyproject.toml", "rb") as f:
@@ -27,5 +29,3 @@ def read_toml():
 
 if __name__ == '__main__':
     main()
-
-

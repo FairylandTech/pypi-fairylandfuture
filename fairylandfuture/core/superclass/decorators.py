@@ -7,7 +7,6 @@
 @datetime: 2024-05-18 11:39:05 UTC+08:00
 """
 
-import functools
 from functools import wraps
 from typing import Callable, TypeVar, Generic, Any
 from typing import Type

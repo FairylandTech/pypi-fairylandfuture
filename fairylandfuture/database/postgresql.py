@@ -1,5 +1,5 @@
 # coding: UTF-8
-""" 
+"""
 @software: PyCharm
 @author: Lionel Johnson
 @contact: https://fairy.host
@@ -14,9 +14,9 @@ import psycopg2
 from psycopg2 import pool
 from psycopg2.extras import NamedTupleCursor
 
+from fairylandfuture.abstract.database import AbstractPostgreSQLOperator
 from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
-from fairylandfuture.abstract.database import AbstractPostgreSQLOperator
 from fairylandfuture.structures.builder.database import PostgreSQLExecuteFrozenStructure
 
 
