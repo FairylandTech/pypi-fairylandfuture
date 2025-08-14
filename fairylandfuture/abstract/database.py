@@ -11,9 +11,9 @@ import abc
 from typing import Tuple, NamedTuple, Union, Dict, Any
 
 from fairylandfuture.exceptions.database import SQLSyntaxException
+from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
 from fairylandfuture.structures.builder.database import MySQLExecuteFrozenStructure
 from fairylandfuture.structures.builder.database import PostgreSQLExecuteFrozenStructure
-from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
 
 
 class AbstractMySQLOperator(abc.ABC):

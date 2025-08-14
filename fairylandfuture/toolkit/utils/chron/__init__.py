@@ -8,15 +8,14 @@
 """
 
 import time
-
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
+from fairylandfuture.core.superclass.validators import Validator
 from fairylandfuture.enums.chron import DateTimeEnum, TimeZoneEnum
 from fairylandfuture.toolkit.tools.validator.validators import ParamsValidator
-from fairylandfuture.core.superclass.validators import Validator
 
 
 class DateTimeToolkit:
@@ -124,12 +123,7 @@ class DateTimeToolkit:
         :return: Current timestamp.
         :rtype: int
         """
-        validator = ParamsValidator(
-            {
-                "ms": Validator(required=False, typedef=bool),
-                "n": Validator(required=False, typedef=(int, type(None)))
-            }
-        )
+        validator = ParamsValidator({"ms": Validator(required=False, typedef=bool), "n": Validator(required=False, typedef=(int, type(None)))})
         validator.validate({"ms": ms, "n": n})
 
         if ms:
@@ -187,7 +181,7 @@ class DateTimeToolkit:
                 "dt_string": Validator(required=True, typedef=str),
                 "ms": Validator(required=False, typedef=bool),
                 "n": Validator(required=False, typedef=(int, type(None))),
-                "_format": Validator(required=False, typedef=(str, type(None)))
+                "_format": Validator(required=False, typedef=(str, type(None))),
             }
         )
         validator.validate({"dt_string": dt_string, "ms": ms, "n": n, "_format": _format})
@@ -287,5 +281,3 @@ class DateTimeToolkit:
         :rtype: datetime
         """
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).replace(tzinfo=None)
-
-
