@@ -17,6 +17,3 @@ dist
 ### Python ###
 .venv
 __pycache__
-
-### Test ###
-test
