@@ -7,6 +7,7 @@
 @datetime: 2024-05-10 10:46:52 UTC+08:00
 """
 
+import abc
 from enum import Enum
 from typing import Any, List, Tuple, TypeVar, Union, Optional, Sequence, Type
 
