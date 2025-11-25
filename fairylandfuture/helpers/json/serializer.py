@@ -8,8 +8,12 @@
 """
 
 import json
+import typing as t
 
-from ._encoder import JsonEncoder
+from fairylandfuture.helpers.json.encoder import JsonEncoder
+
+ClazzType = t.TypeVar("ClazzType")
+StrAny = t.TypeVar("StrAny", str, bytes, bytearray)
 
 
 class JsonSerializerHelper:
@@ -19,5 +23,14 @@ class JsonSerializerHelper:
         return json.dumps(value, cls=JsonEncoder, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
     @classmethod
-    def deserialize(cls, value):
-        return json.loads(value)
+    def deserialize(cls, value: t.Union[StrAny, t.Dict[str, t.Any]], clazz: t.Optional[t.Callable[..., ClazzType]] = None) -> ClazzType:
+        if isinstance(value, t.Dict):
+            if not clazz:
+                return value
+
+            return clazz(**value)
+
+        if not clazz:
+            return json.loads(value)
+
+        return json.loads(value, object_hook=lambda x: clazz(**x))

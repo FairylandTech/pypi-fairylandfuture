@@ -18,7 +18,11 @@ from fairylandfuture.enums.chron import DateTimeEnum
 class JsonEncoder(json.JSONEncoder):
 
     def default(self, o):
-        if isinstance(o, datetime.datetime):
+        if hasattr(o, "__dict__"):
+            return o.__dict__
+        elif hasattr(o, "__slots__"):
+            return {slot: getattr(o, slot) for slot in o.__slots__}
+        elif isinstance(o, datetime.datetime):
             return o.strftime(DateTimeEnum.DATETIME.value)
         elif isinstance(o, datetime.date):
             return o.strftime(DateTimeEnum.DATE.value)
