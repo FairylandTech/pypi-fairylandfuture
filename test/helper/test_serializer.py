@@ -7,11 +7,15 @@
 @datetime: 2025-11-24 21:16:30 UTC+08:00
 """
 
+import time
 import typing as t
 import unittest
 from dataclasses import dataclass
+from enum import auto
 
-from fairylandfuture.core.superclass.structure import BaseStructure
+from fairylandfuture.core.superclass.enumerate import BaseEnum
+from fairylandfuture.core.superclass.schema import BaseSchema
+from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
 from fairylandfuture.helpers.json.serializer import JsonSerializerHelper
 from test import TestBase
 
@@ -55,6 +59,27 @@ class TestJsonEntity3:
 
     def __repr__(self):
         return f"TestJsonEntity3(id={self.id}, name={self.name}, value={self.value})"
+
+
+class UserRuleEnum(BaseEnum):
+    DEFAULT = auto()
+    ADMIN = "admin"
+    USER = "user"
+
+
+class UserDTO(BaseSchema):
+    id: t.Optional[int] = None
+    name: str
+    email: str
+    user_rule: UserRuleEnum
+
+
+@dataclass(frozen=True)
+class UserVO(BaseFrozenStructure):
+    id: int
+    name: str
+    email: str
+    updated_at: t.Optional[str] = None
 
 
 class JsonSerializerHelperTestCase(TestBase):
@@ -138,6 +163,23 @@ class JsonSerializerHelperTestCase(TestBase):
         entity_dict_deserialized: TestJsonEntityDict = JsonSerializerHelper.deserialize(entity_dict_serialized, TestJsonEntityDict)
         print("entity dict deserializer:", entity_dict_deserialized)
         self.assertIsInstance(entity_dict_deserialized, TestJsonEntityDict)
+
+    def test_schema(self):
+        formdata = {
+            "name": "Alice",
+            "email": "alice@example.com",
+            "userRule": "admin",
+        }
+
+        user_dto = UserDTO(**formdata)
+
+        print(user_dto)
+        print(user_dto.to_dict())
+        print(user_dto.to_serializable_dict())
+        print(user_dto.to_json_string())
+        print(user_dto.hashcode)
+
+        time.time()
 
 
 if __name__ == "__main__":

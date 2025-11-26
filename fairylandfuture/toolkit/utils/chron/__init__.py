@@ -263,7 +263,7 @@ class DateTimeToolkit:
         return abs((date2 - date1).days)
 
     @classmethod
-    def unzone_utc(cls) -> datetime:
+    def unzone_utc(cls) -> "datetime":
         """
         Remove the timezone from the current datetime.
 
@@ -273,7 +273,7 @@ class DateTimeToolkit:
         return datetime.now(timezone.utc).replace(tzinfo=None)
 
     @classmethod
-    def unzone_cst(cls) -> datetime:
+    def unzone_cst(cls) -> "datetime":
         """
         Remove the timezone from the current datetime in China.
 
