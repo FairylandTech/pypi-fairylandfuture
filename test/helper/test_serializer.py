@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 from fairylandfuture.core.superclass.structure import BaseStructure
 from fairylandfuture.helpers.json.serializer import JsonSerializerHelper
+from test import TestBase
 
 
 @dataclass
@@ -20,6 +21,12 @@ class TestJsonEntity(BaseStructure):
     id: int
     name: str
     value: t.Optional[float] = None
+
+
+@dataclass
+class TestJsonEntityDict(BaseStructure):
+    id: int
+    eneity: TestJsonEntity
 
 
 class TestJsonEntity2:
@@ -50,13 +57,7 @@ class TestJsonEntity3:
         return f"TestJsonEntity3(id={self.id}, name={self.name}, value={self.value})"
 
 
-class JsonSerializerHelperTestCase(unittest.TestCase):
-
-    def setUp(self):
-        print(f" Start of {self._testMethodName} ".center(50, "="))
-
-    def tearDown(self):
-        print(f" End of {self._testMethodName} ".center(50, "=") + "\n")
+class JsonSerializerHelperTestCase(TestBase):
 
     def test_entity1(self):
         entity: TestJsonEntity = TestJsonEntity(id=1, name="Test", value=10.5)
@@ -125,6 +126,18 @@ class JsonSerializerHelperTestCase(unittest.TestCase):
         print("plain dict serializer:", plain_dict_serialized)
         print("plain dict serializer raw:", repr(plain_dict_serialized))
         self.assertIsInstance(plain_dict_serialized, str)
+
+    def test_entity_dict(self):
+        entity = TestJsonEntity(1, "Test", 0.5)
+        entity_dict = TestJsonEntityDict(id=1, eneity=entity)
+
+        entity_dict_serialized = JsonSerializerHelper.serialize(entity_dict)
+        print("entity dict serializer:", entity_dict_serialized)
+        self.assertIsInstance(entity_dict_serialized, str)
+
+        entity_dict_deserialized: TestJsonEntityDict = JsonSerializerHelper.deserialize(entity_dict_serialized, TestJsonEntityDict)
+        print("entity dict deserializer:", entity_dict_deserialized)
+        self.assertIsInstance(entity_dict_deserialized, TestJsonEntityDict)
 
 
 if __name__ == "__main__":

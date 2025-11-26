@@ -10,6 +10,7 @@
 import unittest
 
 from fairylandfuture.core.metaclass.singleton import SingletonMeta
+from test import TestBase
 
 
 class A(metaclass=SingletonMeta):
@@ -18,13 +19,7 @@ class A(metaclass=SingletonMeta):
         self.name = "Singleton A"
 
 
-class Test(unittest.TestCase):
-
-    def setUp(self):
-        print(f" Start of {self._testMethodName} ".center(50, "="))
-
-    def tearDown(self):
-        print(f" End of {self._testMethodName} ".center(50, "=") + "\n")
+class Test(TestBase):
 
     def test_singleton(self):
         a1 = A()
