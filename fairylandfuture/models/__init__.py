@@ -30,6 +30,7 @@ class BaseModel(DeclarativeBase):
     updated_at = Column(DateTime, default=DateTimeToolkit.unzone_cst, onupdate=DateTimeToolkit.unzone_cst, nullable=False, comment="Update time")
     existed = Column(Boolean, default=True, nullable=False, comment="Soft erase marker: 0=normal, 1=delete")
 
+    @classmethod
     @declared_attr
     def __tablename__(cls) -> str:
         name = re.sub(r"(?<!^)(?=[A-Z])", "_", cls.__name__).lower()
