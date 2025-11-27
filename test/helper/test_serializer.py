@@ -7,29 +7,29 @@
 @datetime: 2025-11-24 21:16:30 UTC+08:00
 """
 
+import datetime as dt
 import time
 import typing as t
 import unittest
 from dataclasses import dataclass
-import datetime as dt
 from enum import auto
+from test import TestBase
 
-from sqlalchemy import Column, String, DateTime, Boolean, Integer, ForeignKey
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, relationship
 
 from fairylandfuture.core.superclass.enumerate import BaseEnum
 from fairylandfuture.core.superclass.schema import BaseSchema
-from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
+from fairylandfuture.core.superclass.structure import BaseFrozenStructure, BaseStructure
 from fairylandfuture.helpers.json.serializer import JsonSerializerHelper
 from fairylandfuture.models import BaseModel
-from test import TestBase
 
 
 @dataclass
 class TestJsonEntity(BaseStructure):
     id: int
     name: str
-    value: t.Optional[float] = None
+    value: float | None = None
 
 
 @dataclass
@@ -40,7 +40,7 @@ class TestJsonEntityDict(BaseStructure):
 
 class TestJsonEntity2:
 
-    def __init__(self, id: int, name: str, value: t.Optional[float] = None) -> None:
+    def __init__(self, id: int, name: str, value: float | None = None) -> None:
         self.id = id
         self.name = name
         self.value = value
@@ -52,10 +52,10 @@ class TestJsonEntity2:
 class TestJsonEntity3:
     id: int
     name: str
-    value: t.Optional[float] = None
+    value: float | None = None
 
     @classmethod
-    def build(cls, id: int, name: str, value: t.Optional[float] = None) -> "TestJsonEntity3":
+    def build(cls, id: int, name: str, value: float | None = None) -> "TestJsonEntity3":
         instance = cls()
         instance.id = id
         instance.name = name
@@ -73,7 +73,7 @@ class UserRuleEnum(BaseEnum):
 
 
 class UserDTO(BaseSchema):
-    id: t.Optional[int] = None
+    id: int | None = None
     name: str
     email: str
     user_rule: UserRuleEnum
@@ -116,7 +116,7 @@ class UserVO(BaseFrozenStructure):
     id: int
     name: str
     email: str
-    updated_at: t.Optional[dt.datetime] = None
+    updated_at: dt.datetime | None = None
 
 
 class JsonSerializerHelperTestCase(TestBase):
@@ -131,7 +131,7 @@ class JsonSerializerHelperTestCase(TestBase):
         print("eneity 1 deserializer:", entity_deserialized)
         self.assertIsInstance(entity_deserialized, TestJsonEntity)
 
-        entity_deserialized2_dict: t.Dict[str, t.Any] = {
+        entity_deserialized2_dict: dict[str, t.Any] = {
             "id": 1,
             "name": "Test1",
             "value": 10.1,
@@ -150,7 +150,7 @@ class JsonSerializerHelperTestCase(TestBase):
         print("entity 2 deserializer:", entity2_deserialized)
         self.assertIsInstance(entity2_deserialized, TestJsonEntity2)
 
-        entity2_deserialized2_dict: t.Dict[str, t.Any] = {
+        entity2_deserialized2_dict: dict[str, t.Any] = {
             "id": 2,
             "name": "Test2-1",
             "value": 20.1,
@@ -169,7 +169,7 @@ class JsonSerializerHelperTestCase(TestBase):
         print("entity 3 deserializer:", entity3_deserialized)
         self.assertIsInstance(entity3_deserialized, TestJsonEntity3)
 
-        entity3_deserialized2_dict: t.Dict[str, t.Any] = {
+        entity3_deserialized2_dict: dict[str, t.Any] = {
             "id": 3,
             "name": "Test3-1",
             "value": 30.1,

@@ -8,7 +8,6 @@
 """
 
 import socket
-from typing import Dict
 
 import netifaces
 
@@ -16,7 +15,7 @@ import netifaces
 class LocalNetworkToolkit:
 
     @classmethod
-    def ip_address(cls) -> Dict[str, str]:
+    def ip_address(cls) -> dict[str, str]:
         default_ip_addr = socket.gethostbyname(socket.gethostname())
         ip_dict = {"default": default_ip_addr}
 

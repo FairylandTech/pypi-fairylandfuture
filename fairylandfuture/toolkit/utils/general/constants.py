@@ -7,7 +7,7 @@
 @datetime: 2024-05-10 10:27:11 UTC+08:00
 """
 
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any
 
 
 class DefaultConstantToolkit:
@@ -17,41 +17,41 @@ class DefaultConstantToolkit:
 
     @staticmethod
     def string() -> str:
-        results = str()
+        results = ""
         return results
 
     @staticmethod
     def integer() -> int:
-        results = int()
+        results = 0
         return results
 
     @staticmethod
     def float() -> float:
-        results = float()
+        results = 0.0
         return results
 
     @staticmethod
     def boolean() -> bool:
-        results = bool()
+        results = False
         return results
 
     @staticmethod
-    def list() -> List[None]:
+    def list() -> list[None]:
         results = []
         return results
 
     @staticmethod
-    def tuple() -> Tuple[None]:
+    def tuple() -> tuple[None]:
         results = tuple()
         return results
 
     @staticmethod
-    def set() -> Set[None]:
+    def set() -> set[None]:
         results = set()
         return results
 
     @staticmethod
-    def dict() -> Dict[None, None]:
+    def dict() -> dict[None, None]:
         results = {}
         return results
 
@@ -61,7 +61,7 @@ class DefaultConstantToolkit:
 
     @staticmethod
     def byte() -> bytes:
-        results = bytes()
+        results = b""
         return results
 
     @staticmethod
@@ -81,7 +81,7 @@ class APIConstantToolkit(DefaultConstantToolkit):
     """
 
     @staticmethod
-    def results() -> Dict[str, Any]:
+    def results() -> dict[str, Any]:
         results = {"status": "failure", "code": 500, "data": None}
         return results
 
@@ -92,7 +92,7 @@ class EncodingConstantToolkit(DefaultConstantToolkit):
     """
 
     @staticmethod
-    def encodings() -> Tuple[str, ...]:
+    def encodings() -> tuple[str, ...]:
         results = (
             "big5",
             "big5-hkscs",

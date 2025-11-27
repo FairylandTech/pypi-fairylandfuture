@@ -8,7 +8,7 @@
 """
 
 from dataclasses import dataclass
-from typing import Union, Dict, Any, Literal, Optional, Self
+from typing import Any, Literal, Self
 
 from requests import Response
 
@@ -19,9 +19,9 @@ from fairylandfuture.helpers.json.serializer import JsonSerializerHelper
 @dataclass(frozen=True)
 class HTTPSimpleRequestResultStructure(BaseFrozenStructure):
     flag: bool
-    content: Optional[Union[str, Dict[str, Any]]]
-    format: Optional[Literal["json", "text"]]
-    response: Optional[Response]
+    content: str | dict[str, Any] | None
+    format: Literal["json", "text"] | None
+    response: Response | None
 
     def __repr__(self):
         if self.format == "json":
@@ -31,7 +31,7 @@ class HTTPSimpleRequestResultStructure(BaseFrozenStructure):
 
         return f"<HTTPSimpleRequestResultStructure(flag={self.flag}, content={content}, format={self.format}, response={self.response})"
 
-    def to_json(self: Self, /, *, ignorenone: bool = False) -> Dict[str, Any]:
+    def to_json(self: Self, /, *, ignorenone: bool = False) -> dict[str, Any]:
         result = super().to_dict(ignorenone=ignorenone)
 
         if self.response:

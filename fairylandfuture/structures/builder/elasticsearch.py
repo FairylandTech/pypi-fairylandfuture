@@ -7,8 +7,9 @@
 @datetime: 2025-05-22 17:45:03 UTC+08:00
 """
 
+from collections.abc import Mapping, MutableMapping
 from dataclasses import dataclass
-from typing import Union, Mapping, MutableMapping, Any
+from typing import Any
 
 from fairylandfuture.core.superclass.structure import BaseFrozenStructure
 
@@ -17,4 +18,4 @@ from fairylandfuture.core.superclass.structure import BaseFrozenStructure
 class ElasticsearchBulkParamFrozenStructure(BaseFrozenStructure):
     index: str
     id: str
-    content: Union[Mapping[str, Any], MutableMapping[str, Any]]
+    content: Mapping[str, Any] | MutableMapping[str, Any]

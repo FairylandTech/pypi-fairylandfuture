@@ -7,17 +7,17 @@
 @datetime: 2025-11-26 12:54:27 UTC+08:00
 """
 
+import datetime
 import hashlib
 import json
-import datetime
 import typing as t
 import uuid
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from pydantic.alias_generators import to_camel
 
-from fairylandfuture.toolkit.utils.chron import DateTimeToolkit
 from fairylandfuture.enums.chron import DateTimeEnum
+from fairylandfuture.toolkit.utils.chron import DateTimeToolkit
 
 
 class PrimitiveSchema(BaseModel):
@@ -31,10 +31,10 @@ class PrimitiveSchema(BaseModel):
         validate_assignment=True,
     )
 
-    def to_dict(self, /, *, exclude_fields: t.Optional[t.Iterable[str]] = None, exclude_none: bool = False, to_camel: bool = False) -> t.Dict[str, t.Any]:
+    def to_dict(self, /, *, exclude_fields: t.Iterable[str] | None = None, exclude_none: bool = False, to_camel: bool = False) -> dict[str, t.Any]:
         return self.model_dump(mode="python", exclude=set(exclude_fields) if exclude_fields else None, exclude_none=exclude_none, by_alias=to_camel)
 
-    def to_serializable_dict(self, /, *, exclude_fields: t.Optional[t.Iterable[str]] = None, exclude_none: bool = False, to_camel: bool = False) -> t.Dict[str, t.Any]:
+    def to_serializable_dict(self, /, *, exclude_fields: t.Iterable[str] | None = None, exclude_none: bool = False, to_camel: bool = False) -> dict[str, t.Any]:
         return self.model_dump(mode="json", exclude=set(exclude_fields) if exclude_fields else None, exclude_none=exclude_none, by_alias=to_camel)
 
     def to_json_string(self, indent: int = 2) -> str:
@@ -43,7 +43,7 @@ class PrimitiveSchema(BaseModel):
 
 class EntitySchema(PrimitiveSchema):
 
-    id: t.Optional[int] = Field(description="ID")
+    id: int | None = Field(description="ID")
     uuid: str = Field(default_factory=lambda: uuid.uuid4().hex, description="UUID", frozen=True)
     created_at: datetime.datetime = Field(default_factory=lambda: DateTimeToolkit.unzone_cst(), description="Create Time", frozen=True)
     updated_at: datetime.datetime = Field(default_factory=lambda: DateTimeToolkit.unzone_cst(), description="Update Time")

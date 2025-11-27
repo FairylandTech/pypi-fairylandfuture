@@ -27,5 +27,5 @@ def read_toml():
     print(data.get("project", {}).get("version", "0.0.0"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

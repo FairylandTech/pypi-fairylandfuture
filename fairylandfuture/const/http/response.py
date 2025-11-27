@@ -7,9 +7,8 @@
 @datetime: 2024-08-18 01:30:12 UTC+08:00
 """
 
-import typing as t
 
-RESPONSE_CODE_MAPPING: t.Dict[int, str] = {
+RESPONSE_CODE_MAPPING: dict[int, str] = {
     100: "Continue",
     101: "Switching Protocols",
     102: "Processing",

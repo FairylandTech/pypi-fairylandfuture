@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 @software: PyCharm
 @author: Lionel Johnson
@@ -12,14 +11,13 @@ import subprocess
 import sys
 import tomllib
 from enum import StrEnum
-from typing import Optional
 
 import requests
 import setuptools
 
 _ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
-if sys.version_info < (3, 11):
+if sys.version_info < (3, 11):  # noqa: UP036
     sys.exit("Python 3.11 or higher is required.")
 
 
@@ -33,8 +31,11 @@ class InstallDependenciesCommand(setuptools.Command):
         return
 
     def run(self):
-        command = "python -m pip install --force git+https://github.com/imba-tjd/pip-autoremove@ups"
-        subprocess.call(command, shell=True)
+        # Using subprocess.run with argument list for safety (avoids shell injection)
+        subprocess.run(
+            ["python", "-m", "pip", "install", "--force", "git+https://github.com/imba-tjd/pip-autoremove@ups"],
+            check=True,
+        )
 
 
 class VersionLevelEnum(StrEnum):
@@ -44,9 +45,9 @@ class VersionLevelEnum(StrEnum):
     beta = "beta"  # 公测版本
 
 
-class Package(object):
+class Package:
 
-    def __init__(self, version_level: Optional[VersionLevelEnum] = None):
+    def __init__(self, version_level: VersionLevelEnum | None = None):
         self.version_number: str = self._version()
         self.version_level: VersionLevelEnum = version_level if version_level else VersionLevelEnum.release
 
@@ -93,7 +94,7 @@ class Package(object):
 
     @property
     def long_description(self):
-        with open(os.path.join(_ROOT_PATH, "README.md"), "r", encoding="UTF-8") as stream:
+        with open(os.path.join(_ROOT_PATH, "README.md"), encoding="UTF-8") as stream:
             content = stream.read()
 
         return content
@@ -198,7 +199,7 @@ class Package(object):
 
         def local_build_version():
             try:
-                with open(os.path.join(_ROOT_PATH, "fairylandfuture", "conf", "release", "buildversion"), "r", encoding="UTF-8") as stream:
+                with open(os.path.join(_ROOT_PATH, "fairylandfuture", "conf", "release", "buildversion"), encoding="UTF-8") as stream:
                     content = stream.read()
                 return content
             except Exception as err:
@@ -223,7 +224,7 @@ class Package(object):
             return data.get("project", {}).get("version", "0.0.0")
         except Exception as err:
             print(f"Error: Getting version {err}")
-            raise RuntimeError("Failed to get version.")
+            raise RuntimeError("Failed to get version.") from err
 
 
 if __name__ == "__main__":

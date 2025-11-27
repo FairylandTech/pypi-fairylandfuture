@@ -8,7 +8,8 @@
 """
 
 from datetime import datetime
-from pypinyin import pinyin, Style
+
+from pypinyin import Style, pinyin
 
 from fairylandfuture.core.superclass.fakerlib import BaseFaker
 
@@ -45,7 +46,7 @@ class FakeUserToolkit(BaseFaker):
             "gender": gender,
             "address": address,
             "postnumber": postnumber,
-            "phonenumber": phonenumber
+            "phonenumber": phonenumber,
         }
         return data
 

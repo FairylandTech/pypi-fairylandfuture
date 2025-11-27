@@ -23,8 +23,8 @@ class JsonSerializerHelper:
         return json.dumps(value, cls=JsonEncoder, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
     @classmethod
-    def deserialize(cls, value: t.Union[StrAny, t.Dict[str, t.Any]], clazz: t.Optional[t.Callable[..., ClazzType]] = None) -> ClazzType:
-        if isinstance(value, t.Dict):
+    def deserialize(cls, value: StrAny | dict[str, t.Any], clazz: t.Callable[..., ClazzType] | None = None) -> ClazzType:
+        if isinstance(value, dict):
             if not clazz:
                 return value
 

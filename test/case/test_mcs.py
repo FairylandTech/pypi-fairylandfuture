@@ -8,9 +8,9 @@
 """
 
 import unittest
+from test import TestBase
 
 from fairylandfuture.core.metaclass.singleton import SingletonMeta
-from test import TestBase
 
 
 class A(metaclass=SingletonMeta):

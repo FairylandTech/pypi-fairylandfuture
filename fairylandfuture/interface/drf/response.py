@@ -11,16 +11,16 @@ import typing as t
 
 from rest_framework.response import Response
 
-from fairylandfuture.structures.http.response import ResponseStructure, ResponseFrozenStructure
+from fairylandfuture.structures.http.response import ResponseFrozenStructure, ResponseStructure
 
 
 class DRFResponseMixin:
 
     def _response(
         self,
-        data: t.Union[ResponseStructure, ResponseFrozenStructure],
-        headers: t.Optional[t.Dict[str, t.Any]] = None,
-        content_type: t.Optional[str] = None,
+        data: ResponseStructure | ResponseFrozenStructure,
+        headers: dict[str, t.Any] | None = None,
+        content_type: str | None = None,
         exception: bool = False,
     ):
         if not isinstance(data, (ResponseStructure, ResponseFrozenStructure)):

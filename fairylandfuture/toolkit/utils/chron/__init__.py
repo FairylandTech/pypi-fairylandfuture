@@ -8,8 +8,7 @@
 """
 
 import time
-from datetime import datetime, timedelta, timezone
-from typing import Optional, Union
+from datetime import UTC, datetime, timedelta, timezone
 
 from dateutil.relativedelta import relativedelta
 
@@ -26,7 +25,7 @@ class DateTimeToolkit:
     TIMEZONE: str = TimeZoneEnum.Shanghai.value
 
     @classmethod
-    def date(cls, _format: Optional[str] = None) -> str:
+    def date(cls, _format: str | None = None) -> str:
         """
         Get the current date.
 
@@ -41,7 +40,7 @@ class DateTimeToolkit:
         return datetime.now().date().strftime(_format)
 
     @classmethod
-    def date_shanghai(cls, _format: Optional[str] = None) -> str:
+    def date_shanghai(cls, _format: str | None = None) -> str:
         """
         Get the current date in shanghai time zone.
 
@@ -56,7 +55,7 @@ class DateTimeToolkit:
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).date().strftime(_format)
 
     @classmethod
-    def time(cls, _fromat: Optional[str] = None) -> str:
+    def time(cls, _fromat: str | None = None) -> str:
         """
         Get the current time.
 
@@ -71,7 +70,7 @@ class DateTimeToolkit:
         return datetime.now().time().strftime(_fromat)
 
     @classmethod
-    def time_shanghai(cls, _fromat: Optional[str] = None) -> str:
+    def time_shanghai(cls, _fromat: str | None = None) -> str:
         """
         Get the current time in shanghai time zone.
 
@@ -86,7 +85,7 @@ class DateTimeToolkit:
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).time().strftime(_fromat)
 
     @classmethod
-    def datetime(cls, _format: Optional[str] = None) -> str:
+    def datetime(cls, _format: str | None = None) -> str:
         """
         Get the current datetime_str.
 
@@ -101,7 +100,7 @@ class DateTimeToolkit:
         return datetime.now().strftime(_format)
 
     @classmethod
-    def datetime_shanghai(cls, _format: Optional[str] = None) -> str:
+    def datetime_shanghai(cls, _format: str | None = None) -> str:
         """
         Get the current datetime_str in shanghai time zone.
 
@@ -116,7 +115,7 @@ class DateTimeToolkit:
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).strftime(_format)
 
     @classmethod
-    def timestamp(cls, ms: bool = False, n: Optional[int] = None) -> int:
+    def timestamp(cls, ms: bool = False, n: int | None = None) -> int:
         """
         Get the current timestamp.
 
@@ -134,7 +133,7 @@ class DateTimeToolkit:
         return round(time.time())
 
     @classmethod
-    def timestamp_to_datetime(cls, timestamp: Union[int, float], _format: Optional[str] = None) -> str:
+    def timestamp_to_datetime(cls, timestamp: int | float, _format: str | None = None) -> str:
         """
         Convert timestamp to datetime_str.
 
@@ -161,7 +160,7 @@ class DateTimeToolkit:
         return datetime.fromtimestamp(timestamp).strftime(_format)
 
     @classmethod
-    def datetime_to_timestamp(cls, dt_string: str, ms: bool = False, n: Optional[int] = None, _format: Optional[str] = None) -> int:
+    def datetime_to_timestamp(cls, dt_string: str, ms: bool = False, n: int | None = None, _format: str | None = None) -> int:
         """
         Convert datetime to timestamp.
 
@@ -199,7 +198,7 @@ class DateTimeToolkit:
         return int(timestamp)
 
     @classmethod
-    def yesterday(cls, _format: Optional[str] = None) -> str:
+    def yesterday(cls, _format: str | None = None) -> str:
         """
         Get yesterday's date.
 
@@ -214,7 +213,7 @@ class DateTimeToolkit:
         return (datetime.now() - relativedelta(days=1)).strftime(_format)
 
     @classmethod
-    def tomorrow(cls, _format: Optional[str] = None) -> str:
+    def tomorrow(cls, _format: str | None = None) -> str:
         """
         Get tomorrow's date.
 
@@ -229,7 +228,7 @@ class DateTimeToolkit:
         return (datetime.now() + relativedelta(days=1)).strftime(_format)
 
     @classmethod
-    def daysdelta(cls, dt1: Union[str, int, float], dt2: Union[str, int, float], timestamp: bool = False, ms: bool = False, _format: Optional[str] = None) -> int:
+    def daysdelta(cls, dt1: str | int | float, dt2: str | int | float, timestamp: bool = False, ms: bool = False, _format: str | None = None) -> int:
         """
         Calculate the number of days between two dates.
 
@@ -270,7 +269,7 @@ class DateTimeToolkit:
         :return: Unzoned datetime.
         :rtype: datetime
         """
-        return datetime.now(timezone.utc).replace(tzinfo=None)
+        return datetime.now(UTC).replace(tzinfo=None)
 
     @classmethod
     def unzone_cst(cls) -> "datetime":

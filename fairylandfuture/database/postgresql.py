@@ -8,10 +8,10 @@
 """
 
 import re
-from typing import Optional, Sequence, Tuple, NamedTuple, Union
+from collections.abc import Sequence
+from typing import NamedTuple
 
 import psycopg2
-from psycopg2 import pool
 from psycopg2.extras import NamedTupleCursor
 
 from fairylandfuture.abstract.database import AbstractPostgreSQLOperator
@@ -77,7 +77,7 @@ class PostgreSQLConnector:
 
     """
 
-    def __init__(self, host: str, port: int, user: str, password: str, database: str, schema: Optional[str] = None):
+    def __init__(self, host: str, port: int, user: str, password: str, database: str, schema: str | None = None):
         self.__host = host
         self.__port = port
         self.__user = user
@@ -177,7 +177,7 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
 
         self.connector = connector
 
-    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> bool | tuple[NamedTuple, ...]:
         """
         Execute a SQL query on PostgreSQL database.
 
@@ -245,7 +245,7 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
             self.connector.close()
             raise err
 
-    def select(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Tuple[NamedTuple, ...]:
+    def select(self, struct: PostgreSQLExecuteFrozenStructure, /) -> tuple[NamedTuple, ...]:
         """
         Select data from PostgreSQL database.
 
@@ -302,7 +302,7 @@ class PostgreSQLSimpleConnectionPool:
     def database(self):
         return self.__database
 
-    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> bool | tuple[NamedTuple, ...]:
         connection: psycopg2.extensions.connection = self.__pool.getconn()
         cursor: CustomPostgreSQLCursor = connection.cursor(cursor_factory=CustomPostgreSQLCursor)
         try:

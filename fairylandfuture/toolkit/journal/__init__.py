@@ -11,7 +11,6 @@ import os
 import sys
 import threading
 from importlib.resources import read_text
-from typing import Optional
 
 from loguru import logger
 
@@ -19,7 +18,7 @@ from fairylandfuture.enums.encode import EncodingEnum
 from fairylandfuture.enums.journal import LogLevelEnum
 
 
-class Journal(object):
+class Journal:
     """
     A logging utility implemented as a singleton to ensure that only one instance
     handles logging across the application.
@@ -74,14 +73,14 @@ class Journal(object):
         debug: bool = False,
         rotation: str = "5 MB",
         retention: str = "180 days",
-        formatting: Optional[str] = None,
+        formatting: str | None = None,
         compression: str = "gz",
         encoding: EncodingEnum = EncodingEnum.UTF8,
         level: LogLevelEnum = LogLevelEnum.INFO,
         serialize: bool = False,
         console: bool = False,
         console_level: LogLevelEnum = LogLevelEnum.TRACE,
-        console_format: Optional[str] = None,
+        console_format: str | None = None,
         clear_existing: bool = True,
     ):
         """
@@ -132,14 +131,14 @@ class Journal(object):
         debug: bool,
         rotation: str,
         retention: str,
-        formatting: Optional[str],
+        formatting: str | None,
         compression: str,
         encoding: EncodingEnum,
         level: LogLevelEnum,
         serialize: bool,
         console: bool,
         console_level: LogLevelEnum,
-        console_format: Optional[str],
+        console_format: str | None,
         clear_existing: bool,
     ):
 

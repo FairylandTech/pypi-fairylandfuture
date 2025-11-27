@@ -11,7 +11,6 @@ import hashlib
 import os
 import secrets
 import string
-from typing import Optional, Tuple
 
 from cryptography.fernet import Fernet
 
@@ -47,7 +46,7 @@ class CipherToolkit:
 class UserPasswordCryptionToolkit(CipherToolkit):
 
     @classmethod
-    def encrypt(cls, password: str, salt: Optional[str] = None) -> Tuple[str, str]:
+    def encrypt(cls, password: str, salt: str | None = None) -> tuple[str, str]:
         """
         Use MD5 to encrypt the password.
 
@@ -91,7 +90,7 @@ class UserPasswordCryptionToolkit(CipherToolkit):
 class PasswordCryptionToolkit(CipherToolkit):
 
     @classmethod
-    def encrypt(cls, password: str, key: bytes) -> Tuple[str, str]:
+    def encrypt(cls, password: str, key: bytes) -> tuple[str, str]:
         """
         Encrypt the password using Fernet.
 

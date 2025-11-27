@@ -10,8 +10,9 @@
 import hashlib
 import json
 import os
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Union, AnyStr, Sequence, Optional, Any, Self
+from typing import Any, AnyStr
 
 import yaml
 
@@ -68,7 +69,7 @@ class BaseFile:
         "path/to/file.txt"
     """
 
-    def __init__(self, path: Union[Path, str], /, *, create: bool = False):
+    def __init__(self, path: Path | str, /, *, create: bool = False):
         if os.path.isdir(path):
             raise ValueError("Path is a directory.")
         if not os.path.exists(path):
@@ -77,8 +78,8 @@ class BaseFile:
             else:
                 raise FileNotFoundError("File not found.")
 
-        self._path: Union[Path, str] = path
-        self.max_size: Union[int, float] = 10 * (1024**2)
+        self._path: Path | str = path
+        self.max_size: int | float = 10 * (1024**2)
         self._dir_path: str = os.sep.join(self._path.split(os.sep)[:-1])
         self._file_name, self._file_ext = os.path.splitext(self._path.split(os.sep)[-1])
         self._file_size: float = os.path.getsize(self._path)
@@ -155,7 +156,7 @@ class BaseFile:
         if self.ext not in exts:
             raise TypeError("File extension is not valid.")
 
-    def read(self, mode: Optional[FileModeEnum] = None, /, *, encoding: Optional[EncodingEnum] = None) -> AnyStr:
+    def read(self, mode: FileModeEnum | None = None, /, *, encoding: EncodingEnum | None = None) -> AnyStr:
         """
         Read data from file.
 
@@ -183,7 +184,7 @@ class BaseFile:
                 data = stream.read()
             return data
 
-    def write(self, data: AnyStr, /, *, mode: FileModeEnum, encoding: Optional[EncodingEnum] = None) -> str:
+    def write(self, data: AnyStr, /, *, mode: FileModeEnum, encoding: EncodingEnum | None = None) -> str:
         """
         Write data to file.
 
@@ -231,7 +232,7 @@ class BaseTextFile(BaseFile):
         "path/to/file.txt"
     """
 
-    def __init__(self, path: Union[Path, str], create: bool = False):
+    def __init__(self, path: Path | str, create: bool = False):
         super().__init__(path, create=create)
 
     def load_text(self) -> str:
@@ -272,7 +273,7 @@ class BaseYamlFile(BaseFile):
         "path/to/file.yaml"
     """
 
-    def __init__(self, path: Union[Path, str], create: bool = False):
+    def __init__(self, path: Path | str, create: bool = False):
         super().__init__(path, create=create)
 
         self.vaildate_ext((".yaml", ".yml"))
@@ -319,7 +320,7 @@ class BaseJsonFile(BaseFile):
         "path/to/file.json"
     """
 
-    def __init__(self, path: Union[Path, str], create: bool = False):
+    def __init__(self, path: Path | str, create: bool = False):
         super().__init__(path, create=create)
 
         self.vaildate_ext((".json",))

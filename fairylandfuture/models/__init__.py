@@ -9,9 +9,8 @@
 
 import typing as t
 
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, Integer, inspect
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped
 
 from fairylandfuture.core.superclass.schema import BaseSchema
@@ -32,5 +31,5 @@ class BaseModel(Base):
                 setattr(ins, field, value)
         return ins
 
-    def to_dict(self) -> t.Dict[str, t.Any]:
+    def to_dict(self) -> dict[str, t.Any]:
         return {field.name: getattr(self, field.name) for field in inspect(self.__class__).columns}

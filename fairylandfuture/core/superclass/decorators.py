@@ -7,9 +7,9 @@
 @datetime: 2024-05-18 11:39:05 UTC+08:00
 """
 
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, TypeVar, Generic, Any
-from typing import Type
+from typing import Any, Generic, TypeVar
 
 _T = TypeVar("_T", bound=Callable[..., Any])
 
@@ -37,7 +37,7 @@ class BaseDecorator(Generic[_T]):
         >>> # output: None
     """
 
-    def __init__(self, func: Type):
+    def __init__(self, func: type):
         wraps(func)(self)
         self.func = func
 
@@ -80,7 +80,7 @@ class BaseParamsDecorator(Generic[_T]):
 
     def __call__(self, *args, **kwargs):
         if args and len(args) == 1 and callable(args.__getitem__(0)):
-            self.func: Type = args.__getitem__(0)
+            self.func: type = args.__getitem__(0)
 
         @wraps(self.func)
         def wrapper(*args, **kwargs):

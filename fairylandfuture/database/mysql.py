@@ -8,7 +8,8 @@
 """
 
 import functools
-from typing import Union, Dict, Tuple, Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 import pymysql
 from dbutils.pooled_db import PooledDB
@@ -198,7 +199,7 @@ class MySQLOperator(AbstractMySQLOperator):
 
         self.connector = connector
 
-    def execute(self, struct: MySQLExecuteFrozenStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def execute(self, struct: MySQLExecuteFrozenStructure, /) -> bool | tuple[dict[str, Any], ...]:
         """
         This method is used to execute a SQL statement.
 
@@ -264,7 +265,7 @@ class MySQLOperator(AbstractMySQLOperator):
             self.connector.close()
             raise err
 
-    def select(self, struct: MySQLExecuteFrozenStructure, /) -> Tuple[Dict[str, Any], ...]:
+    def select(self, struct: MySQLExecuteFrozenStructure, /) -> tuple[dict[str, Any], ...]:
         """
         This method is used to execute a select statement.
 
@@ -335,7 +336,7 @@ class MySQLSQLSimpleConnectionPool:
     def charset(self):
         return self.__charset
 
-    def __open(self) -> Tuple[Connection, CustomMySQLCursor]:
+    def __open(self) -> tuple[Connection, CustomMySQLCursor]:
         connection: Connection = self.__pool.connection()
         cursor: CustomMySQLCursor = connection.cursor(CustomMySQLCursor)
         return connection, cursor
@@ -344,7 +345,7 @@ class MySQLSQLSimpleConnectionPool:
         cur.close()
         conn.close()
 
-    def execute(self, struct: MySQLExecuteFrozenStructure) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def execute(self, struct: MySQLExecuteFrozenStructure) -> bool | tuple[dict[str, Any], ...]:
         connection, cursor = self.__open()
         try:
             cursor.execute(struct.query, struct.args)
@@ -375,7 +376,7 @@ class MySQLSQLSimpleConnectionPool:
         connection, cursor = self.__open()
         try:
             for struct in structs:
-                if sql.query.lower().startswith("select"):
+                if struct.query.lower().startswith("select"):
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
                 cursor.execute(struct.query, struct.args)
             connection.commit()

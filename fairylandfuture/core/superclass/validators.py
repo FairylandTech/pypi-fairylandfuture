@@ -6,14 +6,15 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2025-02-13 20:40:53 UTC+08:00
 """
-from typing import Any, Callable, Optional, Union, Sequence, Type
+from collections.abc import Callable, Sequence
+from typing import Any
 
 from fairylandfuture.exceptions.generic import ValidationError
 
 
 class Validator:
 
-    def __init__(self, required: bool, typedef: Union[Type, Sequence[Type]], validator_factory: Optional[Callable[[Any], bool]] = None):
+    def __init__(self, required: bool, typedef: type | Sequence[type], validator_factory: Callable[[Any], bool] | None = None):
         self.__required = required
         self.__typedef = typedef
         self.__validator_factory = validator_factory
