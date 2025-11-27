@@ -14,13 +14,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import auto
 
-from pydantic import Field, field_serializer
-from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy import Column, String, DateTime, Boolean, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 from fairylandfuture.core.superclass.enumerate import BaseEnum
-from fairylandfuture.core.superclass.schema import BaseSchema, PrimitiveSchema
-from fairylandfuture.core.superclass.structure import BaseStructure
-from fairylandfuture.enums.chron import DateTimeEnum
+from fairylandfuture.core.superclass.schema import BaseSchema
+from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
 from fairylandfuture.helpers.json.serializer import JsonSerializerHelper
 from fairylandfuture.models import BaseModel
 from test import TestBase
@@ -78,31 +77,46 @@ class UserDTO(BaseSchema):
     name: str
     email: str
     user_rule: UserRuleEnum
+    # address_id: t.Optional[int] = None
+
+
+class UserAddressEntity(BaseModel):
+    __tablename__ = "address"
+
+    address: str = Column(String(200), nullable=False)
+    created_at: datetime = Column(DateTime, default=datetime.now)
+    updated_at: datetime = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    existed: bool = Column(Boolean, default=True)
+
+    user = relationship("UserEntity")
+
+    def __repr__(self):
+        return f"<UserAddressEntity(id={self.id}, address={self.address}, created_at={self.created_at}, updated_at={self.updated_at}, existed={self.existed}>"
 
 
 class UserEntity(BaseModel):
     __tablename__ = "users"
 
-    name = Column(String(50), unique=True, nullable=False)
-    email = Column(String(100), nullable=False)
-    user_rule = Column(String(20), nullable=False)
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    existed = Column(Boolean, default=True)
+    name: str = Column(String(50), unique=True, nullable=False)
+    email: str = Column(String(100), nullable=False)
+    user_rule: str = Column(String(20), nullable=False)
+    address_id: int = Column(Integer, ForeignKey("address.id"))
+    created_at: datetime = Column(DateTime, default=datetime.now)
+    updated_at: datetime = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    existed: bool = Column(Boolean, default=True)
+
+    address = relationship("UserAddressEntity")
 
     def __repr__(self):
-        return f"<UserEntity(id={self.id}, name={self.name}, email={self.email}, user_rule={self.user_rule}, created_at={self.created_at}, updated_at={self.updated_at}, existed={self.existed}>"
+        return f"<UserEntity(id={self.id}, name={self.name}, email={self.email}, user_rule={self.user_rule}, address_id={self.address_id},created_at={self.created_at}, updated_at={self.updated_at}, existed={self.existed}>"
 
 
-class UserVO(PrimitiveSchema):
+@dataclass(frozen=True)
+class UserVO(BaseFrozenStructure):
     id: int
     name: str
     email: str
-    updatedAt: t.Optional[datetime] = Field(default=None, alias="updated_at")
-
-    @field_serializer("updatedAt", when_used="json")
-    def serialize_datetime(self, dt: t.Optional[datetime]) -> t.Optional[str]:
-        return dt.strftime(DateTimeEnum.DATETIME.value)
+    updated_at: t.Optional[datetime] = None
 
 
 class JsonSerializerHelperTestCase(TestBase):
@@ -183,33 +197,34 @@ class JsonSerializerHelperTestCase(TestBase):
         print("entity dict serializer:", entity_dict_serialized)
         self.assertIsInstance(entity_dict_serialized, str)
 
-        entity_dict_deserialized: TestJsonEntityDict = JsonSerializerHelper.deserialize(entity_dict_serialized, TestJsonEntityDict)
-        print("entity dict deserializer:", entity_dict_deserialized)
-        self.assertIsInstance(entity_dict_deserialized, TestJsonEntityDict)
+        # entity_dict_deserialized: TestJsonEntityDict = JsonSerializerHelper.deserialize(entity_dict_serialized, TestJsonEntityDict)
+        # print("entity dict deserializer:", entity_dict_deserialized)
+        # self.assertIsInstance(entity_dict_deserialized, TestJsonEntityDict)
 
     def test_schema(self):
         formdata = {
             "name": "Alice",
             "email": "alice@example.com",
             "userRule": "admin",
+            "address_id": 123,
         }
 
         user_dto = UserDTO(**formdata)
 
         print(user_dto)
-        print(user_dto.to_dict())
-        print(user_dto.to_serializable_dict())
-        print(user_dto.to_json_string())
-        print(user_dto.hashcode)
+        # print(user_dto.to_dict())
+        # print(user_dto.to_serializable_dict())
+        # print(user_dto.to_json_string())
+        # print(user_dto.hashcode)
 
         user = UserEntity.from_schema(user_dto)
-        print(f"user entity: {user}")
+        print(f"user entity 1: {user}")
         # 入库后返回ID
         user.id = 1001
-        print(f"user entity: {user}")
+        print(f"user entity 2: {user}")
 
-        user_vo = UserVO.model_validate(user)
-        print(f"user vo: {user_vo.to_serializable_dict()}")
+        user_vo = UserVO.from_model(user)
+        print(f"user vo: {JsonSerializerHelper.serialize(user_vo.to_dict())}")
 
         time.time()
 

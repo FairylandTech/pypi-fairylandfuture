@@ -7,8 +7,11 @@
 @datetime: 2024-05-18 18:44:08 UTC+08:00
 """
 
+import typing as t
+
 from sqlalchemy import Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import inspect
 
 from fairylandfuture.core.superclass.schema import BaseSchema
 
@@ -27,3 +30,6 @@ class BaseModel(Base):
             if hasattr(ins, field):
                 setattr(ins, field, value)
         return ins
+
+    def to_dict(self) -> t.Dict[str, t.Any]:
+        return {field.name: getattr(self, field.name) for field in inspect(self.__class__).columns}

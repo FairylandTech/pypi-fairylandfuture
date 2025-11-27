@@ -31,6 +31,6 @@ class JsonEncoder(json.JSONEncoder):
         elif isinstance(o, decimal.Decimal):
             return float(o)
         elif isinstance(o, (BaseStructure, BaseFrozenStructure)):
-            return o.to_json()
+            return o.to_dict()
 
         return super().default(o)
