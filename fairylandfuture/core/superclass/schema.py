@@ -43,7 +43,7 @@ class PrimitiveSchema(BaseModel):
 
 class EntitySchema(PrimitiveSchema):
 
-    id: t.Optional[int] = Field(default=None, description="ID")
+    id: t.Optional[int] = Field(description="ID")
     uuid: str = Field(default_factory=lambda: uuid.uuid4().hex, description="UUID", frozen=True)
     created_at: datetime.datetime = Field(default_factory=lambda: DateTimeToolkit.unzone_cst(), description="Create Time", frozen=True)
     updated_at: datetime.datetime = Field(default_factory=lambda: DateTimeToolkit.unzone_cst(), description="Update Time")

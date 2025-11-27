@@ -9,7 +9,9 @@
 
 import json
 import typing as t
-from dataclasses import dataclass, asdict, astuple, field
+from dataclasses import dataclass, asdict, astuple, field, fields
+
+from fairylandfuture.core.superclass.schema import BaseSchema
 
 
 @dataclass(frozen=False)

@@ -11,12 +11,18 @@ import time
 import typing as t
 import unittest
 from dataclasses import dataclass
+from datetime import datetime
 from enum import auto
 
+from pydantic import Field, field_serializer
+from sqlalchemy import Column, String, DateTime, Boolean
+
 from fairylandfuture.core.superclass.enumerate import BaseEnum
-from fairylandfuture.core.superclass.schema import BaseSchema
-from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
+from fairylandfuture.core.superclass.schema import BaseSchema, PrimitiveSchema
+from fairylandfuture.core.superclass.structure import BaseStructure
+from fairylandfuture.enums.chron import DateTimeEnum
 from fairylandfuture.helpers.json.serializer import JsonSerializerHelper
+from fairylandfuture.models import BaseModel
 from test import TestBase
 
 
@@ -74,12 +80,29 @@ class UserDTO(BaseSchema):
     user_rule: UserRuleEnum
 
 
-@dataclass(frozen=True)
-class UserVO(BaseFrozenStructure):
+class UserEntity(BaseModel):
+    __tablename__ = "users"
+
+    name = Column(String(50), unique=True, nullable=False)
+    email = Column(String(100), nullable=False)
+    user_rule = Column(String(20), nullable=False)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    existed = Column(Boolean, default=True)
+
+    def __repr__(self):
+        return f"<UserEntity(id={self.id}, name={self.name}, email={self.email}, user_rule={self.user_rule}, created_at={self.created_at}, updated_at={self.updated_at}, existed={self.existed}>"
+
+
+class UserVO(PrimitiveSchema):
     id: int
     name: str
     email: str
-    updated_at: t.Optional[str] = None
+    updatedAt: t.Optional[datetime] = Field(default=None, alias="updated_at")
+
+    @field_serializer("updatedAt", when_used="json")
+    def serialize_datetime(self, dt: t.Optional[datetime]) -> t.Optional[str]:
+        return dt.strftime(DateTimeEnum.DATETIME.value)
 
 
 class JsonSerializerHelperTestCase(TestBase):
@@ -178,6 +201,15 @@ class JsonSerializerHelperTestCase(TestBase):
         print(user_dto.to_serializable_dict())
         print(user_dto.to_json_string())
         print(user_dto.hashcode)
+
+        user = UserEntity.from_schema(user_dto)
+        print(f"user entity: {user}")
+        # 入库后返回ID
+        user.id = 1001
+        print(f"user entity: {user}")
+
+        user_vo = UserVO.model_validate(user)
+        print(f"user vo: {user_vo.to_serializable_dict()}")
 
         time.time()
 
