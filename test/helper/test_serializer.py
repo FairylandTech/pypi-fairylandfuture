@@ -11,11 +11,11 @@ import time
 import typing as t
 import unittest
 from dataclasses import dataclass
-from datetime import datetime
+import datetime as dt
 from enum import auto
 
 from sqlalchemy import Column, String, DateTime, Boolean, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from fairylandfuture.core.superclass.enumerate import BaseEnum
 from fairylandfuture.core.superclass.schema import BaseSchema
@@ -83,29 +83,29 @@ class UserDTO(BaseSchema):
 class UserAddressEntity(BaseModel):
     __tablename__ = "address"
 
-    address: str = Column(String(200), nullable=False)
-    created_at: datetime = Column(DateTime, default=datetime.now)
-    updated_at: datetime = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    existed: bool = Column(Boolean, default=True)
+    address: Mapped[str] = Column(String(200), nullable=False)
+    created_at: Mapped[dt.datetime] = Column(DateTime, default=dt.datetime.now)
+    updated_at: Mapped[dt.datetime] = Column(DateTime, default=dt.datetime.now, onupdate=dt.datetime.now)
+    existed: Mapped[bool] = Column(Boolean, default=True)
 
-    user = relationship("UserEntity")
+    user: Mapped[t.Optional["UserEntity"]] = relationship("UserEntity", back_populates="address")
 
     def __repr__(self):
         return f"<UserAddressEntity(id={self.id}, address={self.address}, created_at={self.created_at}, updated_at={self.updated_at}, existed={self.existed}>"
 
 
 class UserEntity(BaseModel):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
-    name: str = Column(String(50), unique=True, nullable=False)
-    email: str = Column(String(100), nullable=False)
-    user_rule: str = Column(String(20), nullable=False)
-    address_id: int = Column(Integer, ForeignKey("address.id"))
-    created_at: datetime = Column(DateTime, default=datetime.now)
-    updated_at: datetime = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    existed: bool = Column(Boolean, default=True)
+    name: Mapped[str] = Column(String(50), unique=True, nullable=False)
+    email: Mapped[str] = Column(String(100), nullable=False)
+    user_rule: Mapped[str] = Column(String(20), nullable=False)
+    address_id: Mapped[int] = Column(Integer, ForeignKey("address.id"))
+    created_at: Mapped[dt.datetime] = Column(DateTime, default=dt.datetime.now)
+    updated_at: Mapped[dt.datetime] = Column(DateTime, default=dt.datetime.now, onupdate=dt.datetime.now)
+    existed: Mapped[bool] = Column(Boolean, default=True)
 
-    address = relationship("UserAddressEntity")
+    address: Mapped[t.Optional["UserAddressEntity"]] = relationship("UserAddressEntity", back_populates="user")
 
     def __repr__(self):
         return f"<UserEntity(id={self.id}, name={self.name}, email={self.email}, user_rule={self.user_rule}, address_id={self.address_id},created_at={self.created_at}, updated_at={self.updated_at}, existed={self.existed}>"
@@ -116,7 +116,7 @@ class UserVO(BaseFrozenStructure):
     id: int
     name: str
     email: str
-    updated_at: t.Optional[datetime] = None
+    updated_at: t.Optional[dt.datetime] = None
 
 
 class JsonSerializerHelperTestCase(TestBase):
@@ -221,6 +221,9 @@ class JsonSerializerHelperTestCase(TestBase):
         print(f"user entity 1: {user}")
         # 入库后返回ID
         user.id = 1001
+        user.address = UserAddressEntity(id=1, address="1 Main St")
+        print(type(user.address))
+        user.address_id = user.address.id
         print(f"user entity 2: {user}")
 
         user_vo = UserVO.from_model(user)

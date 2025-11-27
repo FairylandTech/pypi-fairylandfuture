@@ -12,6 +12,7 @@ import typing as t
 from sqlalchemy import Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import inspect
+from sqlalchemy.orm import Mapped
 
 from fairylandfuture.core.superclass.schema import BaseSchema
 
@@ -21,7 +22,7 @@ Base = declarative_base()
 class BaseModel(Base):
     __abstract__ = True
 
-    id = Column(Integer, primary_key=True, autoincrement=True, comment="ID")
+    id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True, comment="ID")
 
     @classmethod
     def from_schema(cls, schema: BaseSchema):
