@@ -23,24 +23,39 @@ __all__ = [
     "ComparisonOperatorEnum",
 ]
 
+# Cache for lazy-loaded items
+_cache = {}
+
 
 def __getattr__(name):
     """Lazy import to avoid circular dependencies."""
+    global _cache
+
+    if name in _cache:
+        return _cache[name]
+
     if name in ("DateTimeEnum", "TimeZoneEnum"):
         from fairylandfuture.enums import datetime as _dt
-        return getattr(_dt, name)
+        result = getattr(_dt, name)
+        _cache[name] = result
+        return result
     if name == "EncodingEnum":
         from fairylandfuture.enums.encode import EncodingEnum
+        _cache[name] = EncodingEnum
         return EncodingEnum
     if name == "FileModeEnum":
         from fairylandfuture.enums.file import FileModeEnum
+        _cache[name] = FileModeEnum
         return FileModeEnum
     if name == "LogLevelEnum":
         from fairylandfuture.enums.logger import LogLevelEnum
+        _cache[name] = LogLevelEnum
         return LogLevelEnum
     if name == "HTTPRequestMethodEnum":
         from fairylandfuture.enums import http as _http
-        return getattr(_http, name)
+        result = getattr(_http, name)
+        _cache[name] = result
+        return result
     if name == "ComparisonOperatorEnum":
         from fairylandfuture.core.superclass.enumerate import BaseEnum
 
@@ -64,5 +79,6 @@ def __getattr__(name):
             def value(self) -> str:
                 return super().value
 
+        _cache[name] = ComparisonOperatorEnum
         return ComparisonOperatorEnum
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
