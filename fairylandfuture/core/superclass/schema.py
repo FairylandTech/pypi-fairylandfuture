@@ -16,7 +16,7 @@ import uuid
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from pydantic.alias_generators import to_camel
 
-from fairylandfuture.utils import DateTimeUtils
+from fairylandfuture.utils.datetime import DateTimeUtils
 from fairylandfuture.enums.datetime import DateTimeEnum
 
 

@@ -16,7 +16,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Mapped, DeclarativeBase, declared_attr, Session
 
 from fairylandfuture.core.superclass.schema import BaseSchema
-from fairylandfuture.utils import DateTimeUtils
+from fairylandfuture.utils.datetime import DateTimeUtils
 from fairylandfuture.logger import Journal
 
 
