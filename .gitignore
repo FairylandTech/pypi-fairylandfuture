@@ -1,0 +1,20 @@
+### Public ###
+.idea
+.vscode
+.DS_Store
+
+### Development ###
+log[s]
+conf/dev/config.yaml
+conf/pypi/.pypirc
+temp/*
+!temp/*.md
+
+### Build ###
+build
+dist
+*.egg-info
+
+### Python ###
+.venv
+__pycache__
