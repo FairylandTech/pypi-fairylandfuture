@@ -11,7 +11,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
-from typing import Union, AnyStr, Sequence, Optional, Any, Self
+from typing import Union, AnyStr, Sequence, Optional, Any
 
 import yaml
 
@@ -29,8 +29,9 @@ class BaseFile:
     :type create: bool
 
     Usage:
-        >>> from fairylandfuture.core.superclass.files import BaseFile
-        >>> from fairylandfuture.enums.enconding import EncodingEnum, FileModeEnum
+        >>> from fairylandfuture.core.superclass.file import BaseFile
+        >>> from fairylandfuture.enums.encode import EncodingEnum
+        >>> from fairylandfuture.enums.file import FileModeEnum
         >>> file = BaseFile("path/to/file.txt")
         >>> file.name
         "file"

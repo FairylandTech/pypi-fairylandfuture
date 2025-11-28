@@ -12,7 +12,7 @@ import decimal
 import json
 
 from fairylandfuture.core.superclass.structure import BaseFrozenStructure, BaseStructure
-from fairylandfuture.enums.chron import DateTimeEnum
+from fairylandfuture.enums.datetime import DateTimeEnum
 
 
 class JsonEncoder(json.JSONEncoder):

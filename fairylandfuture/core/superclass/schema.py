@@ -16,8 +16,8 @@ import uuid
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from pydantic.alias_generators import to_camel
 
-from fairylandfuture.toolkit.utils.chron import DateTimeToolkit
-from fairylandfuture.enums.chron import DateTimeEnum
+from fairylandfuture.utils import DateTimeUtils
+from fairylandfuture.enums.datetime import DateTimeEnum
 
 
 class PrimitiveSchema(BaseModel):
@@ -45,8 +45,8 @@ class EntitySchema(PrimitiveSchema):
 
     id: t.Optional[int] = Field(description="ID")
     uuid: str = Field(default_factory=lambda: uuid.uuid4().hex, description="UUID", frozen=True)
-    created_at: datetime.datetime = Field(default_factory=lambda: DateTimeToolkit.unzone_cst(), description="Create Time", frozen=True)
-    updated_at: datetime.datetime = Field(default_factory=lambda: DateTimeToolkit.unzone_cst(), description="Update Time")
+    created_at: datetime.datetime = Field(default_factory=lambda: DateTimeUtils.unzone_cst(), description="Create Time", frozen=True)
+    updated_at: datetime.datetime = Field(default_factory=lambda: DateTimeUtils.unzone_cst(), description="Update Time")
     existed: bool = Field(default=True, description="Is Existed Flag")
 
     @field_serializer("created_at", "updated_at", when_used="json")
@@ -70,6 +70,6 @@ class BaseSchema(EntitySchema):
                 flag = True
 
         if flag:
-            self.updated_at = DateTimeToolkit.unzone_cst()
+            self.updated_at = DateTimeUtils.unzone_cst()
 
         return self

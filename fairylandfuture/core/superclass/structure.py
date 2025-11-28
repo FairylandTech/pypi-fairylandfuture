@@ -51,16 +51,6 @@ class BaseFrozenStructure:
     def to_dict(self, /, *, ignorenone: bool = False) -> t.Dict[str, t.Any]:
         return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
 
-    # @classmethod
-    # def from_model(cls, model: BaseModel):
-    #     kwargs: t.Dict[str, t.Any] = {}
-    #     model_dict = model.to_dict()
-    #     for field in fields(cls):
-    #         if field.name in {f.name: f for f in fields(cls)}:
-    #             kwargs.update({field.name: model_dict[field.name]})
-    #
-    #     return cls(**kwargs)
-
     @classmethod
     def from_model(cls, model: BaseModel):
         kwargs = {}

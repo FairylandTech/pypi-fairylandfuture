@@ -54,9 +54,9 @@ dependencies = [
     "django-redis",
     "django-filter",
     "django-cors-headers",
-    "django-simpleui",  ### PEP517
-    "django-tenant-schemas",  ### PEP517
-    "django-tenants",  ### PEP517
+    "django-simpleui", ### PEP517
+    "django-tenant-schemas", ### PEP517
+    "django-tenants", ### PEP517
     "django-extensions",
     "django-celery-results",
     # API documentation
@@ -68,7 +68,7 @@ dependencies = [
     "uritemplate",
     # Auto
     "selenium",
-    "webdriver-manager",  ### PEP517
+    "webdriver-manager", ### PEP517
     "beautifulsoup4",
 ]
 [build-system]

@@ -4,11 +4,6 @@
 @author: Lionel Johnson
 @contact: https://fairy.host
 @organization: https://github.com/FairylandFuture
-@datetime: 2024-05-18 18:44:08 UTC+08:00
+@datetime: 2025-11-28 12:18:47 UTC+08:00
 """
 
-from ._base import BaseModel
-
-__all__ = [
-    "BaseModel",
-]

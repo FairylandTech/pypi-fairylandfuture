@@ -16,7 +16,7 @@ from elasticsearch.helpers import bulk
 
 from fairylandfuture.exceptions.elasticsearch import ElasticSearchExecutionException
 from fairylandfuture.exceptions.messages.elasticsearch import ElasticSearchExceptMessage
-from fairylandfuture.structures.builder.elasticsearch import ElasticsearchBulkParamFrozenStructure
+from fairylandfuture.structures.database import ElasticsearchBulkParamFrozenStructure
 
 warnings.filterwarnings("ignore")
 

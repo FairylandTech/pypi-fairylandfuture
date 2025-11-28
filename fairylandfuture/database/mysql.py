@@ -18,7 +18,7 @@ from pymysql.cursors import DictCursor
 from fairylandfuture.abstract.database import AbstractMySQLOperator
 from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
-from fairylandfuture.structures.builder.database import MySQLExecuteFrozenStructure
+from fairylandfuture.structures.database import MySQLExecuteFrozenStructure
 
 
 class CustomMySQLConnection(Connection):
@@ -71,7 +71,7 @@ class MySQLConnector:
     :type charset: str, optional
 
     Usage:
-        >>> from fairylandfuture.modules.databases.mysql import MySQLConnector
+        >>> from fairylandfuture.database.mysql import MySQLConnector
         >>> connector = MySQLConnector(host="localhost", port=3306, user="root", password="password", database="test")
         >>> connector.cursor.execute("SELECT * FROM users")
         >>> result = connector.cursor.fetchall()
@@ -185,9 +185,9 @@ class MySQLOperator(AbstractMySQLOperator):
     :type connector: MySQLConnector
 
     Usage:
-        >>> from fairylandfuture.modules.databases.mysql import MySQLConnector, MySQLOperatorImpl
+        >>> from fairylandfuture.database.mysql import MySQLConnector, MySQLOperator
         >>> connector = MySQLConnector(host="localhost", port=3306, user="root", password="password", database="test")
-        >>> operation = MySQLOperatorImpl(connector)
+        >>> operation = MySQLOperator(connector)
         >>> operation.execute("SELECT * FROM users")
         [{'id': 1, 'name': 'John', 'age': 25}, {'id': 2, 'name': 'Mary', 'age': 30}]
     """
@@ -375,7 +375,7 @@ class MySQLSQLSimpleConnectionPool:
         connection, cursor = self.__open()
         try:
             for struct in structs:
-                if sql.query.lower().startswith("select"):
+                if struct.query.lower().startswith("select"):
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
                 cursor.execute(struct.query, struct.args)
             connection.commit()
