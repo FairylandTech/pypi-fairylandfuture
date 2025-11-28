@@ -6,3 +6,10 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2024-05-09 16:15:43 UTC+08:00
 """
+
+from fairylandfuture.logger import Journal, SingletonJournal
+
+__all__ = [
+    "Journal",
+    "SingletonJournal",
+]

@@ -6,3 +6,19 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2024-08-24 17:28:47 UTC+08:00
 """
+
+__all__ = [
+    "SQLSyntaxExceptMessage",
+    "ElasticSearchExceptMessage",
+]
+
+
+def __getattr__(name):
+    """Lazy import."""
+    if name == "SQLSyntaxExceptMessage":
+        from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
+        return SQLSyntaxExceptMessage
+    if name == "ElasticSearchExceptMessage":
+        from fairylandfuture.exceptions.messages.elasticsearch import ElasticSearchExceptMessage
+        return ElasticSearchExceptMessage
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

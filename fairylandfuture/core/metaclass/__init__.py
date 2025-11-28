@@ -6,3 +6,9 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2024-07-03 22:53:26 UTC+08:00
 """
+
+from fairylandfuture.core.metaclass.singleton import SingletonMeta
+
+__all__ = [
+    "SingletonMeta",
+]
