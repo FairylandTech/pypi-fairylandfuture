@@ -6,3 +6,7 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2025-05-27 15:51:36 UTC+08:00
 """
+
+from fairylandfuture.interface.drf.response import DRFResponseMixin
+
+__all__ = ["DRFResponseMixin"]

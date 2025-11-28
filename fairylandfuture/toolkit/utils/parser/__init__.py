@@ -6,3 +6,7 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2025-05-28 17:17:01 UTC+08:00
 """
+
+from fairylandfuture.toolkit.utils.parser.ua import UserAgentParserToolkit
+
+__all__ = ["UserAgentParserToolkit"]

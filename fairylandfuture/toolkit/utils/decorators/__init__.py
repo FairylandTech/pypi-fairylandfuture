@@ -6,3 +6,7 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2024-08-25 13:41:51 UTC+08:00
 """
+
+from fairylandfuture.toolkit.utils.decorators.methods import TryCatchMethodDecorator
+
+__all__ = ["TryCatchMethodDecorator"]
