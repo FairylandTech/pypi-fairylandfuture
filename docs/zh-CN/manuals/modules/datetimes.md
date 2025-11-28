@@ -15,7 +15,7 @@
 ## 导入模块
 
 ```python
-from fairylandfuture.modules.datetimes import DateTimeModule
+from src.fairylandfuture import DateTimeModule
 ```
 
 ## 常用方法
@@ -23,8 +23,8 @@ from fairylandfuture.modules.datetimes import DateTimeModule
 ### 获取当前日期
 
 ```python
-from fairylandfuture.enums.datetime import DateTimeEnum
-from fairylandfuture.modules.datetimes import DateTimeModule
+from src.fairylandfuture.enums.datetime import DateTimeEnum
+from src.fairylandfuture import DateTimeModule
 
 date = DateTimeModule.DATE()  # default format:: %Y-%m-%d
 print(date)  # Output: 2024-05-10

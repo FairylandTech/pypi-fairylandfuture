@@ -29,9 +29,9 @@ class BaseFile:
     :type create: bool
 
     Usage:
-        >>> from fairylandfuture.core.superclass.file import BaseFile
-        >>> from fairylandfuture.enums.encode import EncodingEnum
-        >>> from fairylandfuture.enums.file import FileModeEnum
+        >>> from fairylandfuture import BaseFile
+        >>> from fairylandfuture import EncodingEnum
+        >>> from fairylandfuture import FileModeEnum
         >>> file = BaseFile("path/to/file.txt")
         >>> file.name
         "file"

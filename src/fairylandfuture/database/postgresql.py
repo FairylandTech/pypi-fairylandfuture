@@ -68,7 +68,7 @@ class PostgreSQLConnector:
     :type schema: str
 
     Usage::
-        >>> from fairylandfuture.modules.databases.postgresql import PostgreSQLConnector
+        >>> from fairylandfuture import PostgreSQLConnector
         >>> connector = PostgreSQLConnector(host="localhost", port=5432, user="postgres", password="password", database="test")
         >>> connector.cursor.execute("SELECT * FROM users")
         >>> result = connector.cursor.fetchall()
@@ -158,8 +158,8 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
     :type connector: PostgreSQLConnector
 
     Usage::
-        >>> from fairylandfuture.modules.database.postgresql import PostgreSQLConnector, PostgreSQLOperator
-        >>> from fairylandfuture.structures.builder.expression import StructurePostgreSQLExecute
+        >>> from fairylandfuture import PostgreSQLConnector, PostgreSQLOperator
+        >>> from fairylandfuture import StructurePostgreSQLExecute
         >>> connector = PostgreSQLConnector(host="localhost", port=5432, user="postgres", password="password", database="test")
         >>> operation = PostgreSQLOperator(connector)
         >>> data = operation.select(StructurePostgreSQLExecute("SELECT * FROM users"))

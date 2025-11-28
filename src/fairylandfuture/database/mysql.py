@@ -71,7 +71,7 @@ class MySQLConnector:
     :type charset: str, optional
 
     Usage:
-        >>> from fairylandfuture.database.mysql import MySQLConnector
+        >>> from fairylandfuture import MySQLConnector
         >>> connector = MySQLConnector(host="localhost", port=3306, user="root", password="password", database="test")
         >>> connector.cursor.execute("SELECT * FROM users")
         >>> result = connector.cursor.fetchall()
@@ -185,7 +185,7 @@ class MySQLOperator(AbstractMySQLOperator):
     :type connector: MySQLConnector
 
     Usage:
-        >>> from fairylandfuture.database.mysql import MySQLConnector, MySQLOperator
+        >>> from fairylandfuture import MySQLConnector, MySQLOperator
         >>> connector = MySQLConnector(host="localhost", port=3306, user="root", password="password", database="test")
         >>> operation = MySQLOperator(connector)
         >>> operation.execute("SELECT * FROM users")
