@@ -56,34 +56,34 @@ class DateTimeToolkit:
         return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).date().strftime(_format)
 
     @classmethod
-    def time(cls, _fromat: Optional[str] = None) -> str:
+    def time(cls, _format: Optional[str] = None) -> str:
         """
         Get the current time.
 
-        :param _fromat: Time format.
-        :type _fromat: str
+        :param _format: Time format.
+        :type _format: str
         :return: Current time
         :rtype: str
         """
-        if not _fromat:
-            _fromat = DateTimeEnum.TIME.value
+        if not _format:
+            _format = DateTimeEnum.TIME.value
 
-        return datetime.now().time().strftime(_fromat)
+        return datetime.now().time().strftime(_format)
 
     @classmethod
-    def time_shanghai(cls, _fromat: Optional[str] = None) -> str:
+    def time_shanghai(cls, _format: Optional[str] = None) -> str:
         """
         Get the current time in shanghai time zone.
 
-        :param _fromat: Time format.
-        :type _fromat: str
+        :param _format: Time format.
+        :type _format: str
         :return: Current time in shanghai time zone.
         :rtype: str
         """
-        if not _fromat:
-            _fromat = DateTimeEnum.TIME.value
+        if not _format:
+            _format = DateTimeEnum.TIME.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).time().strftime(_fromat)
+        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).time().strftime(_format)
 
     @classmethod
     def datetime(cls, _format: Optional[str] = None) -> str:

@@ -46,7 +46,7 @@ from fairylandfuture.toolkit.utils.network import LocalNetworkToolkit
 from fairylandfuture.toolkit.utils.parser import UserAgentParserToolkit
 
 # Request
-from fairylandfuture.toolkit.utils.request.django import DjangoRequestToolkit
+from fairylandfuture.toolkit.utils.request import DjangoRequestToolkit
 
 # Validation
 from fairylandfuture.toolkit.utils.validation import StringValidatorToolkit
