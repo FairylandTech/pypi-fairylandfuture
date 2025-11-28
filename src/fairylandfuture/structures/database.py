@@ -14,19 +14,19 @@ from fairylandfuture.core.superclass.structure import BaseFrozenStructure
 
 
 @dataclass(frozen=True)
-class MySQLExecuteFrozenStructure(BaseFrozenStructure):
+class MySQLExecuteStructure(BaseFrozenStructure):
     query: str
     args: t.Optional[t.Union[t.Sequence, t.MutableSequence, t.Mapping, t.MutableMapping]] = field(default=None)
 
 
 @dataclass(frozen=True)
-class PostgreSQLExecuteFrozenStructure(BaseFrozenStructure):
+class PostgreSQLExecuteStructure(BaseFrozenStructure):
     query: str
     vars: t.Optional[t.Union[t.Sequence, t.MutableSequence, t.Mapping, t.MutableMapping]] = field(default=None)
 
 
 @dataclass(frozen=True)
-class ElasticsearchBulkParamFrozenStructure(BaseFrozenStructure):
+class ElasticsearchBulkParamStructure(BaseFrozenStructure):
     index: str
     id: str
     content: t.Union[t.Mapping[str, t.Any], t.MutableMapping[str, t.Any]]

@@ -7,8 +7,8 @@
 @datetime: 2024-07-03 22:53:43 UTC+08:00
 """
 
-import typing as t
 import threading
+import typing as t
 
 
 class SingletonMeta(type):

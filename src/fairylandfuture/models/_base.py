@@ -16,8 +16,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Mapped, DeclarativeBase, declared_attr, Session
 
 from fairylandfuture.core.superclass.schema import BaseSchema
-from fairylandfuture.utils import DateTimeUtils
 from fairylandfuture.logger import Journal
+from fairylandfuture.utils import DateTimeUtils
 
 
 class BaseModel(DeclarativeBase):

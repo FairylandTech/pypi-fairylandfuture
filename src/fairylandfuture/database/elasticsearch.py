@@ -16,7 +16,7 @@ from elasticsearch.helpers import bulk
 
 from fairylandfuture.exceptions.elasticsearch import ElasticSearchExecutionException
 from fairylandfuture.exceptions.messages.elasticsearch import ElasticSearchExceptMessage
-from fairylandfuture.structures.database import ElasticsearchBulkParamFrozenStructure
+from fairylandfuture.structures.database import ElasticsearchBulkParamStructure
 
 warnings.filterwarnings("ignore")
 
@@ -129,7 +129,7 @@ class ElasticSearchOperator:
 
         return self.client.index(index=index, id=doc_id, body=document, refresh=True)
 
-    def bulk_update(self, params: Sequence[ElasticsearchBulkParamFrozenStructure]):
+    def bulk_update(self, params: Sequence[ElasticsearchBulkParamStructure]):
         actions = [{"_op_type": "update", "_index": param.index, "_id": param.id, "doc": param.content} for param in params]
 
         succeed, failed = bulk(self.client, actions, stats_only=True, refresh=True)

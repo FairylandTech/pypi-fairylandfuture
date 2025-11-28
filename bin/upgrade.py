@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 from bin.generic import ROOT_PATH
-from fairylandfuture.enums.encode import EncodingEnum
+from fairylandfuture.enums import EncodingEnum
 
 
 def main():
