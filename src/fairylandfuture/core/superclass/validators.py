@@ -11,7 +11,7 @@ from typing import Any, Callable, Optional, Union, Sequence, Type
 from fairylandfuture.exceptions.generic import ValidationError
 
 
-class Validator:
+class BaseValidator:
 
     def __init__(self, required: bool, typedef: Union[Type, Sequence[Type]], validator_factory: Optional[Callable[[Any], bool]] = None):
         self.__required = required

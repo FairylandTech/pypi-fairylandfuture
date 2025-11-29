@@ -71,10 +71,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
-    "pytest-django",
-    "pytest-cov",
-    "ruff",
     # Python Build Tools
     "pip-tools",
     "pipreqs",
@@ -94,6 +90,11 @@ dev = [
     "pydocstyle",
     "pylint",
     "autopep8",
+    "pytest",
+    "pytest-django",
+    "pytest-cov",
+    "ruff",
+    "importlab",
 ]
 
 [project.urls]
