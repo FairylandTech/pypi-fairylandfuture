@@ -9,11 +9,12 @@
 
 from typing import Any, Dict
 
-from fairylandfuture.core.superclass.validators import Validator
+from fairylandfuture.core.superclass.validators import BaseValidator
 
 
 class ParamsValidator:
-    def __init__(self, schema: Dict[str, Validator]):
+
+    def __init__(self, schema: Dict[str, BaseValidator]):
         self.schema = schema
 
     def validate(self, data: Dict[str, Any]) -> Dict[str, Any]:

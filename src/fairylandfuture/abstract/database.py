@@ -12,8 +12,8 @@ from typing import Tuple, NamedTuple, Union, Dict, Any
 
 from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
-from fairylandfuture.structures.database import MySQLExecuteFrozenStructure
-from fairylandfuture.structures.database import PostgreSQLExecuteFrozenStructure
+from fairylandfuture.structures.database import MySQLExecuteStructure
+from fairylandfuture.structures.database import PostgreSQLExecuteStructure
 
 
 class AbstractMySQLOperator(abc.ABC):
@@ -23,25 +23,25 @@ class AbstractMySQLOperator(abc.ABC):
     """
 
     @abc.abstractmethod
-    def execute(self, struct: MySQLExecuteFrozenStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]: ...
+    def execute(self, struct: MySQLExecuteStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]: ...
 
-    def insert(self, struct: MySQLExecuteFrozenStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def insert(self, struct: MySQLExecuteStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
         if not struct.query.lower().startswith("insert"):
             raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_INSERT)
         return self.execute(struct)
 
-    def delete(self, struct: MySQLExecuteFrozenStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def delete(self, struct: MySQLExecuteStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
         if not struct.query.lower().startswith("delete"):
             raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_DELETE)
         return self.execute(struct)
 
-    def update(self, struct: MySQLExecuteFrozenStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def update(self, struct: MySQLExecuteStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
         if not struct.query.lower().startswith("update"):
             raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_UPDATE)
         return self.execute(struct)
 
     @abc.abstractmethod
-    def select(self, struct: MySQLExecuteFrozenStructure, /) -> Tuple[Dict[str, Any], ...]: ...
+    def select(self, struct: MySQLExecuteStructure, /) -> Tuple[Dict[str, Any], ...]: ...
 
 
 class AbstractPostgreSQLOperator(abc.ABC):
@@ -51,22 +51,22 @@ class AbstractPostgreSQLOperator(abc.ABC):
     """
 
     @abc.abstractmethod
-    def execute(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]: ...
+    def execute(self, struct: PostgreSQLExecuteStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]: ...
 
-    def insert(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def insert(self, struct: PostgreSQLExecuteStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
         if not struct.query.lower().startswith("insert"):
             raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_INSERT)
         return self.execute(struct)
 
-    def delete(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def delete(self, struct: PostgreSQLExecuteStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
         if not struct.query.lower().startswith("delete"):
             raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_DELETE)
         return self.execute(struct)
 
-    def update(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
+    def update(self, struct: PostgreSQLExecuteStructure, /) -> Union[bool, Tuple[NamedTuple, ...]]:
         if not struct.query.lower().startswith("update"):
             raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_UPDATE)
         return self.execute(struct)
 
     @abc.abstractmethod
-    def select(self, struct: PostgreSQLExecuteFrozenStructure, /) -> Tuple[NamedTuple, ...]: ...
+    def select(self, struct: PostgreSQLExecuteStructure, /) -> Tuple[NamedTuple, ...]: ...

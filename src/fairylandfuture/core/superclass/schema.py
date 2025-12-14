@@ -7,17 +7,17 @@
 @datetime: 2025-11-26 12:54:27 UTC+08:00
 """
 
+import datetime
 import hashlib
 import json
-import datetime
 import typing as t
 import uuid
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from pydantic.alias_generators import to_camel
 
+from fairylandfuture.enums import DateTimeEnum
 from fairylandfuture.utils import DateTimeUtils
-from fairylandfuture.enums.datetime import DateTimeEnum
 
 
 class PrimitiveSchema(BaseModel):

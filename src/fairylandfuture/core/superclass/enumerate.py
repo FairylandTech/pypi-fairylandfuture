@@ -18,6 +18,11 @@ class BaseEnum(Enum):
     Enum Base Class.
     """
 
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, str) and isinstance(self.value, str):
+            return self.value.upper() == other.upper()
+        return super().__eq__(other)
+
     @classmethod
     def get(cls: Type[_TypeBaseEnum], value: str) -> Any:
         """

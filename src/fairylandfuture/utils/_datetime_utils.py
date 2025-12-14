@@ -13,9 +13,7 @@ from typing import Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
-from fairylandfuture.common.validator.validator import ParamsValidator
-from fairylandfuture.core.superclass.validators import Validator
-from fairylandfuture.enums.datetime import DateTimeEnum, TimeZoneEnum
+from fairylandfuture.enums import DateTimeEnum, TimeZoneEnum
 
 
 class DateTimeUtils:
@@ -123,8 +121,6 @@ class DateTimeUtils:
         :return: Current timestamp.
         :rtype: int
         """
-        validator = ParamsValidator({"ms": Validator(required=False, typedef=bool), "n": Validator(required=False, typedef=(int, type(None)))})
-        validator.validate({"ms": ms, "n": n})
 
         if ms:
             return round(time.time() * 1000)
@@ -145,12 +141,6 @@ class DateTimeUtils:
         :return: Formatted datetime_str string.
         :rtype: str
         """
-        validator = ParamsValidator(
-            {
-                "timestamp": Validator(required=True, typedef=(int, float)),
-            }
-        )
-        validator.validate({"timestamp": timestamp})
 
         if len(str(int(timestamp))) == 13:
             timestamp /= 1000
@@ -176,15 +166,6 @@ class DateTimeUtils:
         :return: Timestamp.
         :rtype: int
         """
-        validator = ParamsValidator(
-            {
-                "dt_string": Validator(required=True, typedef=str),
-                "ms": Validator(required=False, typedef=bool),
-                "n": Validator(required=False, typedef=(int, type(None))),
-                "_format": Validator(required=False, typedef=(str, type(None))),
-            }
-        )
-        validator.validate({"dt_string": dt_string, "ms": ms, "n": n, "_format": _format})
 
         if not _format:
             _format = DateTimeEnum.DATETIME.value

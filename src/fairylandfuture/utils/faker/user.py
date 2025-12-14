@@ -8,6 +8,7 @@
 """
 
 from datetime import datetime
+
 from pypinyin import pinyin, Style
 
 from fairylandfuture.core.superclass.fakerlib import BaseFaker
