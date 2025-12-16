@@ -12,18 +12,15 @@ import typing as t
 
 from sqlalchemy import Column, Integer, DateTime, Boolean
 from sqlalchemy import inspect
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Mapped, DeclarativeBase, declared_attr, Session
 
+from fairylandfuture import logger
 from fairylandfuture.core.superclass.schema import BaseSchema
-from fairylandfuture.logger import Journal
 from fairylandfuture.utils import DateTimeUtils
 
 
 class BaseModel(DeclarativeBase):
     __abstract__: bool = True
-
-    log: t.Optional[Journal] = Journal(filename="model.service.log")
 
     id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True, comment="ID")
     created_at = Column(DateTime, default=DateTimeUtils.unzone_cst, nullable=False, comment="Create time")
@@ -56,11 +53,8 @@ class BaseModel(DeclarativeBase):
     def get_by_id(cls, session: Session, record_id: int) -> t.Optional["BaseModel"]:
         try:
             return session.query(cls).filter(cls.id == record_id, cls.existed == True).first()
-        except SQLAlchemyError as err:
-            cls.log.error(f"查询{cls.__name__}失败, ID: {record_id}, 错误: {err}")
-            return None
         except Exception as err:
-            cls.log.exception(err)
+            logger.error(f"Failed to query {cls.__name__}, ID: {record_id}, error: {err}")
             return None
 
     @classmethod
@@ -74,17 +68,12 @@ class BaseModel(DeclarativeBase):
                 query = query.limit(limit)
 
             return query.all()
-        except SQLAlchemyError as err:
-            cls.log.error(f"查询{cls.__name__}列表失败, 错误: {err}")
-            return list()
         except Exception as err:
-            cls.log.exception(err)
+            logger.error(f"Failed to query {cls.__name__} list, error: {err}")
             return list()
 
     def refresh(self, session: Session) -> None:
         try:
             session.refresh(self)
-        except SQLAlchemyError as err:
-            self.log.error(f"刷新{self.__class__.__name__}失败, ID: {self.id}, 错误: {err}")
         except Exception as err:
-            self.log.exception(err)
+            logger.error(f"Failed to refresh {self.__class__.__name__} instance, error: {err}")

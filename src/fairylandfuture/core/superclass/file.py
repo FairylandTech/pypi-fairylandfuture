@@ -15,6 +15,7 @@ from typing import Union, AnyStr, Sequence, Optional, Any
 
 import yaml
 
+from fairylandfuture import logger
 from fairylandfuture.enums import EncodingEnum, FileModeEnum
 
 
@@ -28,9 +29,9 @@ class BaseFile:
     :type create: bool
 
     Usage:
-        >>> from fairylandfuture import BaseFile
-        >>> from fairylandfuture import EncodingEnum
-        >>> from fairylandfuture import FileModeEnum
+        >>> from fairylandfuture.common.file import BaseFile
+        >>> from fairylandfuture.enums import EncodingEnum
+        >>> from fairylandfuture.enums import FileModeEnum
         >>> file = BaseFile("path/to/file.txt")
         >>> file.name
         "file"
@@ -73,6 +74,7 @@ class BaseFile:
             raise ValueError("Path is a directory.")
         if not os.path.exists(path):
             if create:
+                logger.debug(f"File not found. Creating new file at: {path!r}")
                 open(path, "w").close()
             else:
                 raise FileNotFoundError("File not found.")

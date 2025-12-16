@@ -11,6 +11,7 @@ import json
 import typing as t
 from dataclasses import dataclass, asdict, astuple, field, fields
 
+from fairylandfuture import logger
 from fairylandfuture.models import BaseModel
 
 
@@ -53,6 +54,7 @@ class BaseFrozenStructure:
 
     @classmethod
     def from_model(cls, model: BaseModel):
+        logger.debug(f"Converting model {model.__class__.__name__!r} to structure {cls.__name__!r}...")
         kwargs = {}
         model_dict = model.to_dict()
         for field in fields(cls):

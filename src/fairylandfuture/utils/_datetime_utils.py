@@ -13,6 +13,7 @@ from typing import Optional, Union
 
 from dateutil.relativedelta import relativedelta
 
+from fairylandfuture import logger
 from fairylandfuture.enums import DateTimeEnum, TimeZoneEnum
 
 
@@ -36,7 +37,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATE.value
 
-        return datetime.now().date().strftime(_format)
+        result = datetime.now().date().strftime(_format)
+        logger.debug(f"Current date: {result}")
+        return result
 
     @classmethod
     def date_shanghai(cls, _format: Optional[str] = None) -> str:
@@ -51,7 +54,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATE.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).date().strftime(_format)
+        result = datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).date().strftime(_format)
+        logger.debug(f"Current date in Shanghai time zone: {result}")
+        return result
 
     @classmethod
     def time(cls, _fromat: Optional[str] = None) -> str:
@@ -66,7 +71,9 @@ class DateTimeUtils:
         if not _fromat:
             _fromat = DateTimeEnum.TIME.value
 
-        return datetime.now().time().strftime(_fromat)
+        result = datetime.now().time().strftime(_fromat)
+        logger.debug(f"Current time: {result}")
+        return result
 
     @classmethod
     def time_shanghai(cls, _fromat: Optional[str] = None) -> str:
@@ -81,7 +88,9 @@ class DateTimeUtils:
         if not _fromat:
             _fromat = DateTimeEnum.TIME.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).time().strftime(_fromat)
+        result = datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).time().strftime(_fromat)
+        logger.debug(f"Current time in Shanghai time zone: {result}")
+        return result
 
     @classmethod
     def datetime(cls, _format: Optional[str] = None) -> str:
@@ -96,7 +105,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATETIME.value
 
-        return datetime.now().strftime(_format)
+        result = datetime.now().strftime(_format)
+        logger.debug(f"Current datetime: {result}")
+        return result
 
     @classmethod
     def datetime_shanghai(cls, _format: Optional[str] = None) -> str:
@@ -111,7 +122,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATETIME.value
 
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).strftime(_format)
+        result = datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).strftime(_format)
+        logger.debug(f"Current datetime in Shanghai time zone: {result}")
+        return result
 
     @classmethod
     def timestamp(cls, ms: bool = False, n: Optional[int] = None) -> int:
@@ -123,11 +136,17 @@ class DateTimeUtils:
         """
 
         if ms:
-            return round(time.time() * 1000)
+            result = round(time.time() * 1000)
+            logger.debug(f"Current timestamp in ms: {result}")
+            return result
         if n:
-            return round(time.time()) * (10 ** (n - 10))
+            result = round(time.time()) * (10 ** (n - 10))
+            logger.debug(f"Current timestamp with {n} digits: {result}")
+            return result
 
-        return round(time.time())
+        result = round(time.time())
+        logger.debug(f"Current timestamp: {result}")
+        return result
 
     @classmethod
     def timestamp_to_datetime(cls, timestamp: Union[int, float], _format: Optional[str] = None) -> str:
@@ -148,7 +167,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATETIME.value
 
-        return datetime.fromtimestamp(timestamp).strftime(_format)
+        result = datetime.fromtimestamp(timestamp).strftime(_format)
+        logger.debug(f"Converted datetime from timestamp {timestamp}: {result}")
+        return result
 
     @classmethod
     def datetime_to_timestamp(cls, dt_string: str, ms: bool = False, n: Optional[int] = None, _format: Optional[str] = None) -> int:
@@ -173,11 +194,17 @@ class DateTimeUtils:
         timestamp = datetime.strptime(dt_string, _format).timestamp()
 
         if ms:
-            return int(timestamp * 1000)
+            result = int(timestamp * 1000)
+            logger.debug(f"Converted timestamp in ms from datetime {dt_string!r}: {result}")
+            return result
         if n:
-            return int(timestamp * (10 ** (n - 10)))
+            result = int(timestamp * (10 ** (n - 10)))
+            logger.debug(f"Converted timestamp with {n} digits from datetime {dt_string!r}: {result}")
+            return result
 
-        return int(timestamp)
+        result = int(timestamp)
+        logger.debug(f"Converted timestamp from datetime {dt_string!r}: {result}")
+        return result
 
     @classmethod
     def yesterday(cls, _format: Optional[str] = None) -> str:
@@ -192,7 +219,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATE.value
 
-        return (datetime.now() - relativedelta(days=1)).strftime(_format)
+        result = (datetime.now() - relativedelta(days=1)).strftime(_format)
+        logger.debug(f"Yesterday's date: {result}")
+        return result
 
     @classmethod
     def tomorrow(cls, _format: Optional[str] = None) -> str:
@@ -207,7 +236,9 @@ class DateTimeUtils:
         if not _format:
             _format = DateTimeEnum.DATE.value
 
-        return (datetime.now() + relativedelta(days=1)).strftime(_format)
+        result = (datetime.now() + relativedelta(days=1)).strftime(_format)
+        logger.debug(f"Tomorrow's date: {result}")
+        return result
 
     @classmethod
     def daysdelta(cls, dt1: Union[str, int, float], dt2: Union[str, int, float], timestamp: bool = False, ms: bool = False, _format: Optional[str] = None) -> int:
@@ -241,7 +272,9 @@ class DateTimeUtils:
             date1 = datetime.strptime(dt1, _format)
             date2 = datetime.strptime(dt2, _format)
 
-        return abs((date2 - date1).days)
+        result = abs((date2 - date1).days)
+        logger.debug(f"Days delta between {dt1!r} and {dt2!r}: {result}")
+        return result
 
     @classmethod
     def unzone_utc(cls) -> "datetime":
@@ -251,7 +284,9 @@ class DateTimeUtils:
         :return: Unzoned datetime.
         :rtype: datetime
         """
-        return datetime.now(timezone.utc).replace(tzinfo=None)
+        result = datetime.now(timezone.utc).replace(tzinfo=None)
+        logger.debug(f"Unzoned UTC datetime: {result}")
+        return result
 
     @classmethod
     def unzone_cst(cls) -> "datetime":
@@ -261,4 +296,6 @@ class DateTimeUtils:
         :return: Unzoned datetime in China.
         :rtype: datetime
         """
-        return datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).replace(tzinfo=None)
+        result = datetime.now(tz=timezone(timedelta(hours=8), name=cls.TIMEZONE)).replace(tzinfo=None)
+        logger.debug(f"Unzoned CST datetime: {result}")
+        return result

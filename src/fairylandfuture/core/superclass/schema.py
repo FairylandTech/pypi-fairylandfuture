@@ -16,6 +16,7 @@ import uuid
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from pydantic.alias_generators import to_camel
 
+from fairylandfuture import logger
 from fairylandfuture.enums import DateTimeEnum
 from fairylandfuture.utils import DateTimeUtils
 
@@ -32,12 +33,15 @@ class PrimitiveSchema(BaseModel):
     )
 
     def to_dict(self, /, *, exclude_fields: t.Optional[t.Iterable[str]] = None, exclude_none: bool = False, to_camel: bool = False) -> t.Dict[str, t.Any]:
+        logger.debug(f"Serializing {self.__class__.__name__!r} to dict(mode=python)...")
         return self.model_dump(mode="python", exclude=set(exclude_fields) if exclude_fields else None, exclude_none=exclude_none, by_alias=to_camel)
 
     def to_serializable_dict(self, /, *, exclude_fields: t.Optional[t.Iterable[str]] = None, exclude_none: bool = False, to_camel: bool = False) -> t.Dict[str, t.Any]:
+        logger.debug(f"Serializing {self.__class__.__name__!r} to dict(mode=json)...")
         return self.model_dump(mode="json", exclude=set(exclude_fields) if exclude_fields else None, exclude_none=exclude_none, by_alias=to_camel)
 
     def to_json_string(self, indent: int = 2) -> str:
+        logger.debug(f"Serializing {self.__class__.__name__!r} to JSON string...")
         return self.model_dump_json(indent=indent, ensure_ascii=False)
 
 
@@ -59,13 +63,16 @@ class BaseSchema(EntitySchema):
     @property
     def hashcode(self) -> str:
         data = self.model_dump(mode="json", exclude={"id", "uuid", "created_at", "updated_at"})
-        return hashlib.md5(json.dumps(data, sort_keys=True).encode()).hexdigest()
+        result = hashlib.md5(json.dumps(data, sort_keys=True).encode()).hexdigest()
+        logger.debug(f"Calculating hashcode for {self.__class__.__name__!r} with result: {result!r}")
+        return result
 
     def update(self, **kwargs) -> t.Self:
         flag = False
         frozen_fields = ("id", "uuid", "created_at")
         for field, value in kwargs.items():
             if field not in frozen_fields and hasattr(self, field) and getattr(self, field) != value:
+                logger.debug(f"Updating field {field!r} of {self.__class__.__name__!r} from {getattr(self, field)!r} to {value!r}")
                 setattr(self, field, value)
                 flag = True
 

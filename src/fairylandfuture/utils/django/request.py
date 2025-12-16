@@ -9,6 +9,8 @@
 
 from django.http import HttpRequest
 
+from fairylandfuture import logger
+
 
 class DjangoRequestUtils:
 
@@ -20,11 +22,14 @@ class DjangoRequestUtils:
         else:
             ip = request.META.get("REMOTE_ADDR")
 
+        logger.debug(f"Client IP Address: {ip}")
         return ip
 
     @classmethod
     def get_user_agent(cls, request: HttpRequest) -> str:
-        return request.META.get("HTTP_USER_AGENT", "")
+        ua = request.META.get("HTTP_USER_AGENT", "")
+        logger.debug(f"User Agent: {ua}")
+        return ua
 
     @classmethod
     def is_ajax_request(cls, request: HttpRequest) -> bool:

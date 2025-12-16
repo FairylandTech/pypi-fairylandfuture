@@ -11,6 +11,7 @@ import typing as t
 
 from rest_framework.response import Response
 
+from fairylandfuture import logger
 from fairylandfuture.structures.http.response import ResponseStructure, ResponseFrozenStructure
 
 
@@ -29,4 +30,5 @@ class DRFResponseMixin:
         if not content_type:
             content_type = "application/json"
 
+        logger.debug(f"DRF Response with data: {data.asdict!r}, status: {data.code}, headers: {headers!r}, content_type: {content_type!r}, exception: {exception}")
         return Response(data=data.asdict, status=data.code, headers=headers, content_type=content_type, exception=exception)
