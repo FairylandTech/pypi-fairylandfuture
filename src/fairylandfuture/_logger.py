@@ -7,6 +7,6 @@
 @datetime: 2025-12-16 19:01:57 UTC+08:00
 """
 
-from fairylandlogger.logger import LogManager, Logger
+from fairylandlogger.logger import Logger, LogManager
 
 logger: Logger = LogManager.get_logger("fairylandfuture")
