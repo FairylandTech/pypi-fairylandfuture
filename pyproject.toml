@@ -8,7 +8,7 @@ license = { file = "LICENSE" }
 authors = [
     { name = "FairylandTech", email = "fairylandfuture@protonmail.com" }
 ]
-keywords = ["fairylandfuture", ]
+keywords = ["fairylandfuture", "fairyland", "toolkit"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
