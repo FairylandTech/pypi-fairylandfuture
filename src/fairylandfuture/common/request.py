@@ -12,6 +12,7 @@ from typing import Optional, Dict, Any
 import requests
 import urllib3
 
+from fairylandfuture import logger
 from fairylandfuture.exceptions.generic import BaseProgramException
 from fairylandfuture.structures.http.request import HTTPSimpleRequestResultStructure
 
@@ -33,10 +34,12 @@ class HTTPSimpleRequest:
         if headers and isinstance(headers, dict) and "Content-Type" not in headers:
             headers["Content-Type"] = "application/json"
 
+        logger.debug(f"Custom headers have been set for HTTP requests: {headers!r}.")
         return headers
 
     def get(self, url: str, params: Optional[Dict[str, Any]] = None) -> HTTPSimpleRequestResultStructure:
         try:
+            logger.debug(f"Sending GET request to URL: {url} with params: {params!r}.")
             response = requests.get(url, params=params, headers=self.headers, cookies=self.cookies, verify=self.verify, timeout=self.timeout)
             response.raise_for_status()
 
@@ -57,6 +60,7 @@ class HTTPSimpleRequest:
 
     def post(self, url: str, data: Optional[Dict[str, Any]] = None) -> HTTPSimpleRequestResultStructure:
         try:
+            logger.debug(f"Sending POST request to URL: {url} with data: {data!r}.")
             response = requests.post(url, json=data, headers=self.headers, cookies=self.cookies, verify=self.verify, timeout=self.timeout)
             response.raise_for_status()
 

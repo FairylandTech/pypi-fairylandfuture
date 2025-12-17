@@ -11,11 +11,14 @@ import typing as t
 
 from user_agents import parse
 
+from fairylandfuture import logger
+
 
 class UserAgentParserHelper:
 
     @classmethod
     def parse_user_agent(cls, user_agent: str) -> t.Optional[t.Dict[str, t.Any]]:
+        logger.debug(f"Parsing User-Agent: {user_agent}")
         if not user_agent:
             return None
 

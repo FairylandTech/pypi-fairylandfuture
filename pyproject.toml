@@ -20,8 +20,7 @@ classifiers = [
 
 dependencies = [
     # FairylandTech Internal Packages
-    "pypi-fairylandlogger==1.0.0",
-
+    "pypi-fairylandlogger",
     # Core Tools
     "loguru",
     "python-dateutil",
@@ -69,10 +68,16 @@ dependencies = [
     "selenium",
     "webdriver-manager",
     "beautifulsoup4",
-]
-
-[project.optional-dependencies]
-dev = [
+    # Stubs for Type Checking
+    "types-requests",
+    "types-python-dateutil",
+    "types-PyYAML",
+    "django-stubs",
+    "django-stubs-ext",
+    "djangorestframework-stubs",
+    "types-cryptography",
+    "pandas-stubs",
+    ### dev
     # Python Build Tools
     "pip-tools",
     "pipreqs",
@@ -83,7 +88,6 @@ dev = [
     "setuptools",
     "wheel",
     "pip",
-    "uv",
     # Code Quality
     "black",
     "flake8",
@@ -96,6 +100,7 @@ dev = [
     "pytest-django",
     "pytest-cov",
     "ruff",
+    "pyright",
     "importlab",
 ]
 

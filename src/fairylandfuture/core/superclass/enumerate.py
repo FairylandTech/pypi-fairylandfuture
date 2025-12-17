@@ -10,6 +10,8 @@
 from enum import Enum
 from typing import Any, List, Tuple, TypeVar, Union, Optional, Sequence, Type
 
+from fairylandfuture import logger
+
 _TypeBaseEnum = TypeVar("_TypeBaseEnum", bound="BaseEnum")
 
 
@@ -37,6 +39,7 @@ class BaseEnum(Enum):
             raise TypeError("The value must be a string.")
 
         value_object: _TypeBaseEnum = getattr(cls, value)
+        logger.debug(f"Get Enum {cls.__name__!r} member {value!r} with value {value_object.value!r}")
 
         return value_object.value
 
