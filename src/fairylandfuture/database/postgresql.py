@@ -170,10 +170,10 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
     :type connector: PostgreSQLConnector
 
     Usage::
-        >>> from fairylandfuture.database.postgresql import PostgreSQLConnector, PostgreSQLOperator
+        >>> from fairylandfuture.database.postgresql import PostgreSQLConnector, PostgreSQLRepository
         >>> from fairylandfuture.structures.database import PostgreSQLExecuteStructure
         >>> connector = PostgreSQLConnector(host="localhost", port=5432, user="postgres", password="password", database="test")
-        >>> operation = PostgreSQLOperator(connector)
+        >>> operation = PostgreSQLRepository(connector)
         >>> data = operation.select(PostgreSQLExecuteStructure("SELECT * FROM users"))
         >>> print(data)
 

@@ -4,40 +4,67 @@
 @author: Lionel Johnson
 @contact: https://fairy.host
 @organization: https://github.com/FairylandFuture
-@datetime: 2025-11-28 11:57:26 UTC+08:00
+@datetime: 2025-12-31 01:26:01 UTC+08:00
 """
 
-import re
+import datetime
 import typing as t
 
-from sqlalchemy import Column, Integer, DateTime, Boolean
+from sqlalchemy import Integer, DateTime, Boolean
 from sqlalchemy import inspect
-from sqlalchemy.orm import Mapped, DeclarativeBase, declared_attr, Session
+from sqlalchemy.orm import Mapped, DeclarativeBase, Session, mapped_column
 
 from fairylandfuture import logger
 from fairylandfuture.core.superclass.schema import BaseSchema
 from fairylandfuture.utils import DateTimeUtils
 
 
-class BaseModel(DeclarativeBase):
+class __BaseModel(DeclarativeBase): ...
+
+
+class BaseModel(__BaseModel):
     __abstract__: bool = True
 
-    id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True, comment="ID")
-    created_at = Column(DateTime, default=DateTimeUtils.unzone_cst, nullable=False, comment="Create time")
-    updated_at = Column(DateTime, default=DateTimeUtils.unzone_cst, onupdate=DateTimeUtils.unzone_cst, nullable=False, comment="Update time")
-    deleted = Column(Boolean, default=False, nullable=False, comment="Soft erase marker: false=normal, ture=delete")
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        comment="ID",
+    )
+
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime,
+        default=DateTimeUtils.unzone_cst,
+        nullable=False,
+        comment="Create time",
+    )
+
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime,
+        default=DateTimeUtils.unzone_cst,
+        onupdate=DateTimeUtils.unzone_cst,
+        nullable=False,
+        comment="Update time",
+    )
+
+    deleted: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        comment="Soft erase marker: false=normal, ture=delete",
+    )
 
     @property
     def is_deleted(self) -> bool:
         return self.deleted
 
-    @classmethod
-    @declared_attr
-    def __tablename__(cls) -> str:
-        name = re.sub(r"(?<!^)(?=[A-Z])", "_", cls.__name__).lower()
-        if name.endswith("_model"):
-            name = name[:-6]
-        return name
+    # @classmethod
+    # @declared_attr
+    # def __tablename__(cls) -> str:
+    #     name = re.sub(r"(?<!^)(?=[A-Z])", "_", cls.__name__).lower()
+    #     if name.endswith("_model"):
+    #         name = name[:-6]
+    #     return name
 
     @classmethod
     def from_schema(cls, schema: BaseSchema):
