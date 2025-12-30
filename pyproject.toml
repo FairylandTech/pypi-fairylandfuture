@@ -39,6 +39,7 @@ dependencies = [
     "sqlalchemy",
     "DBUtils",
     "aiomysql",
+    "psycopg[binary,async]",
     # Message Queue & Search
     "kafka-python",
     "elasticsearch[async]",

@@ -10,6 +10,8 @@
 import typing as t
 from dataclasses import dataclass, field
 
+import psycopg.abc
+
 from fairylandfuture.core.superclass.structure import BaseFrozenStructure
 
 
@@ -21,7 +23,7 @@ class MySQLExecuteStructure(BaseFrozenStructure):
 
 @dataclass(frozen=True)
 class PostgreSQLExecuteStructure(BaseFrozenStructure):
-    query: str
+    query: psycopg.abc.QueryNoTemplate
     vars: t.Optional[t.Union[t.Sequence, t.MutableSequence, t.Mapping, t.MutableMapping]] = field(default=None)
 
 

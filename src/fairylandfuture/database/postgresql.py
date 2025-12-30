@@ -14,6 +14,7 @@ import psycopg2
 from psycopg2 import pool
 from psycopg2.extras import NamedTupleCursor
 
+from fairylandfuture import logger
 from fairylandfuture.abstract.database import AbstractPostgreSQLOperator
 from fairylandfuture.exceptions.database import SQLSyntaxException
 from fairylandfuture.exceptions.messages.database import SQLSyntaxExceptMessage
@@ -87,10 +88,10 @@ class PostgreSQLConnector:
         self.__dsn = f"host={self.__host} port={self.__port} user={self.__user} password={self.__password} dbname={self.__database}"
 
         if self.__schema:
-            self.__dsn = " ".join((self.__dsn, f"options='-c search_path={self.__schema}'"))
+            self.__dsn = " ".join((self.__dsn, f"options='-c search_path={self.__schema} -c timezone=Asia/Shanghai'"))
 
-        self.connection: CustomPostgreSQLConnection = self.__connect()
-        self.cursor: CustomPostgreSQLCursor = self.connection.cursor(cursor_factory=CustomPostgreSQLCursor)
+        self.connection: Optional["CustomPostgreSQLConnection"] = self.__connect()
+        self.cursor: Optional["CustomPostgreSQLCursor"] = self.connection.cursor(cursor_factory=CustomPostgreSQLCursor)
 
     @property
     def host(self) -> str:
@@ -117,7 +118,7 @@ class PostgreSQLConnector:
 
     def __connect(self) -> CustomPostgreSQLConnection:
         connection = psycopg2.connect(dsn=self.__dsn, connection_factory=CustomPostgreSQLConnection, cursor_factory=CustomPostgreSQLCursor)
-
+        connection.cursor()
         return connection
 
     def reconnect(self) -> None:
@@ -127,10 +128,21 @@ class PostgreSQLConnector:
         :return: ...
         :rtype: ...
         """
-        if not self.connection.exist:
+        need_reconnect = False
+        try:
+            if self.connection.closed != 0:
+                need_reconnect = True
+            else:
+                with self.connection.cursor() as cur:
+                    cur.execute("SELECT 1")
+        except (psycopg2.OperationalError, psycopg2.InterfaceError, Exception):
+            need_reconnect = True
+            logger.debug(f"Reconnecting to PostgreSQL database: {self.dsn}")
+
+        if need_reconnect:
             self.connection: CustomPostgreSQLConnection = self.__connect()
             self.cursor: CustomPostgreSQLCursor = self.connection.cursor(cursor_factory=CustomPostgreSQLCursor)
-        if not self.cursor.exist and self.connection.exist:
+        elif self.cursor.closed:
             self.cursor: CustomPostgreSQLCursor = self.connection.cursor(cursor_factory=CustomPostgreSQLCursor)
 
     def close(self) -> None:
@@ -188,15 +200,14 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
         """
         try:
             self.connector.reconnect()
+            logger.debug(f"Executing SQL: {struct.query} | Params: {struct.vars}")
             self.connector.cursor.execute(struct.query, struct.vars)
-            data = self.connector.cursor.fetchall()
+            data = self.connector.cursor.fetchall() if self.connector.cursor.description else None
             self.connector.connection.commit()
-            self.connector.close()
-
+            logger.debug(f"SQL executed successfully, Result: {data}")
             return tuple(data) if data else True
         except Exception as err:
             self.connector.connection.rollback()
-            self.connector.close()
             raise err
 
     def executemany(self, struct: PostgreSQLExecuteStructure, /) -> bool:
@@ -211,14 +222,13 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
         """
         try:
             self.connector.reconnect()
+            logger.debug(f"Executing multiple SQL: {struct.query} | Params: {struct.vars}")
             self.connector.cursor.executemany(struct.query, struct.vars)
             self.connector.connection.commit()
-            self.connector.close()
 
             return True
         except Exception as err:
             self.connector.connection.rollback()
-            self.connector.close()
             raise err
 
     def multiexecute(self, structs: Sequence[PostgreSQLExecuteStructure], /) -> bool:
@@ -235,14 +245,13 @@ class PostgreSQLOperator(AbstractPostgreSQLOperator):
             for struct in structs:
                 if struct.query.lower().startswith("select"):
                     raise SQLSyntaxException(SQLSyntaxExceptMessage.SQL_MUST_NOT_SELECT)
+                logger.debug(f"Executing SQL: {struct.query} | Params: {struct.vars}")
                 self.connector.cursor.execute(struct.query, struct.vars)
             self.connector.connection.commit()
-            self.connector.close()
 
             return True
         except Exception as err:
             self.connector.connection.rollback()
-            self.connector.close()
             raise err
 
     def select(self, struct: PostgreSQLExecuteStructure, /) -> Tuple[NamedTuple, ...]:
@@ -307,7 +316,7 @@ class PostgreSQLSimpleConnectionPool:
         cursor: CustomPostgreSQLCursor = connection.cursor(cursor_factory=CustomPostgreSQLCursor)
         try:
             cursor.execute(struct.query, struct.vars)
-            data = cursor.fetchall()
+            data = cursor.fetchall() if cursor.description else None
             connection.commit()
 
             cursor.close()

@@ -25,7 +25,11 @@ class BaseModel(DeclarativeBase):
     id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True, comment="ID")
     created_at = Column(DateTime, default=DateTimeUtils.unzone_cst, nullable=False, comment="Create time")
     updated_at = Column(DateTime, default=DateTimeUtils.unzone_cst, onupdate=DateTimeUtils.unzone_cst, nullable=False, comment="Update time")
-    existed = Column(Boolean, default=True, nullable=False, comment="Soft erase marker: 0=normal, 1=delete")
+    deleted = Column(Boolean, default=False, nullable=False, comment="Soft erase marker: false=normal, ture=delete")
+
+    @property
+    def is_deleted(self) -> bool:
+        return self.deleted
 
     @classmethod
     @declared_attr
