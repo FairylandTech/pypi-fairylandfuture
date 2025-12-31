@@ -20,6 +20,24 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class HTTPSimpleRequest:
+    """
+    Represents a simple HTTP request handler capable of performing GET and POST requests.
+
+    This class is designed to manage HTTP requests while providing configurable headers, cookies,
+    SSL verification, and timeouts. It simplifies handling HTTP responses by attempting to decode
+    responses into JSON or returning plain text if JSON decoding fails. The class also ensures
+    that required headers like 'Content-Type' are automatically set when not provided.
+
+    :ivar headers: Dictionary of HTTP headers to include in requests. Defaults to a JSON content type header
+        if not provided.
+    :type headers: Dict[str, str] | None
+    :ivar cookies: Dictionary of cookies to include in requests. Defaults to an empty dictionary if not provided.
+    :type cookies: Dict[str, str] | None
+    :ivar verify: Boolean indicating whether SSL certificate verification is enabled. Defaults to False.
+    :type verify: bool
+    :ivar timeout: Timeout duration for requests in seconds. Defaults to 30 seconds if not specified.
+    :type timeout: int | None
+    """
 
     def __init__(self, headers: Optional[Dict[str, str]] = None, cookies: Optional[Dict[str, str]] = None, verify: bool = False, timeout: Optional[int] = None):
         self.headers = self._make_headers(headers)

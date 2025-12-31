@@ -18,11 +18,28 @@ from fairylandfuture import logger
 from fairylandfuture.core.superclass.schema import BaseSchema
 from fairylandfuture.utils import DateTimeUtils
 
+BaseModelType = t.TypeVar("BaseModelType", bound="BaseModel")
 
-class __BaseModel(DeclarativeBase): ...
 
+class BaseModel(DeclarativeBase):
+    """
+    Base class for SQLAlchemy models.
 
-class BaseModel(__BaseModel):
+    Serves as an abstract base class for database models, providing common attributes
+    such as `id`, `created_at`, `updated_at`, and `deleted`. Includes utility methods
+    like record retrieval, dictionary conversion, and schema-based object creation.
+
+    :ivar id: Unique identifier for the model instance.
+    :type id: int
+    :ivar created_at: Timestamp indicating when the record was created.
+    :type created_at: datetime.datetime
+    :ivar updated_at: Timestamp indicating when the record was last updated.
+    :type updated_at: datetime.datetime
+    :ivar deleted: Mark for soft deletion. A value of `False` indicates the record
+        is active, while `True` means the record is marked as deleted.
+    :type deleted: bool
+    """
+
     __abstract__: bool = True
 
     id: Mapped[int] = mapped_column(
@@ -58,16 +75,8 @@ class BaseModel(__BaseModel):
     def is_deleted(self) -> bool:
         return self.deleted
 
-    # @classmethod
-    # @declared_attr
-    # def __tablename__(cls) -> str:
-    #     name = re.sub(r"(?<!^)(?=[A-Z])", "_", cls.__name__).lower()
-    #     if name.endswith("_model"):
-    #         name = name[:-6]
-    #     return name
-
     @classmethod
-    def from_schema(cls, schema: BaseSchema):
+    def from_schema(cls, schema: BaseSchema) -> "BaseModelType":
         ins = cls()
         for field, value in schema.to_dict().items():
             if hasattr(ins, field):
@@ -83,15 +92,15 @@ class BaseModel(__BaseModel):
     @classmethod
     def get_by_id(cls, session: Session, record_id: int) -> t.Optional["BaseModel"]:
         try:
-            return session.query(cls).filter(cls.id == record_id, cls.existed == True).first()
+            return session.query(cls).filter(cls.id == record_id, cls.deleted == False).first()
         except Exception as err:
             logger.error(f"Failed to query {cls.__name__}, ID: {record_id}, error: {err}")
             return None
 
     @classmethod
-    def get_all(cls, session: Session, limit: int = None, offset: int = None):
+    def get_all(cls, session: Session, limit: int = None, offset: int = None) -> t.List[t.Type["BaseModelType"]]:
         try:
-            query = session.query(cls).filter(cls.existed == True)
+            query = session.query(cls).filter(cls.deleted == False)
 
             if offset:
                 query = query.offset(offset)

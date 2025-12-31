@@ -15,6 +15,19 @@ from . import BaseModel
 
 
 class BaseModelPostgreSQL(BaseModel):
+    """
+    Provides an abstract base model for defining PostgreSQL database tables.
+
+    This class is intended to be used as a base for creating table definitions
+    in a PostgreSQL database. The class leverages SQLAlchemy's BaseModel and
+    adds functionality for specifying a schema for the table. All child classes
+    must define their specific table attributes and will automatically inherit
+    the schema specified in this base class.
+
+    :ivar __table_schema__: The default schema name for the table in the PostgreSQL database.
+    :type __table_schema__: str
+    """
+
     __abstract__ = True
     __table_schema__ = "public"
 

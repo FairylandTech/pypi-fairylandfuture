@@ -110,6 +110,21 @@ class StringUtils:
 
     @classmethod
     def format(cls, origin: str, sort: t.Literal["SQL"]) -> str:
+        """
+        Formats a given string based on the specified formatting type.
+
+        This method takes an input string and formats it based on the provided
+        `sort` value. If the value is "SQL", the method compresses the string
+        by removing unnecessary whitespaces between words. If the `sort` value
+        is not "SQL", the string remains unchanged.
+
+        :param origin: The input string to be formatted.
+        :type origin: str
+        :param sort: The mode of formatting to apply. Must be "SQL".
+        :type sort: Literal["SQL"]
+        :return: The formatted string after applying the requested formatting.
+        :rtype: str
+        """
         if sort == "SQL":
             return " ".join(origin.split())
 

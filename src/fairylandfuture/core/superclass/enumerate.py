@@ -17,7 +17,13 @@ _TypeBaseEnum = TypeVar("_TypeBaseEnum", bound="BaseEnum")
 
 class BaseEnum(Enum):
     """
-    Enum Base Class.
+    Provides a base class for customizable enumerations.
+
+    This class extends the default functionality of Python's Enum module, providing
+    additional methods for enhanced Enum manipulation and comparison. It is
+    designed to handle string-based comparisons in a case-insensitive manner and
+    offers utility methods to fetch Enum members and their attributes dynamically.
+
     """
 
     def __eq__(self, other: Any) -> bool:

@@ -17,6 +17,13 @@ from fairylandfuture.models import BaseModel
 
 @dataclass(frozen=False)
 class BaseStructure:
+    """
+    Represents a base structure with functionality for conversion to dictionary, tuple, and JSON string.
+
+    This class provides common methods for data serialization, enabling derived classes to be
+    easily represented in various formats such as dictionaries, tuples, or JSON strings.
+    It is designed to be extended and should form the foundation of more specialized structures.
+    """
 
     @property
     def asdict(self) -> t.Dict[str, t.Any]:
@@ -36,6 +43,14 @@ class BaseStructure:
 
 @dataclass(frozen=True)
 class BaseFrozenStructure:
+    """
+    Base class for creating immutable data structures.
+
+    This frozen data class serves as a base structure providing utility methods for
+    serialization and model conversion. It ensures that instances are immutable and
+    can be easily converted to dictionaries, tuples, or JSON strings. It can also
+    be constructed from a Pydantic BaseModel.
+    """
 
     @property
     def asdict(self) -> t.Dict[str, t.Any]:
@@ -54,6 +69,20 @@ class BaseFrozenStructure:
 
     @classmethod
     def from_model(cls, model: BaseModel):
+        """
+        Creates an instance of the class by mapping fields from the given model.
+
+        Uses the provided BaseModel instance to construct a dictionary of
+        attributes that correspond to the fields of the class. Any matching
+        fields between the model and the class are included in the constructed
+        instance.
+
+        :param model: The BaseModel instance containing data to populate the
+            class attributes.
+        :type model: BaseModel
+        :return: An instance of the class, populated with data from the model.
+        :rtype: cls
+        """
         logger.debug(f"Converting model {model.__class__.__name__!r} to structure {cls.__name__!r}...")
         kwargs = {}
         model_dict = model.to_dict()
@@ -66,6 +95,20 @@ class BaseFrozenStructure:
 
 @dataclass
 class BaseStructureTreeNode:
+    """
+    Represents a node in a hierarchical structure tree.
+
+    This class is designed to facilitate the representation of hierarchical relationships within a tree-like
+    structure. Each node contains an identifier, a reference to its parent node, associated data, and a list
+    of its children nodes. The primary usage of this class is for creating hierarchical models that can be
+    easily traversed or exported to dictionary forms.
+
+    :ivar id: The unique identifier of the current node.
+    :ivar parent_id: The unique identifier of the parent node of the current node.
+    :ivar data: A dictionary containing the metadata or associated data of the current node.
+    :ivar children: A list of child nodes that belong to the current node. Defaults to an empty list.
+    """
+
     id: t.Any
     parent_id: t.Any
     data: t.Dict[str, t.Any]
