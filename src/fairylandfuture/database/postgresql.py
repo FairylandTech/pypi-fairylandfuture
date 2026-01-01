@@ -83,7 +83,7 @@ class PostgreSQLConnector:
         self.close()
 
     @property
-    def connection(self):
+    def connection(self) -> psycopg.Connection:
         """
         Provides a property to manage and retrieve a PostgreSQL connection. Ensures
         that the connection is active and re-establishes it if it is lost. Tracks the
@@ -108,7 +108,7 @@ class PostgreSQLConnector:
                 logger.error(f"Error obtaining PostgreSQL connection: {err}")
                 time.sleep(2)
 
-    def __connect(self):
+    def __connect(self) -> None:
         """
         Establishes a connection to the PostgreSQL database using the provided connection
         parameters. This method attempts to create the database connection and logs its
@@ -155,14 +155,14 @@ class PostgreSQLConnector:
             logger.error(f"PostgreSQL connection id {self.__connection_id} is not alive: {err}")
             return False
 
-    def __reconnect(self):
+    def __reconnect(self) -> None:
         self.close()
         self.__connect()
 
-    def ensure_connection(self):
+    def ensure_connection(self) -> None:
         _ = self.connection
 
-    def close(self):
+    def close(self) -> None:
         """
         Closes the current PostgreSQL connection if it is open.
 
@@ -183,7 +183,7 @@ class PostgreSQLConnector:
             finally:
                 self.__connection = None
 
-    def get_cursor(self, /, *, row_factory: t.Optional[psycopg.rows.RowFactory] = None) -> psycopg.Cursor:
+    def get_cursor(self, /, *, row_factory: t.Optional[psycopg.rows.RowFactory] = None) -> psycopg.Cursor[t.Tuple[t.Any, ...] | t.Mapping[str, t.Any]]:
         """
         Retrieves a cursor object for interacting with the database.
 
@@ -202,7 +202,7 @@ class PostgreSQLConnector:
             return self.connection.cursor(row_factory=row_factory)
         return self.connection.cursor()
 
-    def commit(self):
+    def commit(self) -> None:
         """
         Commits the current transaction for the associated database connection. This method
         ensures that all changes within the scope of the transaction are saved permanently
@@ -219,7 +219,7 @@ class PostgreSQLConnector:
             logger.error(f"Error committing PostgreSQL connection id {self.__connection_id}: {err}")
             raise err
 
-    def rollback(self):
+    def rollback(self) -> None:
         """
         Rolls back the current transaction on the database connection.
 
@@ -304,7 +304,7 @@ class PostgreSQLRepository:
             logger.error(f"Error executing PostgreSQL query: {error}")
             raise
 
-    def executemany(self, exec: PostgreSQLExecuteStructure, batch_size: int = 1000, commit_interval: int = 10000, show_progress: bool = True):
+    def executemany(self, exec: PostgreSQLExecuteStructure, batch_size: int = 1000, commit_interval: int = 10000, show_progress: bool = True) -> int:
         """
         Executes a batch of database operations using the provided PostgreSQL query and variables. The function
         splits the operations into batches, executes each in sequence, and handles committing to the database
@@ -601,3 +601,219 @@ class PostgreSQLRepository:
             return data
 
         return row
+
+    def bulk_insert(
+        self,
+        data: t.Sequence[t.Mapping[str, t.Any] | MODEL_ORM_TYPE],
+        /,
+        *,
+        table: t.Optional[str] = None,
+        schema: t.Optional[str] = None,
+        columns: t.Optional[t.Sequence[str]] = None,
+        on_conflict: t.Optional[t.Sequence[str]] = None,
+        update_now_fields: t.Sequence[str] = ("updated_at",),
+        batch_size: int = 1000,
+        commit_interval: int = 10000,
+        show_progress: bool = True,
+        return_rows: bool = False,
+    ) -> int | t.List[t.Mapping[str, t.Any]]:
+        """
+        Performs a bulk insert operation on the specified database table. This method allows inserting
+        multiple rows efficiently, leveraging batch processing, conflict handling, and progress monitoring.
+
+        :param data: A sequence of data dictionaries or ORM models to be inserted into the database.
+        :type data: Sequence[Mapping[str, Any]] | MODEL_ORM_TYPE
+        :param table: The name of the target table. Required if `data` is not an ORM model.
+        :type table: Optional[str]
+        :param schema: The schema name where the target table resides. If omitted, the default schema is used.
+        :type schema: Optional[str]
+        :param columns: A sequence of column names to be included in the insertion. If omitted, columns
+            are inferred from the first data item.
+        :type columns: Optional[Sequence[str]]
+        :param on_conflict: A sequence of column names to be used for conflict resolution, if applicable.
+        :type on_conflict: Optional[Sequence[str]]
+        :param update_now_fields: A sequence of column names that should have their values set to the current
+            timestamp during conflict resolution. Defaults to `["updated_at"]`.
+        :type update_now_fields: Sequence[str]
+        :param batch_size: The number of rows to be inserted in each batch. Defaults to 1000.
+        :type batch_size: int
+        :param commit_interval: The maximum number of rows after which a database commit is performed.
+            Defaults to 10000.
+        :type commit_interval: int
+        :param show_progress: A flag indicating if progress of the bulk insert operation should be displayed.
+            Defaults to True.
+        :type show_progress: bool
+        :param return_rows: A flag indicating if the inserted rows should be returned. Defaults to False.
+            If set to True, the result will be a list of the inserted rows.
+        :type return_rows: bool
+        :return: The number of rows successfully inserted if `return_rows` is False. Otherwise, a list of
+            the inserted rows will be returned.
+        :rtype: int | List[Mapping[str, Any]]
+
+        :raises ValueError: Raised if the `data` parameter is empty or if the `table` parameter is missing
+            when `data` does not include ORM models.
+        """
+        if not data:
+            logger.warning("No data provided for bulk insert operation.")
+            raise ValueError("Data list for bulk insert operation cannot be empty.")
+
+        # Getting the first data for inferring structure
+        row = data[0]
+        is_orm_model = isinstance(row, BaseModelPostgreSQL)
+
+        # Determining table identifiers and columns.
+        if is_orm_model:
+            table_identifier = psycopg.sql.Identifier(row.__table__.schema, row.__tablename__) if row.__table__.schema else psycopg.sql.Identifier(row.__tablename__)
+
+            if not columns:
+                # Inferring columns from the first model.
+                columns = [column.key for column in row.__mapper__.columns if getattr(row, column.key, None) is not None]
+        else:
+            if not table:
+                raise ValueError("Table name must be provided when data is not ORM models")
+
+            table_identifier = psycopg.sql.Identifier(schema, table) if schema else psycopg.sql.Identifier(table)
+
+            if not columns:
+                # Inferring columns from the first dictionary.
+                columns = tuple(row.keys())
+
+        # variable list
+        vars_list = []
+        for item in data:
+            if is_orm_model:
+                vars_dict = {column: getattr(item, column, None) for column in columns}
+            else:
+                vars_dict = {column: item.get(column) for column in columns}
+            vars_list.append(vars_dict)
+
+        # Building INSERT statement
+        insert_stmt = psycopg.sql.SQL("{insert} {table} ({fields}) {values} ({placeholders})").format(
+            insert=SQLKeywordConst.PostgreSQL.INSERT_INTO,
+            table=table_identifier,
+            fields=psycopg.sql.SQL(", ").join(map(psycopg.sql.Identifier, columns)),
+            values=SQLKeywordConst.PostgreSQL.VALUES,
+            placeholders=psycopg.sql.SQL(", ").join(psycopg.sql.Placeholder(column) for column in columns),
+        )
+
+        # Building conflict clause statement
+        conflict_clause = psycopg.sql.SQL("")
+        if on_conflict:
+            update_fields = [column for column in columns if column not in on_conflict]
+            update_exprs: t.List[psycopg.sql.Composed] = []
+
+            if not update_fields:
+                update_exprs.append(psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier("updated_at")))
+            else:
+                for column in update_fields:
+                    if column in update_now_fields:
+                        update_exprs.append(psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier(column)))
+                    else:
+                        update_exprs.append(
+                            psycopg.sql.SQL("{field} = {excluded}.{field}").format(
+                                field=psycopg.sql.Identifier(column),
+                                excluded=SQLKeywordConst.PostgreSQL.EXCLUDED,
+                            )
+                        )
+
+            if update_exprs:
+                conflict_clause = psycopg.sql.SQL("{on_conflict} ({conflict_fields}) {do} {updates}").format(
+                    on_conflict=SQLKeywordConst.PostgreSQL.ON_CONFLICT,
+                    conflict_fields=psycopg.sql.SQL(", ").join(map(psycopg.sql.Identifier, on_conflict)),
+                    do=SQLKeywordConst.PostgreSQL.DO_UPDATE_SET,
+                    updates=psycopg.sql.SQL(", ").join(update_exprs),
+                )
+            else:
+                conflict_clause = psycopg.sql.SQL("{on_conflict} ({conflict_fields}) {do}").format(
+                    on_conflict=SQLKeywordConst.PostgreSQL.ON_CONFLICT,
+                    conflict_fields=psycopg.sql.SQL(", ").join(map(psycopg.sql.Identifier, on_conflict)),
+                    do=SQLKeywordConst.PostgreSQL.DO_NOTHING,
+                )
+
+        # Building complete Query
+        if return_rows:
+            query = psycopg.sql.SQL("{insert} {conflict} {returning} *;").format(
+                insert=insert_stmt,
+                conflict=conflict_clause,
+                returning=SQLKeywordConst.PostgreSQL.RETURNING,
+            )
+        else:
+            query = psycopg.sql.SQL("{insert} {conflict};").format(
+                insert=insert_stmt,
+                conflict=conflict_clause,
+            )
+
+        if return_rows:
+            return self._bulk_insert_with_returning(query, vars_list, batch_size, commit_interval, show_progress)
+        else:
+            exec_query = PostgreSQLExecuteStructure(query, vars_list)
+            processed = self.executemany(exec_query, batch_size=batch_size, commit_interval=commit_interval, show_progress=show_progress)
+            return processed
+
+    def _bulk_insert_with_returning(
+        self,
+        query: psycopg.sql.Composed,
+        vars_list: t.List[t.Dict[str, t.Any]],
+        batch_size: int,
+        commit_interval: int,
+        show_progress: bool,
+    ) -> t.List[t.Mapping[str, t.Any]]:
+        """
+        Executes a bulk insert query with a RETURNING clause using batched data. This method
+        returns rows generated by the database during the insert operations. The process
+        shows progress information if enabled and commits transactions periodically.
+
+        :param query: SQL query composed using psycopg.sql.Composed to support
+            dynamic execution.
+        :type query: psycopg.sql.Composed
+        :param vars_list: List of dictionaries containing the data to be used for the
+            insert operation.
+        :type vars_list: list[dict[str, Any]]
+        :param batch_size: Number of rows to be processed in one batch.
+        :type batch_size: int
+        :param commit_interval: Number of processed rows between transaction commits.
+        :type commit_interval: int
+        :param show_progress: Indicates whether progress logs should be displayed.
+        :type show_progress: bool
+        :return: A list of mappings representing rows returned by the database during
+            each insert operation.
+        :rtype: list[mapping[str, Any]]
+        """
+        total_rows = len(vars_list)
+        processed = 0
+        start_time = time.time()
+        all_rows: t.List[t.Mapping[str, t.Any]] = []
+
+        cursor = self.connector.get_cursor(row_factory=dict_row)
+
+        try:
+            for i in range(0, total_rows, batch_size):
+                batch = vars_list[i : i + batch_size]
+
+                self.connector.ensure_connection()
+
+                for vars_dict in batch:
+                    cursor.execute(query, vars_dict)
+                    row: t.Mapping[str, t.Any] = cursor.fetchone()
+                    if row:
+                        all_rows.append(row)
+                    processed += 1
+
+                if processed % commit_interval == 0 or processed == total_rows:
+                    self.connector.commit()
+
+                    if show_progress:
+                        elapsed = time.time() - start_time
+                        speed = processed / elapsed if elapsed > 0 else 0
+                        logger.info(f"Progress: {processed}/{total_rows} " f"({processed/total_rows*100:.2f}%) " f"Speed: {speed:.2f} rows/sec")
+
+            total_elapsed = time.time() - start_time
+            avg_speed = total_rows / total_elapsed if total_elapsed > 0 else 0
+            logger.info(f"Completed bulk insert with returning:  {len(all_rows)} rows in {total_elapsed:.2f}s " f"(avg {avg_speed:.2f} rows/sec)")
+
+            return all_rows
+
+        except Exception as error:
+            self.connector.rollback()
+            logger.error(f"Bulk insert with returning failed at row {processed}: {error}")
+            raise
