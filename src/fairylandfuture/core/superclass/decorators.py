@@ -8,8 +8,7 @@
 """
 
 from functools import wraps
-from typing import Callable, TypeVar, Generic, Any
-from typing import Type
+from typing import Any, Callable, Generic, Type, TypeVar
 
 _T = TypeVar("_T", bound=Callable[..., Any])
 

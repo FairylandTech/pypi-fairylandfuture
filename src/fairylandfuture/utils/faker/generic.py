@@ -11,7 +11,6 @@ import secrets
 
 
 class FakeGeneralToolkit:
-
     @classmethod
     def generate_hex_string(cls, number, group=1, sep=""):
         if number % 2 != 0:

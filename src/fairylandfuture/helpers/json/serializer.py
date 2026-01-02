@@ -44,7 +44,7 @@ class JsonSerializerHelper:
         return json.dumps(value, cls=JsonEncoder, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
     @classmethod
-    def deserialize(cls, value: t.Union[StrAny, t.Dict[str, t.Any]], clazz: t.Optional[t.Callable[..., ClazzType]] = None) -> ClazzType:
+    def deserialize(cls, value: StrAny | dict[str, t.Any], clazz: t.Callable[..., ClazzType] | None = None) -> ClazzType:
         """
         Deserialize a value into a Python object, optionally using a provided class type.
 
@@ -62,7 +62,7 @@ class JsonSerializerHelper:
         :rtype: ClazzType
         """
         logger.debug(f"Deserializing value of type {type(value)} to class {clazz}")
-        if isinstance(value, t.Dict):
+        if isinstance(value, dict):
             if not clazz:
                 return value
             logger.debug(f"Deserializing dict to class {clazz}")

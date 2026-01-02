@@ -6,7 +6,8 @@
 @organization: https://github.com/FairylandFuture
 @datetime: 2025-02-13 20:40:53 UTC+08:00
 """
-from typing import Any, Callable, Optional, Union, Sequence, Type
+
+import typing as t
 
 from fairylandfuture.exceptions.generic import ValidationError
 
@@ -20,7 +21,7 @@ class BaseValidator:
     types, checking for required values, and applying custom validation logic through callable factories.
     """
 
-    def __init__(self, required: bool, typedef: Union[Type, Sequence[Type]], validator_factory: Optional[Callable[[Any], bool]] = None):
+    def __init__(self, required: bool, typedef: type | t.Sequence[type], validator_factory: t.Callable[[t.Any], bool] | None = None):
         self.__required = required
         self.__typedef = typedef
         self.__validator_factory = validator_factory
@@ -37,7 +38,7 @@ class BaseValidator:
     def validator_factory(self):
         return self.__validator_factory
 
-    def validate(self, value: Any) -> Any:
+    def validate(self, value: t.Any) -> t.Any:
         """
         Validates the provided value based on the configured constraints such as required fields,
         type definition, and custom validator functions. Ensures the value meets the expected

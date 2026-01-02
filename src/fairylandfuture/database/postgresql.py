@@ -15,12 +15,13 @@ import typing as t
 
 import psycopg
 import psycopg.sql
+from psycopg.rows import dict_row, tuple_row
+
 from fairylandfuture import logger
 from fairylandfuture.const.database import SQLKeywordConst
 from fairylandfuture.models import BaseModelPostgreSQL
 from fairylandfuture.structures.database import PostgreSQLExecuteStructure
 from fairylandfuture.utils.strings import StringUtils
-from psycopg.rows import dict_row, tuple_row
 
 MODEL_ORM_TYPE = t.TypeVar("MODEL_ORM_TYPE", bound="BaseModelPostgreSQL")
 
@@ -69,7 +70,7 @@ class PostgreSQLConnector:
             "options": f"-c timezone={timezone}",
             **kwargs,
         }
-        self.__connection: t.Optional[psycopg.Connection] = None
+        self.__connection: psycopg.Connection | None = None
 
         self.__connection_id: int = 0
         self.__last_activity_timestamp: float = 0.0
@@ -182,7 +183,7 @@ class PostgreSQLConnector:
             finally:
                 self.__connection = None
 
-    def get_cursor(self, /, *, row_factory: t.Optional[psycopg.rows.RowFactory] = None) -> psycopg.Cursor[t.Tuple[t.Any, ...] | t.Mapping[str, t.Any]]:
+    def get_cursor(self, /, *, row_factory: psycopg.rows.RowFactory | None = None) -> psycopg.Cursor[tuple[t.Any, ...] | t.Mapping[str, t.Any]]:
         """
         Retrieves a cursor object for interacting with the database.
 
@@ -213,7 +214,7 @@ class PostgreSQLConnector:
         """
         try:
             self.connection.commit()
-            logger.debug(f"Transaction committed.")
+            logger.debug("Transaction committed.")
         except Exception as err:
             logger.error(f"Error committing PostgreSQL connection id {self.__connection_id}: {err}")
             raise err
@@ -233,7 +234,7 @@ class PostgreSQLConnector:
         """
         try:
             self.connection.rollback()
-            logger.debug(f"Transaction rolled back.")
+            logger.debug("Transaction rolled back.")
         except Exception as err:
             logger.error(f"Error rolling back PostgreSQL connection id {self.__connection_id}: {err}")
             raise
@@ -335,7 +336,7 @@ class PostgreSQLRepository:
 
                 self.connector.ensure_connection()
 
-                logger.debug(f"Executing batch of size {len(batch)} for PostgreSQL query: {StringUtils.format(exec.query.as_string(), "SQL")}")
+                logger.debug(f"Executing batch of size {len(batch)} for PostgreSQL query: {StringUtils.format(exec.query.as_string(), 'SQL')}")
                 cursor.executemany(exec.query, batch)
                 processed_rows += len(batch)
 
@@ -354,13 +355,13 @@ class PostgreSQLRepository:
             raise
 
     @t.overload
-    def fetchone(self, exec: PostgreSQLExecuteStructure, /, *, as_dict: t.Literal[True] = True) -> t.Optional[t.Dict[str, t.Any]]: ...
+    def fetchone(self, exec: PostgreSQLExecuteStructure, /, *, as_dict: t.Literal[True] = True) -> dict[str, t.Any] | None: ...
 
     @t.overload
-    def fetchone(self, exec: PostgreSQLExecuteStructure, /, *, as_dict: t.Literal[False] = False) -> t.Optional[t.Tuple[t.Any, ...]]: ...
+    def fetchone(self, exec: PostgreSQLExecuteStructure, /, *, as_dict: t.Literal[False] = False) -> tuple[t.Any, ...] | None: ...
 
     @t.overload
-    def fetchone(self, exec: PostgreSQLExecuteStructure, /, *, clazz: t.Type[MODEL_ORM_TYPE]) -> t.Optional[MODEL_ORM_TYPE]: ...
+    def fetchone(self, exec: PostgreSQLExecuteStructure, /, *, clazz: type[MODEL_ORM_TYPE]) -> MODEL_ORM_TYPE | None: ...
 
     def fetchone(
         self,
@@ -368,8 +369,8 @@ class PostgreSQLRepository:
         /,
         *,
         as_dict: bool = True,
-        clazz: t.Optional[t.Type[MODEL_ORM_TYPE]] = None,
-    ) -> t.Dict[str, t.Any] | t.Tuple[t.Any, ...] | MODEL_ORM_TYPE | None:
+        clazz: type[MODEL_ORM_TYPE] | None = None,
+    ) -> dict[str, t.Any] | tuple[t.Any, ...] | MODEL_ORM_TYPE | None:
         """
         Fetches a single row from the PostgreSQL database using the provided query structure.
 
@@ -392,7 +393,7 @@ class PostgreSQLRepository:
         row_factory = dict_row if (as_dict or clazz) else tuple_row
         cursor = self.connector.get_cursor(row_factory=row_factory)
 
-        logger.debug(f"Fetching one row for PostgreSQL query: {StringUtils.format(exec.query.as_string(), "SQL")} with vars: {exec.vars}")
+        logger.debug(f"Fetching one row for PostgreSQL query: {StringUtils.format(exec.query.as_string(), 'SQL')} with vars: {exec.vars}")
 
         cursor.execute(exec.query, exec.vars)
         row = cursor.fetchone()
@@ -411,7 +412,7 @@ class PostgreSQLRepository:
         *,
         size: int = 100,
         as_dict: t.Literal[True] = True,
-    ) -> t.Generator[t.List[t.Dict[str, t.Any]], None, None]: ...
+    ) -> t.Generator[list[dict[str, t.Any]], None, None]: ...
 
     @t.overload
     def fetchmany(
@@ -421,7 +422,7 @@ class PostgreSQLRepository:
         *,
         size: int = 100,
         as_dict: t.Literal[False] = False,
-    ) -> t.Generator[t.List[t.Tuple[t.Any, ...]], None, None]: ...
+    ) -> t.Generator[list[tuple[t.Any, ...]], None, None]: ...
 
     @t.overload
     def fetchmany(
@@ -430,8 +431,8 @@ class PostgreSQLRepository:
         /,
         *,
         size: int = 100,
-        clazz: t.Type[MODEL_ORM_TYPE],
-    ) -> t.Generator[t.List[MODEL_ORM_TYPE], None, None]: ...
+        clazz: type[MODEL_ORM_TYPE],
+    ) -> t.Generator[list[MODEL_ORM_TYPE], None, None]: ...
 
     def fetchmany(
         self,
@@ -440,8 +441,8 @@ class PostgreSQLRepository:
         *,
         size: int = 100,
         as_dict: bool = True,
-        clazz: t.Optional[t.Type[MODEL_ORM_TYPE]] = None,
-    ) -> t.Generator[t.List[t.Dict[str, t.Any]] | t.List[t.Tuple[t.Any, ...] | t.List[MODEL_ORM_TYPE]], None, None]:
+        clazz: type[MODEL_ORM_TYPE] | None = None,
+    ) -> t.Generator[list[dict[str, t.Any]] | list[tuple[t.Any, ...] | list[MODEL_ORM_TYPE]], None, None]:
         """
         Fetches and yields batches of rows from a database query result.
 
@@ -484,16 +485,16 @@ class PostgreSQLRepository:
     def insert(self, data: MODEL_ORM_TYPE) -> MODEL_ORM_TYPE | None: ...
 
     @t.overload
-    def insert(self, data: t.Mapping[str, t.Any], /, *, table: str, schema: t.Optional[str] = None) -> t.Mapping[str, t.Any] | None: ...
+    def insert(self, data: t.Mapping[str, t.Any], /, *, table: str, schema: str | None = None) -> t.Mapping[str, t.Any] | None: ...
 
     def insert(
         self,
         data: t.Mapping[str, t.Any] | MODEL_ORM_TYPE,
         /,
         *,
-        table: t.Optional[str] = None,
-        schema: t.Optional[str] = None,
-        on_conflict: t.Optional[t.Sequence[str]] = None,
+        table: str | None = None,
+        schema: str | None = None,
+        on_conflict: t.Sequence[str] | None = None,
         update_now_fields: t.Sequence[str] = ("updated_at",),
         commit: bool = True,
     ) -> MODEL_ORM_TYPE | t.Mapping[str, t.Any] | None:
@@ -590,7 +591,7 @@ class PostgreSQLRepository:
 
         exec_query_lang = PostgreSQLExecuteStructure(query, vars)
         cursor = self.execute(exec_query_lang, commit=commit)
-        row: t.Optional[t.Mapping[str, t.Any]] = cursor.fetchone()
+        row: t.Mapping[str, t.Any] | None = cursor.fetchone()
 
         logger.debug(f"Inserted row: {row}")
 
@@ -606,16 +607,16 @@ class PostgreSQLRepository:
         data: t.Sequence[t.Mapping[str, t.Any] | MODEL_ORM_TYPE],
         /,
         *,
-        table: t.Optional[str] = None,
-        schema: t.Optional[str] = None,
-        columns: t.Optional[t.Sequence[str]] = None,
-        on_conflict: t.Optional[t.Sequence[str]] = None,
+        table: str | None = None,
+        schema: str | None = None,
+        columns: t.Sequence[str] | None = None,
+        on_conflict: t.Sequence[str] | None = None,
         update_now_fields: t.Sequence[str] = ("updated_at",),
         batch_size: int = 1000,
         commit_interval: int = 10000,
         show_progress: bool = True,
         return_rows: bool = False,
-    ) -> int | t.List[t.Mapping[str, t.Any]]:
+    ) -> int | list[t.Mapping[str, t.Any]]:
         """
         Performs a bulk insert operation on the specified database table. This method allows inserting
         multiple rows efficiently, leveraging batch processing, conflict handling, and progress monitoring.
@@ -699,7 +700,7 @@ class PostgreSQLRepository:
         conflict_clause = psycopg.sql.SQL("")
         if on_conflict:
             update_fields = [column for column in columns if column not in on_conflict]
-            update_exprs: t.List[psycopg.sql.Composed] = [psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier("updated_at"))]
+            update_exprs: list[psycopg.sql.Composed] = [psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier("updated_at"))]
 
             for column in update_fields:
                 if column == "created_at":
@@ -748,11 +749,11 @@ class PostgreSQLRepository:
     def _bulk_insert_with_returning(
         self,
         query: psycopg.sql.Composed,
-        vars_list: t.List[t.Dict[str, t.Any]],
+        vars_list: list[dict[str, t.Any]],
         batch_size: int,
         commit_interval: int,
         show_progress: bool,
-    ) -> t.List[t.Mapping[str, t.Any]]:
+    ) -> list[t.Mapping[str, t.Any]]:
         """
         Executes a bulk insert query with a RETURNING clause using batched data. This method
         returns rows generated by the database during the insert operations. The process
@@ -777,7 +778,7 @@ class PostgreSQLRepository:
         total_rows = len(vars_list)
         processed = 0
         start_time = time.time()
-        all_rows: t.List[t.Mapping[str, t.Any]] = []
+        all_rows: list[t.Mapping[str, t.Any]] = []
 
         cursor = self.connector.get_cursor(row_factory=dict_row)
 
@@ -800,11 +801,11 @@ class PostgreSQLRepository:
                     if show_progress:
                         elapsed = time.time() - start_time
                         speed = processed / elapsed if elapsed > 0 else 0
-                        logger.info(f"Progress: {processed}/{total_rows} " f"({processed/total_rows*100:.2f}%) " f"Speed: {speed:.2f} rows/sec")
+                        logger.info(f"Progress: {processed}/{total_rows} ({processed / total_rows * 100:.2f}%) Speed: {speed:.2f} rows/sec")
 
             total_elapsed = time.time() - start_time
             avg_speed = total_rows / total_elapsed if total_elapsed > 0 else 0
-            logger.info(f"Completed bulk insert with returning:  {len(all_rows)} rows in {total_elapsed:.2f}s " f"(avg {avg_speed:.2f} rows/sec)")
+            logger.info(f"Completed bulk insert with returning:  {len(all_rows)} rows in {total_elapsed:.2f}s (avg {avg_speed:.2f} rows/sec)")
 
             return all_rows
 

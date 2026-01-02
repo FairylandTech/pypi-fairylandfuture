@@ -45,7 +45,7 @@ class PrimitiveSchema(BaseModel):
         validate_assignment=True,
     )
 
-    def to_dict(self, /, *, exclude_fields: t.Optional[t.Iterable[str]] = None, exclude_none: bool = False, to_camel: bool = False) -> t.Dict[str, t.Any]:
+    def to_dict(self, /, *, exclude_fields: t.Iterable[str] | None = None, exclude_none: bool = False, to_camel: bool = False) -> dict[str, t.Any]:
         """
         Converts the object into a dictionary representation. Allows customization of
         the dictionary transformation by excluding specific fields, omitting keys with
@@ -67,7 +67,7 @@ class PrimitiveSchema(BaseModel):
         logger.debug(f"Serializing {self.__class__.__name__!r} to dict(mode=python)...")
         return self.model_dump(mode="python", exclude=set(exclude_fields) if exclude_fields else None, exclude_none=exclude_none, by_alias=to_camel)
 
-    def to_serializable_dict(self, /, *, exclude_fields: t.Optional[t.Iterable[str]] = None, exclude_none: bool = False, to_camel: bool = False) -> t.Dict[str, t.Any]:
+    def to_serializable_dict(self, /, *, exclude_fields: t.Iterable[str] | None = None, exclude_none: bool = False, to_camel: bool = False) -> dict[str, t.Any]:
         """
         Converts the object to a dictionary representation, suitable for JSON serialization. Provides options
         to exclude specific fields, omit fields with `None` values, and convert keys to camelCase format. This
@@ -131,7 +131,7 @@ class EntitySchema(PrimitiveSchema):
     :type existed: bool
     """
 
-    id: t.Optional[int] = Field(description="ID")
+    id: int | None = Field(description="ID")
     uuid: str = Field(default_factory=lambda: uuid.uuid4().hex, description="UUID", frozen=True)
     created_at: datetime.datetime = Field(default_factory=lambda: DateTimeUtils.unzone_cst(), description="Create Time", frozen=True)
     updated_at: datetime.datetime = Field(default_factory=lambda: DateTimeUtils.unzone_cst(), description="Update Time")

@@ -8,7 +8,6 @@
 """
 
 import threading
-import typing as t
 
 
 class SingletonMeta(type):
@@ -18,7 +17,7 @@ class SingletonMeta(type):
     Thread-safe impl of Singleton.
     """
 
-    __instance: t.Dict[type, object] = {}
+    __instance: dict[type, object] = {}
 
     def __init__(cls, name, bases, namespace, **kwargs):
         super().__init__(name, bases, namespace, **kwargs)

@@ -7,8 +7,8 @@
 @datetime: 2024-07-17 10:42:19 UTC+08:00
 """
 
+import typing as t
 import warnings
-from typing import Dict, Union, Tuple, Sequence, Any, Literal
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
@@ -22,7 +22,6 @@ warnings.filterwarnings("ignore")
 
 
 class ElasticSearchOperator:
-
     def __init__(self, client: Elasticsearch):
         self.__client = client
 
@@ -31,11 +30,11 @@ class ElasticSearchOperator:
         return self.__client
 
     @property
-    def info(self) -> Dict[str, Any]:
+    def info(self) -> dict[str, t.Any]:
         return self.client.info().raw
 
     @property
-    def indices(self) -> Tuple[str, ...]:
+    def indices(self) -> tuple[str, ...]:
         return tuple(self.client.indices.get(index="*").raw.keys())
 
     def _validate_index(self, index: str) -> str:
@@ -60,7 +59,7 @@ class ElasticSearchOperator:
         if not self.client.exists(index=index, id=doc_id):
             raise ElasticSearchExecutionException(ElasticSearchExceptMessage.DOC_NOT_EXISTS)
 
-    def get_name_type(self, name: str) -> Literal["index", "alias", "both", "none"]:
+    def get_name_type(self, name: str) -> t.Literal["index", "alias", "both", "none"]:
         index = self.client.indices.exists(index=name)
         alias = self.client.indices.exists_alias(name=name)
 
@@ -78,7 +77,7 @@ class ElasticSearchOperator:
 
         return self.client.indices.get(index=index).raw.get(index)
 
-    def get_doc_info(self, index: str, doc_id: str) -> Dict[str, Any]:
+    def get_doc_info(self, index: str, doc_id: str) -> dict[str, t.Any]:
         self._validate_index(index)
         self._validate_doc(index, doc_id)
 
@@ -89,7 +88,7 @@ class ElasticSearchOperator:
 
         return self.client.indices.stats(index=index).raw
 
-    def get_index_stats_light(self, index: str) -> Dict[str, Dict[str, str]]:
+    def get_index_stats_light(self, index: str) -> dict[str, dict[str, str]]:
         self._validate_index(index)
 
         data = self.client.cat.indices(index=index, format="json").raw
@@ -98,7 +97,7 @@ class ElasticSearchOperator:
 
         return result
 
-    def get_indices_for_alias(self, name: str) -> Union[str, Tuple[str, ...]]:
+    def get_indices_for_alias(self, name: str) -> str | tuple[str, ...]:
         try:
             result = tuple(self.client.indices.get_alias(name=name).raw.keys())
 
@@ -106,7 +105,7 @@ class ElasticSearchOperator:
         except NotFoundError as err:
             raise RuntimeWarning from err
 
-    def search(self, index: str, body: Dict[str, Any]):
+    def search(self, index: str, body: dict[str, t.Any]):
         if not self.client.indices.exists(index=index):
             raise ElasticSearchExecutionException(ElasticSearchExceptMessage.INDEX_NOT_EXISTS)
 
@@ -117,19 +116,19 @@ class ElasticSearchOperator:
 
         return results
 
-    def update_partial(self, index: str, doc_id: str, content: Dict[str, Any]):
+    def update_partial(self, index: str, doc_id: str, content: dict[str, t.Any]):
         self._validate_index(index)
         self._validate_doc(index, doc_id)
 
         return self.client.update(index=index, id=doc_id, body={"doc": content}, refresh=True).raw
 
-    def update_replace(self, index: str, doc_id: str, document: Dict[str, Any]):
+    def update_replace(self, index: str, doc_id: str, document: dict[str, t.Any]):
         self._validate_index(index)
         self._validate_doc(index, doc_id)
 
         return self.client.index(index=index, id=doc_id, body=document, refresh=True)
 
-    def bulk_update(self, params: Sequence[ElasticsearchBulkParamStructure]):
+    def bulk_update(self, params: t.Sequence[ElasticsearchBulkParamStructure]):
         actions = [{"_op_type": "update", "_index": param.index, "_id": param.id, "doc": param.content} for param in params]
 
         succeed, failed = bulk(self.client, actions, stats_only=True, refresh=True)
@@ -137,7 +136,7 @@ class ElasticSearchOperator:
         return succeed, failed
 
     @classmethod
-    def parser_search_results(cls, data: Union[str, Dict[str, Any]]) -> Tuple[int, Tuple[Dict[str, ...], ...]]:
+    def parser_search_results(cls, data: str | dict[str, t.Any]) -> tuple[int, tuple[dict[str, ...], ...]]:
         total = data.get("hits", {}).get("total", {}).get("value", 0)
         hits = data.get("hits", {}).get("hits", [])
         return total, tuple(hits)

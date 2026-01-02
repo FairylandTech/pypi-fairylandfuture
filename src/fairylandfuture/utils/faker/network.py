@@ -11,7 +11,6 @@ from fairylandfuture.core.superclass.fakerlib import BaseFaker
 
 
 class FakeNetworkToolkit(BaseFaker):
-
     @classmethod
     def __route(cls, locale=None):
         if locale and locale.upper() in ("ZH_CN", "CN"):

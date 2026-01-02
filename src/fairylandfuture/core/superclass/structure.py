@@ -9,7 +9,7 @@
 
 import json
 import typing as t
-from dataclasses import dataclass, asdict, astuple, field, fields
+from dataclasses import asdict, astuple, dataclass, field, fields
 
 from fairylandfuture import logger
 from fairylandfuture.models import BaseModel
@@ -26,18 +26,18 @@ class BaseStructure:
     """
 
     @property
-    def asdict(self) -> t.Dict[str, t.Any]:
+    def asdict(self) -> dict[str, t.Any]:
         return asdict(self)
 
     @property
-    def astuple(self) -> t.Tuple[t.Any, ...]:
+    def astuple(self) -> tuple[t.Any, ...]:
         return astuple(self)
 
     @property
     def string(self) -> str:
         return json.dumps(self.asdict, separators=(",", ":"), ensure_ascii=False)
 
-    def to_dict(self, /, *, ignorenone: bool = False) -> t.Dict[str, t.Any]:
+    def to_dict(self, /, *, ignorenone: bool = False) -> dict[str, t.Any]:
         return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
 
 
@@ -53,18 +53,18 @@ class BaseFrozenStructure:
     """
 
     @property
-    def asdict(self) -> t.Dict[str, t.Any]:
+    def asdict(self) -> dict[str, t.Any]:
         return asdict(self)
 
     @property
-    def astuple(self) -> t.Tuple[t.Any, ...]:
+    def astuple(self) -> tuple[t.Any, ...]:
         return astuple(self)
 
     @property
     def string(self) -> str:
         return json.dumps(self.asdict, separators=(",", ":"), ensure_ascii=False)
 
-    def to_dict(self, /, *, ignorenone: bool = False) -> t.Dict[str, t.Any]:
+    def to_dict(self, /, *, ignorenone: bool = False) -> dict[str, t.Any]:
         return {k: v for k, v in self.asdict.items() if v is not None} if ignorenone else self.asdict
 
     @classmethod
@@ -86,7 +86,7 @@ class BaseFrozenStructure:
         logger.debug(f"Converting model {model.__class__.__name__!r} to structure {cls.__name__!r}...")
         kwargs = {}
         model_dict = model.to_dict()
-        for field in fields(cls):
+        for field in fields(cls):  # noqa: F402
             if field.name in model_dict:
                 kwargs.update({field.name: model_dict.get(field.name)})
 
@@ -111,8 +111,8 @@ class BaseStructureTreeNode:
 
     id: t.Any
     parent_id: t.Any
-    data: t.Dict[str, t.Any]
-    children: t.List["BaseStructureTreeNode"] = field(default=None)
+    data: dict[str, t.Any]
+    children: list["BaseStructureTreeNode"] = field(default=None)
 
     def __post_init__(self):
         self.children = []
@@ -126,9 +126,9 @@ class BaseStructureTreeNode:
     def add_child(self, child: "BaseStructureTreeNode"):
         self.children.append(child)
 
-    def get_children(self) -> t.List["BaseStructureTreeNode"]:
+    def get_children(self) -> list["BaseStructureTreeNode"]:
         return self.children
 
-    def to_dict(self) -> t.Dict[str, t.Any]:
+    def to_dict(self) -> dict[str, t.Any]:
         result = {"id": self.id, "parent_id": self.parent_id, "data": self.data, "children": [child.to_dict() for child in self.children]}
         return result

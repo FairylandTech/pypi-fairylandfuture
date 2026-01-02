@@ -18,17 +18,17 @@ from fairylandfuture.core.superclass.structure import BaseFrozenStructure
 @dataclass(frozen=True)
 class MySQLExecuteStructure(BaseFrozenStructure):
     query: str
-    args: t.Optional[t.Union[t.Sequence, t.MutableSequence, t.Mapping, t.MutableMapping]] = field(default=None)
+    args: t.Sequence | t.MutableSequence | t.Mapping | t.MutableMapping | None = field(default=None)
 
 
 @dataclass(frozen=True)
 class PostgreSQLExecuteStructure(BaseFrozenStructure):
     query: psycopg.abc.QueryNoTemplate
-    vars: t.Optional[t.Union[t.Sequence, t.MutableSequence, t.Mapping, t.MutableMapping]] = field(default=None)
+    vars: t.Sequence | t.MutableSequence | t.Mapping | t.MutableMapping | None = field(default=None)
 
 
 @dataclass(frozen=True)
 class ElasticsearchBulkParamStructure(BaseFrozenStructure):
     index: str
     id: str
-    content: t.Union[t.Mapping[str, t.Any], t.MutableMapping[str, t.Any]]
+    content: t.Mapping[str, t.Any] | t.MutableMapping[str, t.Any]

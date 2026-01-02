@@ -9,13 +9,12 @@
 
 from datetime import datetime
 
-from pypinyin import pinyin, Style
+from pypinyin import Style, pinyin
 
 from fairylandfuture.core.superclass.fakerlib import BaseFaker
 
 
 class FakeUserToolkit(BaseFaker):
-
     @classmethod
     def __route(cls, locale=None):
         if locale and locale.upper() in ("ZH_CN", "CN"):

@@ -10,8 +10,8 @@
 import hashlib
 import json
 import os
+import typing as t
 from pathlib import Path
-from typing import Union, AnyStr, Sequence, Optional, Any
 
 import yaml
 
@@ -32,7 +32,7 @@ class BaseFile:
     :type max_size: Union[int, float]
     """
 
-    def __init__(self, path: Union[Path, str], /, *, create: bool = False):
+    def __init__(self, path: Path | str, /, *, create: bool = False):
         if os.path.isdir(path):
             raise ValueError("Path is a directory.")
         if not os.path.exists(path):
@@ -42,8 +42,8 @@ class BaseFile:
             else:
                 raise FileNotFoundError("File not found.")
 
-        self._path: Union[Path, str] = path
-        self.max_size: Union[int, float] = 10 * (1024**2)
+        self._path: Path | str = path
+        self.max_size: int | float = 10 * (1024**2)
         self._dir_path: str = os.sep.join(self._path.split(os.sep)[:-1])
         self._file_name, self._file_ext = os.path.splitext(self._path.split(os.sep)[-1])
         self._file_size: float = os.path.getsize(self._path)
@@ -116,11 +116,11 @@ class BaseFile:
 
         return hashlib.sha256(data).hexdigest()
 
-    def vaildate_ext(self, exts: Sequence[str], /) -> None:
+    def vaildate_ext(self, exts: t.Sequence[str], /) -> None:
         if self.ext not in exts:
             raise TypeError("File extension is not valid.")
 
-    def read(self, mode: Optional[FileModeEnum] = None, /, *, encoding: Optional[EncodingEnum] = None) -> AnyStr:
+    def read(self, mode: FileModeEnum | None = None, /, *, encoding: EncodingEnum | None = None) -> t.AnyStr:
         """
         Read data from file.
 
@@ -148,7 +148,7 @@ class BaseFile:
                 data = stream.read()
             return data
 
-    def write(self, data: AnyStr, /, *, mode: FileModeEnum, encoding: Optional[EncodingEnum] = None) -> str:
+    def write(self, data: t.AnyStr, /, *, mode: FileModeEnum, encoding: EncodingEnum | None = None) -> str:
         """
         Write data to file.
 
@@ -196,7 +196,7 @@ class BaseTextFile(BaseFile):
         "path/to/file.txt"
     """
 
-    def __init__(self, path: Union[Path, str], create: bool = False):
+    def __init__(self, path: Path | str, create: bool = False):
         super().__init__(path, create=create)
 
     def load_text(self) -> str:
@@ -208,7 +208,7 @@ class BaseTextFile(BaseFile):
         """
         return super().read(FileModeEnum.r)
 
-    def save_text(self, data: AnyStr, /) -> str:
+    def save_text(self, data: t.AnyStr, /) -> str:
         """
         Save text data to file.
 
@@ -237,12 +237,12 @@ class BaseYamlFile(BaseFile):
         "path/to/file.yaml"
     """
 
-    def __init__(self, path: Union[Path, str], create: bool = False):
+    def __init__(self, path: Path | str, create: bool = False):
         super().__init__(path, create=create)
 
         self.vaildate_ext((".yaml", ".yml"))
 
-    def load_yaml(self) -> Any:
+    def load_yaml(self) -> t.Any:
         """
         Load yaml data from file.
 
@@ -253,7 +253,7 @@ class BaseYamlFile(BaseFile):
 
         return yaml.load(data, Loader=yaml.FullLoader)
 
-    def save_yaml(self, data: Any, /) -> str:
+    def save_yaml(self, data: t.Any, /) -> str:
         """
         Save yaml data to file.
 
@@ -284,12 +284,12 @@ class BaseJsonFile(BaseFile):
         "path/to/file.json"
     """
 
-    def __init__(self, path: Union[Path, str], create: bool = False):
+    def __init__(self, path: Path | str, create: bool = False):
         super().__init__(path, create=create)
 
         self.vaildate_ext((".json",))
 
-    def load_json(self) -> Any:
+    def load_json(self) -> t.Any:
         """
         Load json data from file.
 
@@ -300,7 +300,7 @@ class BaseJsonFile(BaseFile):
 
         return json.loads(data)
 
-    def save_json(self, data: Any) -> str:
+    def save_json(self, data: t.Any) -> str:
         """
         Save json data to file.
 

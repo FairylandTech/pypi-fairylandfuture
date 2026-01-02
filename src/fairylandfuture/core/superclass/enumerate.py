@@ -7,12 +7,12 @@
 @datetime: 2024-05-10 10:46:52 UTC+08:00
 """
 
+import typing as t
 from enum import Enum
-from typing import Any, List, Tuple, TypeVar, Union, Optional, Sequence, Type
 
 from fairylandfuture import logger
 
-_TypeBaseEnum = TypeVar("_TypeBaseEnum", bound="BaseEnum")
+_TypeBaseEnum = t.TypeVar("_TypeBaseEnum", bound="BaseEnum")
 
 
 class BaseEnum(Enum):
@@ -26,13 +26,13 @@ class BaseEnum(Enum):
 
     """
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: t.Any) -> bool:
         if isinstance(other, str) and isinstance(self.value, str):
             return self.value.upper() == other.upper()
         return super().__eq__(other)
 
     @classmethod
-    def get(cls: Type[_TypeBaseEnum], value: str) -> Any:
+    def get(cls: type[_TypeBaseEnum], value: str) -> t.Any:
         """
         Get the Enum value by member.
 
@@ -50,7 +50,7 @@ class BaseEnum(Enum):
         return value_object.value
 
     @classmethod
-    def members(cls: Type[_TypeBaseEnum], exclude_enums: Optional[Sequence[str]] = None, only_value: bool = False) -> Union[Tuple[_TypeBaseEnum, ...], Tuple[Any, ...]]:
+    def members(cls: type[_TypeBaseEnum], exclude_enums: t.Sequence[str] | None = None, only_value: bool = False) -> tuple[_TypeBaseEnum, ...] | tuple[t.Any, ...]:
         """
         Returns a tuple with all members of the Enum.
 
@@ -64,10 +64,10 @@ class BaseEnum(Enum):
         if exclude_enums and not isinstance(exclude_enums, (list, tuple, set)):
             raise TypeError("The exclude_enums must be a list, tuple or set.")
 
-        member_list: List[_TypeBaseEnum] = list(cls)
+        member_list: list[_TypeBaseEnum] = list(cls)
 
         if exclude_enums:
-            member_list: List[_TypeBaseEnum] = [member for member in member_list if member not in exclude_enums]
+            member_list: list[_TypeBaseEnum] = [member for member in member_list if member not in exclude_enums]
 
         if only_value:
             return tuple(member.value for member in member_list)
@@ -75,7 +75,7 @@ class BaseEnum(Enum):
             return tuple(member_list)
 
     @classmethod
-    def names(cls: Type[_TypeBaseEnum]) -> Tuple[str, ...]:
+    def names(cls: type[_TypeBaseEnum]) -> tuple[str, ...]:
         """
         Returns a tuple with the names of all members of the Enum.
         :return: Tuple with the names of all members of the Enum.
@@ -84,7 +84,7 @@ class BaseEnum(Enum):
         return tuple(cls._member_names_)
 
     @classmethod
-    def values(cls: Type[_TypeBaseEnum], exclude_enums: Optional[Sequence] = None) -> Tuple[Any, ...]:
+    def values(cls: type[_TypeBaseEnum], exclude_enums: t.Sequence[str] | None = None) -> tuple[t.Any, ...]:
         """
         Returns a tuple with the values of all members of the Enum.
 

@@ -13,7 +13,6 @@ from fairylandfuture.enums import EncodingEnum
 
 
 class Base64Utils:
-
     @classmethod
     def encode(cls, data: str) -> str:
         """

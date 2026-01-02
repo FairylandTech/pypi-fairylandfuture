@@ -7,18 +7,18 @@
 @datetime: 2024-08-14 17:02:11 UTC+08:00
 """
 
+import typing as t
 from dataclasses import dataclass, field
-from typing import MutableSequence, Sequence, MutableMapping, Mapping, Union, Self, Dict, Any
 
 from fairylandfuture.const.http.response import RESPONSE_CODE_MAPPING
-from fairylandfuture.core.superclass.structure import BaseStructure, BaseFrozenStructure
+from fairylandfuture.core.superclass.structure import BaseFrozenStructure, BaseStructure
 
 
 @dataclass(frozen=False)
 class ResponseStructure(BaseStructure):
     code: int = field(default=None)
     message: str = field(default=None)
-    data: Union[MutableSequence, Sequence, MutableMapping, Mapping] = field(default=None)
+    data: t.MutableSequence | t.Sequence | t.MutableMapping | t.Mapping = field(default=None)
 
     def __embody(self):
         if self.code and not self.message:
@@ -32,7 +32,7 @@ class ResponseStructure(BaseStructure):
         return self.string
 
     @property
-    def asdict(self: Self) -> Dict[str, Any]:
+    def asdict(self) -> dict[str, t.Any]:
         self.__embody()
         return super().asdict
 
@@ -41,7 +41,7 @@ class ResponseStructure(BaseStructure):
 class ResponseFrozenStructure(BaseFrozenStructure):
     code: int = field(default=None)
     message: str = field(default=None)
-    data: Union[MutableSequence, Sequence, MutableMapping, Mapping] = field(default=None)
+    data: t.MutableSequence | t.Sequence | t.MutableMapping | t.Mapping = field(default=None)
 
     def __post_init__(self):
         if self.code and not self.message:

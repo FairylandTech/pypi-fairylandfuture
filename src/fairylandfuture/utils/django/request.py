@@ -13,7 +13,6 @@ from fairylandfuture import logger
 
 
 class DjangoRequestUtils:
-
     @classmethod
     def get_client_ip(cls, request: HttpRequest) -> str:
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")

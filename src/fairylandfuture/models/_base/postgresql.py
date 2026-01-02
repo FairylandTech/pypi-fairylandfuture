@@ -33,5 +33,5 @@ class BaseModelPostgreSQL(BaseModel):
 
     @classmethod
     @declared_attr
-    def __table_args__(cls) -> t.Dict[str, str]:
+    def __table_args__(cls) -> dict[str, str]:
         return {"schema": cls.__table_schema__}

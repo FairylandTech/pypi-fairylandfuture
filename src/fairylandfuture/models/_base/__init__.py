@@ -10,9 +10,8 @@
 import datetime
 import typing as t
 
-from sqlalchemy import Integer, DateTime, Boolean
-from sqlalchemy import inspect
-from sqlalchemy.orm import Mapped, DeclarativeBase, Session, mapped_column
+from sqlalchemy import Boolean, DateTime, Integer, inspect
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
 from fairylandfuture import logger
 from fairylandfuture.core.superclass.schema import BaseSchema
@@ -83,7 +82,7 @@ class BaseModel(DeclarativeBase):
                 setattr(ins, field, value)
         return ins
 
-    def to_dict(self, exclude: t.Optional[t.Iterable[str]] = None) -> t.Dict[str, t.Any]:
+    def to_dict(self, exclude: t.Iterable[str] | None = None) -> dict[str, t.Any]:
         if exclude is None:
             exclude = set()
 
@@ -92,15 +91,15 @@ class BaseModel(DeclarativeBase):
     @classmethod
     def get_by_id(cls, session: Session, record_id: int) -> t.Optional["BaseModel"]:
         try:
-            return session.query(cls).filter(cls.id == record_id, cls.deleted == False).first()
+            return session.query(cls).filter(cls.id.is_(record_id), cls.deleted.is_(False)).first()
         except Exception as err:
             logger.error(f"Failed to query {cls.__name__}, ID: {record_id}, error: {err}")
             return None
 
     @classmethod
-    def get_all(cls, session: Session, limit: int = None, offset: int = None) -> t.List[t.Type["BaseModelType"]]:
+    def get_all(cls, session: Session, limit: int = None, offset: int = None) -> list[type[BaseModelType]]:
         try:
-            query = session.query(cls).filter(cls.deleted == False)
+            query = session.query(cls).filter(cls.deleted.is_(False))
 
             if offset:
                 query = query.offset(offset)

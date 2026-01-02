@@ -14,7 +14,6 @@ import netifaces
 
 
 class LocalNetworkUtils:
-
     @classmethod
     def ip_address(cls) -> Dict[str, str]:
         default_ip_addr = socket.gethostbyname(socket.gethostname())

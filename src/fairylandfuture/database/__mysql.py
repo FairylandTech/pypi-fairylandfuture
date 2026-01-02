@@ -8,7 +8,7 @@
 """
 
 import functools
-from typing import Union, Dict, Tuple, Any, Sequence
+import typing as t
 
 import pymysql
 from dbutils.pooled_db import PooledDB
@@ -22,7 +22,6 @@ from fairylandfuture.structures.database import MySQLExecuteStructure
 
 
 class CustomMySQLConnection(Connection):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__exist = True
@@ -37,7 +36,6 @@ class CustomMySQLConnection(Connection):
 
 
 class CustomMySQLCursor(DictCursor):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__exist = True
@@ -199,7 +197,7 @@ class MySQLOperator(AbstractMySQLOperator):
 
         self.connector = connector
 
-    def execute(self, struct: MySQLExecuteStructure, /) -> Union[bool, Tuple[Dict[str, Any], ...]]:
+    def execute(self, struct: MySQLExecuteStructure, /) -> bool | tuple[dict[str, t.Any], ...]:
         """
         This method is used to execute a SQL statement.
 
@@ -284,7 +282,6 @@ class MySQLOperator(AbstractMySQLOperator):
 
 
 class MySQLSQLSimpleConnectionPool:
-
     def __init__(self, host: str, port: int, user: str, password: str, database: str, charset: str = None, /):
         self.__host = host
         self.__port = port
