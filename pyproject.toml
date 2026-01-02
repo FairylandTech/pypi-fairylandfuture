@@ -18,10 +18,11 @@ classifiers = [
     "Framework :: Django",
 ]
 
+# Production Dependencies
 dependencies = [
-    # FairylandTech Internal Packages
+    # FairylandTech Internal
     "pypi-fairylandlogger",
-    # Core Tools
+    # Core Utilities
     "loguru",
     "python-dateutil",
     "python-dotenv",
@@ -32,7 +33,9 @@ dependencies = [
     "pydantic",
     "ua-parser",
     "user-agents",
-    # Database
+    "faker",
+    "pypinyin",
+    # Database Drivers & ORM
     "pymysql",
     "psycopg2-binary",
     "mysql-connector-python",
@@ -44,10 +47,7 @@ dependencies = [
     "kafka-python",
     "elasticsearch[async]",
     "opensearch-py",
-    # Utilities
-    "faker",
-    "pypinyin",
-    # Django Framework
+    # Django Ecosystem
     "django",
     "djangorestframework",
     "django-redis",
@@ -65,44 +65,27 @@ dependencies = [
     "pygments",
     "markdown",
     "uritemplate",
-    # Web Automation
+    # Web Automation & Scraping
     "selenium",
     "webdriver-manager",
     "beautifulsoup4",
-    # Stubs for Type Checking
-    "types-requests",
-    "types-python-dateutil",
-    "types-PyYAML",
-    "django-stubs",
-    "django-stubs-ext",
-    "djangorestframework-stubs",
-    "types-cryptography",
-    "pandas-stubs",
-    ### dev
-    # Python Build Tools
-    "pip-tools",
-    "pipreqs",
-    "pipdeptree",
-    "pip-review",
-    "pip-autoremove",
-    "pigar",
-    "setuptools",
-    "wheel",
-    "pip",
-    # Code Quality
-    "black",
-    "flake8",
-    "isort",
-    "mypy",
-    "pydocstyle",
-    "pylint",
-    "autopep8",
-    "pytest",
-    "pytest-django",
-    "pytest-cov",
-    "ruff",
-    "pyright",
-    "importlab",
+    # Data Analysis
+    "pandas",
+    "numpy",
+    "openpyxl",
+    "xlrd",
+    "xlwt",
+    "xlsxwriter",
+    # Async & Networking
+    "aiohttp",
+    "asyncio",
+    "httpx",
+    # Email & Files
+    "secure-smtplib",
+    "email-validator",
+    "python-magic",
+    "watchdog",
+    "orjson",
 ]
 
 [project.urls]
@@ -111,11 +94,38 @@ Repository = "https://github.com/FairylandTech/pypi-fairylandfuture"
 Documentation = "https://github.com/FairylandTech/pypi-fairylandfuture#readme"
 Issues = "https://github.com/FairylandTech/pypi-fairylandfuture/issues"
 
-[build-system]
-requires = [
-    "setuptools",
+# Development Dependencies : uv sync --all-extras
+[project.optional-dependencies]
+# uv sync --extra dev
+dev = [
+    # Linting & Formatting (Ruff 替代了 black, isort, flake8)
+    "ruff",
+    # Type Checking
+    "mypy",
+    "django-stubs",
+    "django-stubs-ext",
+    "djangorestframework-stubs",
+    "pandas-stubs",
+    "types-requests",
+    "types-python-dateutil",
+    "types-PyYAML",
+    "types-cryptography",
+    "pyright",
+    # Testing
+    "pytest",
+    "pytest-django",
+    "pytest-cov",
+    # Build Tools
+    "pip-tools",
+    "pipdeptree",
+    "build",
+    "twine",
     "wheel",
+    "setuptools",
 ]
+
+[build-system]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -126,29 +136,52 @@ exclude = ["tests*"]
 [tool.setuptools.package-data]
 fairylandfuture = ["py.typed"]
 
-[tool.black]
+[tool.ruff]
 line-length = 170
-target-version = ["py312"]
-include = '\.pyi?$'
+target-version = "py312"
 
-[tool.isort]
-profile = "black"
-line_length = 170
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "DJ"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["fairylandfuture"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.mypy]
 python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
+plugins = ["mypy_django_plugin.main", "pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = [
+    "kafka.*",
+    "elasticsearch.*",
+    "opensearchpy.*",
+    "DBUtils.*",
+    "user_agents.*",
+    "ua_parser.*",
+    "pypinyin.*",
+    "secure_smtplib.*",
+    "netifaces.*",
+    "pymysql.*"
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --cov=fairylandfuture"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+django_find_project = true
 filterwarnings = [
     "ignore:pkg_resources is deprecated as an API:UserWarning",
-    "ignore::UserWarning:pkg_resources",
-    "ignore::DeprecationWarning:pkg_resources",
-    "ignore::UserWarning:pylama"
+    "ignore::DeprecationWarning",
 ]
