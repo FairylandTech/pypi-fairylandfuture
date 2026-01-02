@@ -15,13 +15,12 @@ import typing as t
 
 import psycopg
 import psycopg.sql
-from psycopg.rows import dict_row, tuple_row
-
 from fairylandfuture import logger
 from fairylandfuture.const.database import SQLKeywordConst
 from fairylandfuture.models import BaseModelPostgreSQL
 from fairylandfuture.structures.database import PostgreSQLExecuteStructure
 from fairylandfuture.utils.strings import StringUtils
+from psycopg.rows import dict_row, tuple_row
 
 MODEL_ORM_TYPE = t.TypeVar("MODEL_ORM_TYPE", bound="BaseModelPostgreSQL")
 
@@ -700,21 +699,17 @@ class PostgreSQLRepository:
         conflict_clause = psycopg.sql.SQL("")
         if on_conflict:
             update_fields = [column for column in columns if column not in on_conflict]
-            update_exprs: t.List[psycopg.sql.Composed] = []
+            update_exprs: t.List[psycopg.sql.Composed] = [psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier("updated_at"))]
 
-            if not update_fields:
-                update_exprs.append(psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier("updated_at")))
-            else:
-                for column in update_fields:
-                    if column in update_now_fields:
-                        update_exprs.append(psycopg.sql.SQL("{field} = now()").format(field=psycopg.sql.Identifier(column)))
-                    else:
-                        update_exprs.append(
-                            psycopg.sql.SQL("{field} = {excluded}.{field}").format(
-                                field=psycopg.sql.Identifier(column),
-                                excluded=SQLKeywordConst.PostgreSQL.EXCLUDED,
-                            )
-                        )
+            for column in update_fields:
+                if column == "created_at":
+                    continue
+                update_exprs.append(
+                    psycopg.sql.SQL("{field} = {excluded}.{field}").format(
+                        field=psycopg.sql.Identifier(column),
+                        excluded=SQLKeywordConst.PostgreSQL.EXCLUDED,
+                    )
+                )
 
             if update_exprs:
                 conflict_clause = psycopg.sql.SQL("{on_conflict} ({conflict_fields}) {do} {updates}").format(
