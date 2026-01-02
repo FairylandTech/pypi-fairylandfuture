@@ -7,7 +7,7 @@
 @datetime: 2024-05-09 16:15:43 UTC+08:00
 """
 
-__version__ = "1.3.3"
+__version__ = "1.3.4"
 
 from ._logger import logger
 

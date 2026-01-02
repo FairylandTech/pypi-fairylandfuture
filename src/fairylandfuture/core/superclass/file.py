@@ -21,52 +21,15 @@ from fairylandfuture.enums import EncodingEnum, FileModeEnum
 
 class BaseFile:
     """
-    Base file class.
+    BaseFile provides a representation of a file with utility functions for file operations.
 
-    :param path: file path.
-    :type path: Union[Path, str]
-    :param create: create file if not exists.
-    :type create: bool
+    This class facilitates reading from and writing to a file, validating its extension, and
+    provides properties to retrieve file details like path, name, size, and hashes. It also ensures
+    that files are created if they don't exist (based on the parameter) and validates file size
+    before performing read or write operations.
 
-    Usage:
-        >>> from fairylandfuture.common.file import BaseFile
-        >>> from fairylandfuture.enums import EncodingEnum
-        >>> from fairylandfuture.enums import FileModeEnum
-        >>> file = BaseFile("path/to/file.txt")
-        >>> file.name
-        "file"
-        >>> file.ext
-        ".txt"
-        >>> file.size_byte
-        123456
-        >>> file.size_kilobyte
-        123.46
-        >>> file.size_megabytes
-        0.12
-        >>> file.size_gigabyte
-        0.00012
-        >>> file.size_trillionbyte
-        0.0000000012
-        >>> file.size_petabyte
-        0.0000000000012
-        >>> file.size_exabyte
-        0.0000000000000012
-        >>> file.size_zettabyte
-        0.0000000000000000012
-        >>> file.size_yottabyte
-        0.0000000000000000000012
-        >>> file.size_brontobyte
-        0.000000000012
-        >>> file.dir_path
-        "path/to"
-        >>> file.read(FileModeEnum.r)
-        "Hello, world!"
-        >>> file.md5
-        "1b2cf535f27732324c34a76544b79991"
-        >>> file.sha256
-        "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3"
-        >>> file.write("Hello, world!", mode=FileModeEnum.w)
-        "path/to/file.txt"
+    :ivar max_size: The maximum allowed size in bytes for file operations.
+    :type max_size: Union[int, float]
     """
 
     def __init__(self, path: Union[Path, str], /, *, create: bool = False):

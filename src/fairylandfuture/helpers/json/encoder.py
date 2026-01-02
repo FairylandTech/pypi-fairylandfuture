@@ -17,6 +17,20 @@ from fairylandfuture.enums import DateTimeEnum
 
 
 class JsonEncoder(json.JSONEncoder):
+    """
+    Custom JSON encoder for serializing complex Python objects.
+
+    This class extends the default behavior of the JSONEncoder to handle
+    the serialization of objects such as instances of custom classes,
+    datetime, date, time, and Decimal. It checks for specific attributes
+    or types of objects to determine the appropriate way to serialize
+    them into JSON-compatible data structures.
+
+    :ivar indent: Specifies the indentation level of the JSON output.
+    :type indent: int
+    :ivar sort_keys: If True, dictionary keys are sorted in the JSON output.
+    :type sort_keys: bool
+    """
 
     def default(self, o):
         if hasattr(o, "__dict__"):

@@ -8,7 +8,9 @@
 """
 
 from ._base import BaseModel
+from ._base.postgresql import BaseModelPostgreSQL
 
 __all__ = [
     "BaseModel",
+    "BaseModelPostgreSQL",
 ]
