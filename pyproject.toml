@@ -85,7 +85,12 @@ dependencies = [
     "email-validator",
     "python-magic",
     "watchdog",
+    # Unknown
     "orjson",
+    "fastapi",
+    "uvicorn",
+    "websockets",
+    "pydantic-settings",
 ]
 
 [project.urls]
