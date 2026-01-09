@@ -7,20 +7,20 @@
 @datetime: 2024-12-23 16:35:23 UTC+08:00
 """
 
-from typing import Dict, Any, Optional, Sequence, Tuple, Union
+import typing as t
 
 from fairylandfuture.core.superclass.structure import BaseStructureTreeNode
 
 
-class TreeBuilderToolkit:
+class TreeBuilder:
     node = BaseStructureTreeNode
 
     @classmethod
-    def build(cls, data: Sequence[Dict[str, Any]], id_field: str = "id", parent_id_field: str = "parent_id") -> Tuple[Dict[str, Any], ...]:
+    def build(cls, data: t.Sequence[dict[str, t.Any]], id_field: str = "id", parent_id_field: str = "parent_id") -> tuple[dict[str, t.Any], ...]:
         if not data:
             raise ValueError("Input data cannot be empty.")
 
-        nodes: Dict[Union[str, int], BaseStructureTreeNode] = {
+        nodes: dict[str | int, BaseStructureTreeNode] = {
             item.get(id_field): cls.node(item.get(id_field), parent_id=item.get(parent_id_field), data=item) for item in data
         }
         root_nodes = []
@@ -35,17 +35,15 @@ class TreeBuilderToolkit:
         return tuple([node.to_dict() for node in root_nodes])
 
 
-class TreeBuilderToolkitV2(TreeBuilderToolkit):
-
+class TreeBuilderV2(TreeBuilder):
     @classmethod
     def build(
         cls,
-        data: Sequence[Dict[str, Any]],
+        data: t.Sequence[dict[str, t.Any]],
         id_field: str = "id",
         parent_id_field: str = "parent_id",
-        max_depth: Optional[int] = None,
-    ) -> Tuple[Dict[str, Any], ...]:
-
+        max_depth: int | None = None,
+    ) -> tuple[dict[str, t.Any], ...]:
         if not data:
             raise ValueError("Input data cannot be empty.")
 
@@ -62,7 +60,7 @@ class TreeBuilderToolkitV2(TreeBuilderToolkit):
         return tuple([cls.__limit_depth(node.to_dict(), max_depth) for node in root_nodes])
 
     @classmethod
-    def __limit_depth(cls, node: Dict[str, Any], max_depth: Optional[int], current_depth: int = 1) -> Dict[str, Any]:
+    def __limit_depth(cls, node: dict[str, t.Any], max_depth: int, current_depth: int = 1) -> dict[str, t.Any]:
         if max_depth is not None and current_depth >= max_depth:
             node.pop("children", None)
         else:
